@@ -49,9 +49,9 @@ Once you have all the required parts in hand, you can start wiring
 
 ---
 
-
-
 # 3D Print
+
+![ESP32 Plant Monitoring Housing Image](/static/img/3d-housing.png)
 
 The housing to hold the ESP32 and sensors can be 3D printed.
 
@@ -61,6 +61,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 
 # TODO
 
+* Decide on CO2 sensor
 * Add wiring/setup instructions
 
 ---
@@ -68,6 +69,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 # Links
 
 * https://microcontrollerslab.com/esp32-dht11-dht22-web-server
+* https://blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt
 
 ---
 
