@@ -6,8 +6,14 @@
 
 ---
 
+# Shopping List
+
+
+---
+
 # TODO
 
 * Add wiring/setup instructions
+* Add shopping list
 
 ---
