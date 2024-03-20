@@ -40,7 +40,13 @@ Once you have all the required parts in hand, you can start wiring
 Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code
 
 
+---
 
+# 3D Print
+
+The housing to hold the ESP32 and sensors can be 3D printed.
+
+The 3D model files are located under the [3D-models](/3D-models) directory.
 
 ---
 
