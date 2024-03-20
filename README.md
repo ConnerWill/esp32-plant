@@ -18,7 +18,7 @@ Here is a list of parts used in this project
 
 | NAME  | PRICE | COUNT | DESCRIPTION | LINK                                                                                                |
 |-------|-------|-------|-------------|-----------------------------------------------------------------------------------------------------|
-| ESP32 | $5    | 1     | microcontroller      | https://www.amazon.com/ESP-WROOM-32-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528 |
+| ESP32 | $5    | 1     | Microcontroller      | https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528 |
 | DHT22 | $5    | 1     | Temp/Humidity Sensor | https://www.amazon.com/gp/product/B0795F19W6                                                        |
 
 > *Lower prices can be found if you shop around*
