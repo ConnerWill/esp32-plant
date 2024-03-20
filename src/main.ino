@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
@@ -7,8 +9,8 @@ int dhtPin = 27;
 
 DHTesp dht;
 
-const char* ssid = "YourNetworkName";
-const char* password =  "YourNetworkPass";
+// const char* wifi_ssid = "YourNetworkName";
+// const char* wifi_password =  "YourNetworkPass";
 
 AsyncWebServer server(80);
 
@@ -39,7 +41,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  WiFi.begin(ssid, password);
+  WiFi.begin(wifi_ssid, wifi_password);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
