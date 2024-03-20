@@ -4,6 +4,12 @@
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
 
+// Define the WiFi SSID (network name) for connection
+const char* const wifi_ssid     = "YourWifiSSID";
+
+// Define the WiFi password for connection
+const char* const wifi_password = "YourWifiPassword";
+
 // Define the analog pin for CO2 measurement
 int analogPin = 35;
 
@@ -46,7 +52,8 @@ int getCo2Measurement() {
 void setup() {
 
   // Setup DHT sensor on specified pin
-  dht.setup(dhtPin);
+  // dht.setup(dhtPin);
+  dht.setup(dhtPin, DHTesp::DHT_MODEL_t::DHT22);
 
   // Begin serial communication for debugging
   Serial.begin(115200);
