@@ -29,6 +29,14 @@ Here is a list of parts used in this project
 
 Once you have all the required parts in hand, you can start wiring
 
+
+## Pinout
+
+Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code
+
+
+
+
 ---
 
 # TODO
