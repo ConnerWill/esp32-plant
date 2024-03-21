@@ -47,6 +47,25 @@ Once you have all the required parts in hand, you can start wiring
 
 > *Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code.*
 
+
+## Configuration
+
+You will need to define values to suite your needs. Variables are defined in [`./src/main/config.h`](/src/main/config.h)
+
+Here is a list of variables that **need** to be defined and their descriptions...
+
+`WIFI_SSID`
+: WiFi SSID (network/WiFi name)
+
+`WIFI_PASSWORD`
+: WiFi password
+
+`WIFI_HOSTNAME`
+: Hostname of ESP32 to set
+
+Other variables in [`config.h`](/src/main/config.h) can be changed to suite your needs
+
+
 ---
 
 # 3D Print
