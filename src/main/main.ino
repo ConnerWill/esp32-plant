@@ -1,26 +1,20 @@
-#include "config.h"
-
+// INCLUDE DIRECTIVES -----------------------------------------------------------
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
 
-// Define the WiFi SSID (network name) for connection
-const char* const wifi_ssid     = "YourWifiSSID";
-
-// Define the WiFi password for connection
-const char* const wifi_password = "YourWifiPassword";
-
-// Define the analog pin for CO2 measurement
-int analogPin = 35;
-
-// Define the DHT sensor pin for temperature and humidity measurement
-int dhtPin = 27;
+// VARIABLES --------------------------------------------------------------------
+const char* const wifi_ssid     = "YourWifiSSID";     // WiFi SSID (network name)
+const char* const wifi_password = "YourWifiPassword"; // WiFi password
+int analogPin = 35;                                   // Analog pin for CO2 measurement
+int dhtPin = 27;                                      // DHT sensor pin for temperature and humidity measurement
+int webserverPort = 80;                               // Webserver port
 
 // Initialize the DHT sensor object
 DHTesp dht;
 
-// Initialize the AsyncWebServer object on port 80
-AsyncWebServer server(80);
+// Initialize the AsyncWebServer object on port
+AsyncWebServer server(webserverPort);
 
 // Function to get CO2 measurement
 int getCo2Measurement() {
