@@ -27,7 +27,7 @@ void connectWiFi(const char* ssid, const char* password) {
 
 void checkWiFiConnection() {
   static unsigned long lastCheckTime = 0;
-  const unsigned long checkInterval = 10000; // Check every 10 seconds
+  const unsigned long checkInterval  = 10000; // Check every 10 seconds
 
   if (millis() - lastCheckTime > checkInterval) {
     lastCheckTime = millis();
