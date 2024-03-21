@@ -12,7 +12,7 @@ const int WEBSERVER_PORT        = 80;                 // Webserver port
 const int BAUD_RATE             = 115200;             // Baud rate for serial connection
 
 // OBJECTS -----------------------------------------------------------------------
-DHTesp dht;                           // Initialize the DHT sensor object
+DHTesp dht;                            // Initialize the DHT sensor object
 AsyncWebServer server(WEBSERVER_PORT); // Initialize the AsyncWebServer object on port
 
 // FUNCTION PROTOTYPES ----------------------------------------------------------
@@ -21,7 +21,9 @@ int getCo2Measurement();
 
 // SETUP ------------------------------------------------------------------------
 void setup() {
-  Serial.begin(BAUD_RATE); // Begin serial communication for debugging
+
+  // Begin serial communication for debugging
+  Serial.begin(BAUD_RATE);
 
   // Setup DHT sensor on specified pin
   dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22);
