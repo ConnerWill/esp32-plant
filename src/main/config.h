@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -10,4 +11,3 @@ const int WEBSERVER_PORT        = 80;                 // Webserver port
 const int BAUD_RATE             = 115200;             // Baud rate for serial connection
 
 #endif
-
