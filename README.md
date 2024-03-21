@@ -16,8 +16,6 @@ This is designed to be used to monitor the environment when growing plants
 
 Here is a list of parts used in this project
 
-***Still a work in progress until I decide which CO2 sensor to use***
-
 | NAME  | PRICE | COUNT | DESCRIPTION | LINK                                                                                                         |
 |-------|-------|-------|-------------|--------------------------------------------------------------------------------------------------------------|
 | ESP32 | $5    | 1     | Microcontroller      | https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528 |
