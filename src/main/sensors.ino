@@ -41,4 +41,3 @@ int readCO2Level() {
     return static_cast<int>((voltageDifference * CalibrationFactor) / VoltageOffset);
   }
 }
-
