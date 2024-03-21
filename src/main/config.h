@@ -1,7 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// CONSTANTS --------------------------------------------------------------------
 const char* const WIFI_SSID     = "YourWifiSSID";     // WiFi SSID (network name)
 const char* const WIFI_PASSWORD = "YourWifiPassword"; // WiFi password
 const char* const WIFI_HOSTNAME = "ESP32-plant";      // Hostname for ESP32
