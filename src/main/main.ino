@@ -18,6 +18,7 @@ AsyncWebServer server(WEBSERVER_PORT); // Initialize the AsyncWebServer object o
 // FUNCTION PROTOTYPES ----------------------------------------------------------
 void connectWiFi(const char* ssid, const char* password);
 String getAllMeasurements();
+void handleMeasurementsRequest(AsyncWebServerRequest *request);
 
 // SETUP ------------------------------------------------------------------------
 void setup() {
@@ -32,10 +33,7 @@ void setup() {
   connectWiFi(WIFI_SSID, WIFI_PASSWORD);
 
   // Handle all measurements request
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
-    String measurements = getAllMeasurements();
-    request->send(200, "text/plain", measurements);
-  });
+  server.on("/", HTTP_GET, handleMeasurementsRequest);
 
   // Start the web server
   server.begin();
@@ -70,6 +68,11 @@ void connectWiFi(const char* ssid, const char* password) {
   }
 }
 
+void handleMeasurementsRequest(AsyncWebServerRequest *request) {
+  String measurements = getAllMeasurements();
+  request->send(200, "text/plain", measurements);
+}
+
 String getAllMeasurements() {
   float temperature = dht.getTemperature(); // Get temperature
   float humidity = dht.getHumidity();       // Get humidity
@@ -83,7 +86,7 @@ String getAllMeasurements() {
 }
 
 int getCo2Measurement() {
-  int adcVal = analogRead(ANALOG_PIN);     // Read analog value from CO2 sensor
+  int adcVal = analogRead(ANALOG_PIN); // Read analog value from CO2 sensor
   float voltage = adcVal * (3.3 / 4095.0); // Calculate voltage based on ADC value
 
   // Calculate CO2 measurement based on voltage difference
