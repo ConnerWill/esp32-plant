@@ -17,7 +17,7 @@ AsyncWebServer server(WEBSERVER_PORT); // Initialize the AsyncWebServer object o
 
 // FUNCTION PROTOTYPES ----------------------------------------------------------
 void connectWiFi(const char* ssid, const char* password);
-int getCo2Measurement();
+String getAllMeasurements();
 
 // SETUP ------------------------------------------------------------------------
 void setup() {
@@ -31,25 +31,10 @@ void setup() {
   // Connect to WiFi network using specified credentials
   connectWiFi(WIFI_SSID, WIFI_PASSWORD);
 
-  // Handle CO2 measurement request
-  server.on("/co2", HTTP_GET, [](AsyncWebServerRequest * request) {
-    int measurement = getCo2Measurement();
-    String message = (measurement == -1) ? "Sensor is not operating correctly" :
-                     (measurement == -2) ? "Sensor is pre-heating" :
-    String(measurement) + " ppm";
-    request->send(200, "text/plain", message);
-  });
-
-  // Handle temperature measurement request
-  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest * request) {
-    float temperature = dht.getTemperature();
-    request->send(200, "text/plain", String(temperature) + " ºC");
-  });
-
-  // Handle humidity measurement request
-  server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest * request) {
-    float humidity = dht.getHumidity();
-    request->send(200, "text/plain", String(humidity) + " %");
+  // Handle all measurements request
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
+    String measurements = getAllMeasurements();
+    request->send(200, "text/plain", measurements);
   });
 
   // Start the web server
@@ -83,6 +68,18 @@ void connectWiFi(const char* ssid, const char* password) {
   } else {
     Serial.println("\nFailed to connect to WiFi: " + String(ssid));
   }
+}
+
+String getAllMeasurements() {
+  float temperature = dht.getTemperature(); // Get temperature
+  float humidity = dht.getHumidity();       // Get humidity
+  int co2 = getCo2Measurement();            // Get CO2 measurement
+
+  String measurements = "Temperature: " + String(temperature) + " ºC\n";
+  measurements += "Humidity: " + String(humidity) + " %\n";
+  measurements += "CO2 Level: " + String(co2) + " ppm";
+
+  return measurements;
 }
 
 int getCo2Measurement() {
