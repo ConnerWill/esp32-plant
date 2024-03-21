@@ -12,28 +12,51 @@ int webserverPort               = 80;                 // Webserver port
 int baudRate                    = 115200;             // Baud rate for serial connection
 
 // INITIALIZATION ---------------------------------------------------------------
-DHTesp dht; // Initialize the DHT sensor object
+DHTesp dht;                           // Initialize the DHT sensor object
 AsyncWebServer server(webserverPort); // Initialize the AsyncWebServer object on port
 
 // SETUP ------------------------------------------------------------------------
+void connectWiFi(const char* ssid, const char* password) {
+
+  // Connect to WiFi network using specified credentials
+  WiFi.begin(ssid, password);
+
+  // Variable to store connection status
+  bool connected = false;
+
+  Serial.print("Connecting to WiFi: " + String(ssid));
+
+  // Wait for WiFi connection
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+
+  // Check if connected
+  if (WiFi.status() == WL_CONNECTED) {
+    connected = true;
+    Serial.println("\n-----------------------------");
+    Serial.println("Connected to: " + String(ssid));
+    Serial.println("IP Address  : " + String(WiFi.localIP()));
+    Serial.println("-----------------------------");
+  }
+
+  // Use the 'connected' variable to print the connection status
+  if (!connected) {
+    Serial.println("\nFailed to connect to WiFi: " + String(ssid));
+  }
+}
+
 void setup() {
+
   // Setup DHT sensor on specified pin
   dht.setup(dhtPin, DHTesp::DHT_MODEL_t::DHT22);
 
   // Begin serial communication for debugging
   Serial.begin(baudRate);
 
-  // Connect to WiFi network using specified credentials
-  WiFi.begin(wifi_ssid, wifi_password);
-
-  // Wait for WiFi connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
-  }
-
-  // Print local IP address once connected
-  Serial.println(WiFi.localIP());
+  // Usage of the connectAndPrintWiFi function
+  connectWiFi(wifi_ssid, wifi_password);
 
   // Handle CO2 measurement request
   server.on("/co2", HTTP_GET, [](AsyncWebServerRequest * request) {
