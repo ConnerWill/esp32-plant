@@ -10,10 +10,11 @@ AsyncWebServer server(WEBSERVER_PORT); // Initialize the AsyncWebServer object o
 
 // FUNCTION PROTOTYPES ----------------------------------------------------------
 void connectWiFi(const char* ssid, const char* password);
-String getAllMeasurements();
 void handleMeasurementsRequest(AsyncWebServerRequest *request);
-float readTemperature();
+void checkWiFiConnection();
+String getAllMeasurements();
 float readHumidity();
+float readTemperature();
 int readCO2Level();
 
 // SETUP ------------------------------------------------------------------------
@@ -27,7 +28,7 @@ void setup() {
 
 // LOOP -------------------------------------------------------------------------
 void loop() {
-  // Add any continuous operations here
+  checkWiFiConnection(); // Check and reconnect to WiFi if necessary
 }
 
 // FUNCTION DEFINITIONS ---------------------------------------------------------
@@ -55,6 +56,13 @@ void connectWiFi(const char* ssid, const char* password) {
   }
 }
 
+void checkWiFiConnection() {
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("WiFi Disconnected. Attempting reconnection...");
+    connectWiFi(WIFI_SSID, WIFI_PASSWORD);
+  }
+}
+
 void handleMeasurementsRequest(AsyncWebServerRequest *request) {
   request->send(200, "text/plain", getAllMeasurements());
 }
@@ -79,17 +87,20 @@ float readHumidity() {
 int readCO2Level() {
   const float ReferenceVoltage = 3.3;
   const float MaxAdcValue = 4095.0;
+  const float VoltageThreshold = 0.4;
+  const float CalibrationFactor = 5000.0;
+  const float VoltageOffset = 1.6;
   int adcVal = analogRead(ANALOG_PIN);                       // Read analog value from CO2 sensor
   float voltage = adcVal * (ReferenceVoltage / MaxAdcValue); // Calculate voltage based on ADC value
 
   // Calculate CO2 measurement based on voltage difference
   if (voltage == 0) {
     return -1; // Sensor not operating correctly
-  } else if (voltage < 0.4) {
+  } else if (voltage < VoltageThreshold) {
     return -2; // Sensor pre-heating
   } else {
-    float voltageDifference = voltage - 0.4;
-    return static_cast<int>((voltageDifference * 5000.0) / 1.6);
+    float voltageDifference = voltage - VoltageThreshold;
+    return static_cast<int>((voltageDifference * CalibrationFactor) / VoltageOffset);
   }
 }
 
