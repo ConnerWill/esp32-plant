@@ -3,60 +3,33 @@
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
 
-// VARIABLES --------------------------------------------------------------------
-const char* const wifi_ssid     = "YourWifiSSID";     // WiFi SSID (network name)
-const char* const wifi_password = "YourWifiPassword"; // WiFi password
-int analogPin                   = 35;                 // Analog pin for CO2 measurement
-int dhtPin                      = 27;                 // DHT sensor pin for temperature and humidity measurement
-int webserverPort               = 80;                 // Webserver port
-int baudRate                    = 115200;             // Baud rate for serial connection
+// CONSTANTS --------------------------------------------------------------------
+const char* const WIFI_SSID     = "YourWifiSSID";     // WiFi SSID (network name)
+const char* const WIFI_PASSWORD = "YourWifiPassword"; // WiFi password
+const int ANALOG_PIN            = 35;                 // Analog pin for CO2 measurement
+const int DHT_PIN               = 27;                 // DHT sensor pin for temperature and humidity measurement
+const int WEBSERVER_PORT        = 80;                 // Webserver port
+const int BAUD_RATE             = 115200;             // Baud rate for serial connection
 
-// INITIALIZATION ---------------------------------------------------------------
+// OBJECTS -----------------------------------------------------------------------
 DHTesp dht;                           // Initialize the DHT sensor object
-AsyncWebServer server(webserverPort); // Initialize the AsyncWebServer object on port
+AsyncWebServer server(WEBSERVER_PORT); // Initialize the AsyncWebServer object on port
+
+// FUNCTION PROTOTYPES ----------------------------------------------------------
+void connectWiFi(const char* ssid, const char* password);
+int getCo2Measurement();
 
 // SETUP ------------------------------------------------------------------------
-void connectWiFi(const char* ssid, const char* password) {
-
-  // Connect to WiFi network using specified credentials
-  WiFi.begin(ssid, password);
-
-  // Variable to store connection status
-  bool connected = false;
-
-  Serial.print("Connecting to WiFi: " + String(ssid));
-
-  // Wait for WiFi connection
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.print(".");
-  }
-
-  // Check if connected
-  if (WiFi.status() == WL_CONNECTED) {
-    connected = true;
-    Serial.println("\n-----------------------------");
-    Serial.println("Connected to: " + String(ssid));
-    Serial.println("IP Address  : " + String(WiFi.localIP()));
-    Serial.println("-----------------------------");
-  }
-
-  // Use the 'connected' variable to print the connection status
-  if (!connected) {
-    Serial.println("\nFailed to connect to WiFi: " + String(ssid));
-  }
-}
-
 void setup() {
 
   // Setup DHT sensor on specified pin
-  dht.setup(dhtPin, DHTesp::DHT_MODEL_t::DHT22);
+  dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22);
 
   // Begin serial communication for debugging
-  Serial.begin(baudRate);
+  Serial.begin(BAUD_RATE);
 
-  // Usage of the connectAndPrintWiFi function
-  connectWiFi(wifi_ssid, wifi_password);
+  // Connect to WiFi network using specified credentials
+  connectWiFi(WIFI_SSID, WIFI_PASSWORD);
 
   // Handle CO2 measurement request
   server.on("/co2", HTTP_GET, [](AsyncWebServerRequest * request) {
@@ -99,31 +72,63 @@ void setup() {
   server.begin();
 }
 
-// Function to get CO2 measurement
+// LOOP -------------------------------------------------------------------------
+void loop() {
+  // Add any continuous operations here
+}
+
+// FUNCTION DEFINITIONS ---------------------------------------------------------
+void connectWiFi(const char* ssid, const char* password) {
+
+  // Connect to WiFi network using specified credentials
+  WiFi.begin(ssid, password);
+
+  // Variable to store connection status
+  bool connected = false;
+
+  Serial.print("Connecting to WiFi: " + String(ssid));
+
+  // Wait for WiFi connection
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+
+  // Check if connected
+  if (WiFi.status() == WL_CONNECTED) {
+    connected = true;
+    Serial.println("\n-----------------------------");
+    Serial.println("Connected to: " + String(ssid));
+    Serial.println("IP Address  : " + String(WiFi.localIP()));
+    Serial.println("-----------------------------");
+  }
+
+  // Use the 'connected' variable to print the connection status
+  if (!connected) {
+    Serial.println("\nFailed to connect to WiFi: " + String(ssid));
+  }
+}
+
 int getCo2Measurement() {
 
   // Read analog value from CO2 sensor
-  int adcVal = analogRead(analogPin);
+  int adcVal = analogRead(ANALOG_PIN);
 
   // Calculate voltage based on ADC value
   float voltage = adcVal * (3.3 / 4095.0);
 
   // Check for zero voltage (sensor not operating correctly)
-  if (voltage == 0)
-  {
+  if (voltage == 0) {
     return -1;
   }
   // Check for low voltage (sensor pre-heating)
-  else if (voltage < 0.4)
-  {
+  else if (voltage < 0.4) {
     return -2;
   }
   // Calculate CO2 measurement based on voltage difference
-  else
-  {
+  else {
     float voltageDifference = voltage - 0.4;
-    return (int) ((voltageDifference * 5000.0) / 1.6);
+    return static_cast<int>((voltageDifference * 5000.0) / 1.6);
   }
 }
 
-void loop() {}
