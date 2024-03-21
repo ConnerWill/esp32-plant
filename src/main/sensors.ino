@@ -22,11 +22,11 @@ float readHumidity() {
 }
 
 int readCO2Level() {
-  static const float ReferenceVoltage = 3.3;
-  static const float MaxAdcValue = 4095.0;
-  static const float VoltageThreshold = 0.4;
+  static const float ReferenceVoltage  = 3.3;
+  static const float MaxAdcValue       = 4095.0;
+  static const float VoltageThreshold  = 0.4;
   static const float CalibrationFactor = 5000.0;
-  static const float VoltageOffset = 1.6;
+  static const float VoltageOffset     = 1.6;
 
   int adcVal = analogRead(ANALOG_PIN);                       // Read analog value from CO2 sensor
   float voltage = adcVal * (ReferenceVoltage / MaxAdcValue); // Calculate voltage based on ADC value
