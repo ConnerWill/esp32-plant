@@ -21,50 +21,32 @@ int getCo2Measurement();
 
 // SETUP ------------------------------------------------------------------------
 void setup() {
+  Serial.begin(BAUD_RATE); // Begin serial communication for debugging
 
   // Setup DHT sensor on specified pin
   dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22);
-
-  // Begin serial communication for debugging
-  Serial.begin(BAUD_RATE);
 
   // Connect to WiFi network using specified credentials
   connectWiFi(WIFI_SSID, WIFI_PASSWORD);
 
   // Handle CO2 measurement request
   server.on("/co2", HTTP_GET, [](AsyncWebServerRequest * request) {
-
-    // Get CO2 measurement
     int measurement = getCo2Measurement();
-
-    // Prepare response message based on measurement
-    String message;
-    if(measurement == -1){message = "Sensor is not operating correctly";}
-    else if(measurement == -2){message = "Sensor is pre-heating";}
-    else {message = String(measurement) + " ppm";}
-
-    // Send response with HTTP status 200 (OK)
+    String message = (measurement == -1) ? "Sensor is not operating correctly" :
+                     (measurement == -2) ? "Sensor is pre-heating" :
+    String(measurement) + " ppm";
     request->send(200, "text/plain", message);
-
   });
 
   // Handle temperature measurement request
   server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest * request) {
-
-    // Get temperature from DHT sensor
     float temperature = dht.getTemperature();
-
-    // Send temperature response with HTTP status 200 (OK)
     request->send(200, "text/plain", String(temperature) + " ºC");
   });
 
   // Handle humidity measurement request
   server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest * request) {
-
-    // Get humidity from DHT sensor
     float humidity = dht.getHumidity();
-
-    // Send humidity response with HTTP status 200 (OK)
     request->send(200, "text/plain", String(humidity) + " %");
   });
 
@@ -81,11 +63,7 @@ void loop() {
 void connectWiFi(const char* ssid, const char* password) {
 
   // Connect to WiFi network using specified credentials
-  WiFi.begin(ssid, password);
-
-  // Variable to store connection status
-  bool connected = false;
-
+  WiFi.begin(ssid, password); 
   Serial.print("Connecting to WiFi: " + String(ssid));
 
   // Wait for WiFi connection
@@ -94,39 +72,27 @@ void connectWiFi(const char* ssid, const char* password) {
     Serial.print(".");
   }
 
-  // Check if connected
+  // Print connection status
   if (WiFi.status() == WL_CONNECTED) {
-    connected = true;
     Serial.println("\n-----------------------------");
     Serial.println("Connected to: " + String(ssid));
     Serial.println("IP Address  : " + String(WiFi.localIP()));
     Serial.println("-----------------------------");
-  }
-
-  // Use the 'connected' variable to print the connection status
-  if (!connected) {
+  } else {
     Serial.println("\nFailed to connect to WiFi: " + String(ssid));
   }
 }
 
 int getCo2Measurement() {
+  int adcVal = analogRead(ANALOG_PIN); // Read analog value from CO2 sensor
+  float voltage = adcVal * (3.3 / 4095.0); // Calculate voltage based on ADC value
 
-  // Read analog value from CO2 sensor
-  int adcVal = analogRead(ANALOG_PIN);
-
-  // Calculate voltage based on ADC value
-  float voltage = adcVal * (3.3 / 4095.0);
-
-  // Check for zero voltage (sensor not operating correctly)
-  if (voltage == 0) {
-    return -1;
-  }
-  // Check for low voltage (sensor pre-heating)
-  else if (voltage < 0.4) {
-    return -2;
-  }
   // Calculate CO2 measurement based on voltage difference
-  else {
+  if (voltage == 0) {
+    return -1; // Sensor not operating correctly
+  } else if (voltage < 0.4) {
+    return -2; // Sensor pre-heating
+  } else {
     float voltageDifference = voltage - 0.4;
     return static_cast<int>((voltageDifference * 5000.0) / 1.6);
   }
