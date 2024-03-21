@@ -87,6 +87,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * Add 3D models
 * Replace images
 * Improve code
+* Add plotting
 
 ---
 
