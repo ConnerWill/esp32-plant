@@ -12,24 +12,17 @@ AsyncWebServer server(WEBSERVER_PORT); // Initialize the AsyncWebServer object o
 void connectWiFi(const char* ssid, const char* password);
 String getAllMeasurements();
 void handleMeasurementsRequest(AsyncWebServerRequest *request);
+float readTemperature();
+float readHumidity();
+int readCO2Level();
 
 // SETUP ------------------------------------------------------------------------
 void setup() {
-
-  // Begin serial communication for debugging
-  Serial.begin(BAUD_RATE);
-
-  // Setup DHT sensor on specified pin
-  dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22);
-
-  // Connect to WiFi network using specified credentials
-  connectWiFi(WIFI_SSID, WIFI_PASSWORD);
-
-  // Handle all measurements request
-  server.on("/", HTTP_GET, handleMeasurementsRequest);
-
-  // Start the web server
-  server.begin();
+  Serial.begin(BAUD_RATE);                             // Begin serial communication for debugging
+  dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22);      // Setup DHT sensor on specified pin
+  connectWiFi(WIFI_SSID, WIFI_PASSWORD);               // Connect to WiFi network using specified credentials
+  server.on("/", HTTP_GET, handleMeasurementsRequest); // Handle all measurements request
+  server.begin();                                      // Start the web server
 }
 
 // LOOP -------------------------------------------------------------------------
@@ -39,12 +32,8 @@ void loop() {
 
 // FUNCTION DEFINITIONS ---------------------------------------------------------
 void connectWiFi(const char* ssid, const char* password) {
-
-  // Set hostname before connecting to WiFi
-  WiFi.setHostname(WIFI_HOSTNAME);
-
-  // Connect to WiFi network using specified credentials
-  WiFi.begin(ssid, password); 
+  WiFi.setHostname(WIFI_HOSTNAME); // Set hostname before connecting to WiFi
+  WiFi.begin(ssid, password);      // Connect to WiFi network using specified credentials
   Serial.print("Connecting to WiFi: " + String(ssid) + " ");
 
   // Wait for WiFi connection
@@ -67,25 +56,31 @@ void connectWiFi(const char* ssid, const char* password) {
 }
 
 void handleMeasurementsRequest(AsyncWebServerRequest *request) {
-  String measurements = getAllMeasurements();
-  request->send(200, "text/plain", measurements);
+  request->send(200, "text/plain", getAllMeasurements());
 }
 
 String getAllMeasurements() {
-  float temperature = dht.getTemperature(); // Get temperature
-  float humidity = dht.getHumidity();       // Get humidity
-  int co2 = getCo2Measurement();            // Get CO2 measurement
-
-  String measurements = "Temperature: " + String(temperature) + " ºC\n";
-         measurements += "Humidity   : " + String(humidity) + " %\n";
-         measurements += "CO2 Level  : " + String(co2) + " ppm";
-
+  String measurements = "Temperature: "  + String(readTemperature()) + " ºC\n";
+         measurements += "Humidity   : " + String(readHumidity())    + " %\n";
+         measurements += "CO2 Level  : " + String(readCO2Level())    + " ppm";
   return measurements;
 }
 
-int getCo2Measurement() {
-  int adcVal = analogRead(ANALOG_PIN);     // Read analog value from CO2 sensor
-  float voltage = adcVal * (3.3 / 4095.0); // Calculate voltage based on ADC value
+
+float readTemperature() {
+  return dht.getTemperature();
+}
+
+float readHumidity() {
+  return dht.getHumidity();
+}
+
+
+int readCO2Level() {
+  const float ReferenceVoltage = 3.3;
+  const float MaxAdcValue = 4095.0;
+  int adcVal = analogRead(ANALOG_PIN);                       // Read analog value from CO2 sensor
+  float voltage = adcVal * (ReferenceVoltage / MaxAdcValue); // Calculate voltage based on ADC value
 
   // Calculate CO2 measurement based on voltage difference
   if (voltage == 0) {
