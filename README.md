@@ -22,7 +22,7 @@ Here is a list of parts used in this project
 | DHT22         | $7    | 1     | Temp/Humidity Sensor | https://www.amazon.com/gp/product/B0795F19W6                                                        |                                                    |
 | MQ-135        | $3    | 1     | CO2 Sensor           | https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY                   |                                                    |
 | 1K Ω Resistor | $0.25 | 1     | 1K Ohm Resistor      | https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B                       |                                                    |
-| 10K Ω Resistor| $0.25 | 1     | 10K Ohm Resistor     | https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM                       | Most DHT22 sensor modules have a built-in resistor |
+| 10K Ω Resistor| $0.25 | 0/1   | 10K Ohm Resistor     | https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM                       | Most DHT22 sensor modules have a built-in resistor |
 <!--
 | ENS160       | $5    | 0/1   | CO2 Sensor           | https://www.amazon.com/HiLetgo-Dioxide-Temperature-Humidity-Monitoring/dp/B0CDWYFSGH                |
 | SGP30        | $5    | 0/1   | CO2 Sensor           | https://www.makerfabs.com/sgp30-air-quality-sensor-breakout.html                                    |
