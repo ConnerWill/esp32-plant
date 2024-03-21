@@ -54,7 +54,7 @@ void connectWiFi(const char* ssid, const char* password) {
 
   // Connect to WiFi network using specified credentials
   WiFi.begin(ssid, password); 
-  Serial.print("Connecting to WiFi: " + String(ssid));
+  Serial.print("Connecting to WiFi: " + String(ssid) + " ");
 
   // Wait for WiFi connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -86,8 +86,8 @@ String getAllMeasurements() {
   int co2 = getCo2Measurement();            // Get CO2 measurement
 
   String measurements = "Temperature: " + String(temperature) + " ºC\n";
-  measurements += "Humidity: " + String(humidity) + " %\n";
-  measurements += "CO2 Level: " + String(co2) + " ppm";
+         measurements += "Humidity   : " + String(humidity) + " %\n";
+         measurements += "CO2 Level  : " + String(co2) + " ppm";
 
   return measurements;
 }
