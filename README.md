@@ -16,14 +16,15 @@ This is designed to be used to monitor the environment when growing plants
 
 Here is a list of parts used in this project
 
-| NAME  | PRICE | COUNT | DESCRIPTION | LINK                                                                                                         |
-|-------|-------|-------|-------------|--------------------------------------------------------------------------------------------------------------|
-| ESP32 | $5    | 1     | Microcontroller      | https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528 |
-| DHT22 | $5    | 1     | Temp/Humidity Sensor | https://www.amazon.com/gp/product/B0795F19W6                                                        |
-| MQ-135 | $5   | 0/1   | CO2 Sensor | https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY                          |
+| NAME            | PRICE | COUNT | DESCRIPTION          | LINK                                                                                                |
+|-----------------|-------|-------|----------------------|-----------------------------------------------------------------------------------------------------|
+| ESP32           | $5    | 1     | Microcontroller      | https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528 |
+| DHT22           | $7    | 1     | Temp/Humidity Sensor | https://www.amazon.com/gp/product/B0795F19W6                                                        |
+| MQ-135          | $3    | 1     | CO2 Sensor           | https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY                   |
+| 1K Ohm Resistor | $0.25 | 1     | 1K Ohm Resistor      | https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B                       |
 <!--
-| ENS160 | $5   | 0/1   | CO2 Sensor  | https://www.amazon.com/HiLetgo-Dioxide-Temperature-Humidity-Monitoring/dp/B0CDWYFSGH                          |
-| SGP30 | $5    | 0/1    | CO2 Sensor | https://www.makerfabs.com/sgp30-air-quality-sensor-breakout.html                          |
+| ENS160 | $5   | 0/1   | CO2 Sensor  | https://www.amazon.com/HiLetgo-Dioxide-Temperature-Humidity-Monitoring/dp/B0CDWYFSGH                                   |
+| SGP30 | $5    | 0/1    | CO2 Sensor | https://www.makerfabs.com/sgp30-air-quality-sensor-breakout.html                                                       |
 -->
 
 > *Lower prices can be found if you shop around*
