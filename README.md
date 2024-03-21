@@ -52,7 +52,9 @@ Once you have all the required parts in hand, you can start wiring
 
 You will need to define values to suite your needs. Variables are defined in [`./src/main/config.h`](/src/main/config.h)
 
-Here is a list of variables that **need** to be defined and their descriptions...
+### WiFI Configuration
+
+Here is a list of WiFi variables that **must** be defined and their descriptions...
 
 `WIFI_SSID`
 : WiFi SSID (network/WiFi name)
@@ -63,8 +65,9 @@ Here is a list of variables that **need** to be defined and their descriptions..
 `WIFI_HOSTNAME`
 : Hostname of ESP32 to set
 
-Other variables in [`config.h`](/src/main/config.h) can be changed to suite your needs
+### Other Configuration
 
+Other variables in [`config.h`](/src/main/config.h) can be changed to suite your needs
 
 ---
 
