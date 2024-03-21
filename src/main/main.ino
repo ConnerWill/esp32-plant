@@ -6,51 +6,22 @@
 // VARIABLES --------------------------------------------------------------------
 const char* const wifi_ssid     = "YourWifiSSID";     // WiFi SSID (network name)
 const char* const wifi_password = "YourWifiPassword"; // WiFi password
-int analogPin = 35;                                   // Analog pin for CO2 measurement
-int dhtPin = 27;                                      // DHT sensor pin for temperature and humidity measurement
-int webserverPort = 80;                               // Webserver port
+int analogPin                   = 35;                 // Analog pin for CO2 measurement
+int dhtPin                      = 27;                 // DHT sensor pin for temperature and humidity measurement
+int webserverPort               = 80;                 // Webserver port
+int baudRate                    = 115200;             // Baud rate for serial connection
 
-// Initialize the DHT sensor object
-DHTesp dht;
+// INITIALIZATION ---------------------------------------------------------------
+DHTesp dht; // Initialize the DHT sensor object
+AsyncWebServer server(webserverPort); // Initialize the AsyncWebServer object on port
 
-// Initialize the AsyncWebServer object on port
-AsyncWebServer server(webserverPort);
-
-// Function to get CO2 measurement
-int getCo2Measurement() {
-
-  // Read analog value from CO2 sensor
-  int adcVal = analogRead(analogPin);
-
-  // Calculate voltage based on ADC value
-  float voltage = adcVal * (3.3 / 4095.0);
-
-  // Check for zero voltage (sensor not operating correctly)
-  if (voltage == 0)
-  {
-    return -1;
-  }
-  // Check for low voltage (sensor pre-heating)
-  else if (voltage < 0.4)
-  {
-    return -2;
-  }
-  // Calculate CO2 measurement based on voltage difference
-  else
-  {
-    float voltageDifference = voltage - 0.4;
-    return (int) ((voltageDifference * 5000.0) / 1.6);
-  }
-}
-
+// SETUP ------------------------------------------------------------------------
 void setup() {
-
   // Setup DHT sensor on specified pin
-  // dht.setup(dhtPin);
   dht.setup(dhtPin, DHTesp::DHT_MODEL_t::DHT22);
 
   // Begin serial communication for debugging
-  Serial.begin(115200);
+  Serial.begin(baudRate);
 
   // Connect to WiFi network using specified credentials
   WiFi.begin(wifi_ssid, wifi_password);
@@ -103,6 +74,33 @@ void setup() {
 
   // Start the web server
   server.begin();
+}
+
+// Function to get CO2 measurement
+int getCo2Measurement() {
+
+  // Read analog value from CO2 sensor
+  int adcVal = analogRead(analogPin);
+
+  // Calculate voltage based on ADC value
+  float voltage = adcVal * (3.3 / 4095.0);
+
+  // Check for zero voltage (sensor not operating correctly)
+  if (voltage == 0)
+  {
+    return -1;
+  }
+  // Check for low voltage (sensor pre-heating)
+  else if (voltage < 0.4)
+  {
+    return -2;
+  }
+  // Calculate CO2 measurement based on voltage difference
+  else
+  {
+    float voltageDifference = voltage - 0.4;
+    return (int) ((voltageDifference * 5000.0) / 1.6);
+  }
 }
 
 void loop() {}
