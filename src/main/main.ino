@@ -84,7 +84,7 @@ String getAllMeasurements() {
 }
 
 int getCo2Measurement() {
-  int adcVal = analogRead(ANALOG_PIN); // Read analog value from CO2 sensor
+  int adcVal = analogRead(ANALOG_PIN);     // Read analog value from CO2 sensor
   float voltage = adcVal * (3.3 / 4095.0); // Calculate voltage based on ADC value
 
   // Calculate CO2 measurement based on voltage difference
