@@ -57,9 +57,15 @@ void connectWiFi(const char* ssid, const char* password) {
 }
 
 void checkWiFiConnection() {
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("WiFi Disconnected. Attempting reconnection...");
-    connectWiFi(WIFI_SSID, WIFI_PASSWORD);
+  static unsigned long lastCheckTime = 0;
+  const unsigned long checkInterval = 10000; // Check every 10 seconds
+
+  if (millis() - lastCheckTime > checkInterval) {
+    lastCheckTime = millis();
+    if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("WiFi Disconnected. Attempting reconnection...");
+      connectWiFi(WIFI_SSID, WIFI_PASSWORD);
+    }
   }
 }
 
