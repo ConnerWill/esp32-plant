@@ -27,6 +27,10 @@ Here is a list of parts used in this project
 | SGP30        | $5    | 0/1   | CO2 Sensor           | https://www.makerfabs.com/sgp30-air-quality-sensor-breakout.html                                    |
 -->
 
+| TOTAL COST |
+|------------|
+| $15.25     |
+
 > *Lower prices can be found if you shop around*
 
 ---
