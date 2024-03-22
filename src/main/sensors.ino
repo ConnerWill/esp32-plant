@@ -1,5 +1,5 @@
 #include "sensors.h"
-//#include <ArduinoJson.h>
+#include <ArduinoJson.h>
 
 DHTesp dht;
 
@@ -8,19 +8,18 @@ void dhtSetup(int pin) {
 }
 
 String getAllMeasurements() {
-  // Get measurement values
-  float temperature = readTemperature();
-  float humidity = readHumidity();
-  int co2Level = readCO2Level();
+  StaticJsonDocument<256> doc; // Create a JSON object
 
-  // Create a JSON string with the measurements
-  String measurements = "{";
-  measurements += "\"temperature\": " + String(temperature) + ",";
-  measurements += "\"humidity\": "    + String(humidity)    + ",";
-  measurements += "\"co2Level\": "    + String(co2Level);
-  measurements += "}";
+  // Populate the JSON object with sensor data
+  doc["temperature"] = readTemperature();
+  doc["humidity"]    = readHumidity();
+  doc["co2"]         = readCO2Level();
 
-  return measurements;
+  // Serialize the JSON object to a string
+  String output;
+  serializeJson(doc, output);
+
+  return output;
 }
 
 float readTemperature() {
