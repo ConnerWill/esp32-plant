@@ -48,10 +48,10 @@ Once you have all the required parts in hand, you can start wiring
 ![ESP32 Plant Monitoring Circuit Schematic Image](/static/img/circuit-schematic.png)
 
 
-| ESP32 Pin | Destination | Type    |
-|-----------|-------------|---------|
-| 27        | DHT22       | Digital |
-| 35        | CO2 Sensor  | Analog  |
+| ESP32 Pin | Destination | Type    | Power Requirements (Volts) | ESP32 VCC Pin | ESP32 GND Pin |
+|-----------|-------------|---------|----------------------------|---------------|---------------|
+| 27        | DHT22       | Digital | 3-5                        | 3.3V          | GND           |
+| 35        | CO2 Sensor  | Analog  | 5                          | 5V            | GND           |
 
 > *Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code.*
 
