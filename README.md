@@ -96,7 +96,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 
 ## DHT22 Case
 
-![DHT22 3D Printied Case](/static/img/DHT22-3D-model.jpg)
+![DHT22 3D Printed Case](/static/img/DHT22-3D-model.jpg)
 
 [Over-engineered DHT22 / AM2302 Board Case](https://www.thingiverse.com/thing:4521313)
 : (Credit [SciMonster](https://www.thingiverse.com/SciMonster))
@@ -104,7 +104,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 
 ## MQ-135 Case
 
-![MQ-135 3D Printied Case](/static/img/MQ-135-3D-model.jpg)
+![MQ-135 3D Printed Case](/static/img/MQ-135-3D-model.jpg)
 
 [MQ-2 Sensor Case](https://www.thingiverse.com/thing:2893581)
 : (Credit [RJGII](https://www.thingiverse.com/RJGII))
