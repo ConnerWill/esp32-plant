@@ -97,6 +97,9 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 [Over-engineered DHT22 / AM2302 Board Case](https://www.thingiverse.com/thing:4521313)
 : Credit: [SciMonster](https://www.thingiverse.com/SciMonster)
 
+[MQ-2 Sensor Case](https://www.thingiverse.com/thing:2893581)
+: Credit: [RJGII](https://www.thingiverse.com/RJGII)
+
 ---
 
 # TODO
@@ -115,6 +118,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * https://blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt
 * https://maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32
 * https://www.thingiverse.com/thing:4521313
+* https://www.thingiverse.com/thing:2893581
 
 ---
 
