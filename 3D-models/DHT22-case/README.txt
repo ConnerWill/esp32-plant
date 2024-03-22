@@ -1,0 +1,1 @@
+Over-engineered DHT22 / AM2302 Board Case by SciMonster on Thingiverse: https://www.thingiverse.com/thing:4521313
