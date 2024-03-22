@@ -94,6 +94,9 @@ The housing to hold the ESP32 and sensors can be 3D printed.
 
 The 3D model files are located under the [3D-models](/3D-models) directory.
 
+[Over-engineered DHT22 / AM2302 Board Case](https://www.thingiverse.com/thing:4521313)
+: Credit: [SciMonster](https://www.thingiverse.com/SciMonster)
+
 ---
 
 # TODO
@@ -111,6 +114,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * https://microcontrollerslab.com/esp32-dht11-dht22-web-server
 * https://blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt
 * https://maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32
+* https://www.thingiverse.com/thing:4521313
 
 ---
 
