@@ -109,6 +109,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 
 * https://microcontrollerslab.com/esp32-dht11-dht22-web-server
 * https://blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt
+* https://maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32
 
 ---
 
