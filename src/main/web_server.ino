@@ -6,7 +6,8 @@ AsyncWebServer server(WEBSERVER_PORT);
 
 void setupWebServer() {
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", getAllMeasurements());
+    String jsonResponse = getAllMeasurements(); // Ensure getAllMeasurements() returns a JSON string
+    request->send(200, "application/json", jsonResponse);
   });
   server.begin();
 }
