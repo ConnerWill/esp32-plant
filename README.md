@@ -77,6 +77,12 @@ Here is a list of WiFi variables that **must** be defined and their descriptions
 
 Other variables in [`config.h`](/src/main/config.h) can be changed to suite your needs
 
+## Uploading
+
+I use Arduino IDE to upload the code to the board. I had to install additional drivers ***[(Download)](https://www.silabs.com/documents/public/software/CP210x_Universal_Windows_Driver.zip)*** to get connected to my board.
+
+I installed the ESP32 boards and selected ESP32dev board.
+
 ---
 
 # 3D Print
