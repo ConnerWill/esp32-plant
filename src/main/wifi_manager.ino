@@ -15,7 +15,7 @@ void connectWiFi(const char* ssid, const char* password) {
   // Print connection status
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("\n-----------------------------");
-    Serial.println("Connected to : " + String(WiFi.SSID));
+    //Serial.println("Connected to : " + String(WiFi.SSID));
     Serial.println("Hostname     : " + String(WiFi.getHostname()));
     Serial.println("IP Address   : " + String(WiFi.localIP()));
     Serial.println("Strength     : " + String(WiFi.RSSI()));
