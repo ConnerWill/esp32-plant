@@ -13,4 +13,5 @@ void setup() {
 
 void loop() {
   checkWiFiConnection(); // Check if WiFi is connected
+  operateRelay();        // Operate relay based on soil moisture sensor
 }
