@@ -8,3 +8,5 @@ float readHumidity();
 int readCO2Level();
 int readSoilMoisture();
 String getAllMeasurements();
+void relaySetup(int pin);
+void operateRelay();

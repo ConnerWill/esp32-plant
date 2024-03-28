@@ -4,12 +4,13 @@
 #include "sensors.h"
 
 void setup() {
-  Serial.begin(BAUD_RATE);
-  dhtSetup(DHT_PIN); // Setup DHT sensor, function defined in sensors module
-  connectWiFi(WIFI_SSID, WIFI_PASSWORD);
-  setupWebServer();
+  Serial.begin(BAUD_RATE);               // Start serial output
+  dhtSetup(DHT_PIN);                     // Setup DHT sensor, function defined in sensors module
+  relaySetup(RELAY_PIN);                 // Setup relay
+  connectWiFi(WIFI_SSID, WIFI_PASSWORD); // Connect to WiFi
+  setupWebServer();                      // Setup web server
 }
 
 void loop() {
-  checkWiFiConnection();
+  checkWiFiConnection(); // Check if WiFi is connected
 }

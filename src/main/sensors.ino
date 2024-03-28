@@ -33,21 +33,57 @@ int readCO2Level() {
   float voltage = adcVal * (ReferenceVoltage / MaxAdcValue); // Calculate voltage based on ADC value
 
   // Calculate CO2 measurement based on voltage difference
+  // If volate is 0
   if (voltage == 0) {
+    Serial.println("CO2 level sensor not operating correctly");
     return -1; // Sensor not operating correctly
-  } else if (voltage < VoltageThreshold) {
+  }
+  // If voltage is less than VoltageThreshold
+  else if (voltage < VoltageThreshold) {
+    Serial.println("CO2 level sensor pre-heating");
     return -2; // Sensor pre-heating
-  } else {
+  }
+  else {
     float voltageDifference = voltage - VoltageThreshold;
     return static_cast<int>((voltageDifference * CalibrationFactor) / VoltageOffset);
   }
 }
 
 int readSoilMoisture() {
-  // static const float VoltageThreshold = 2800.0; //TODO: Create Dry/Wet thresholds
   //static const float MaxAdcValue       = 4095.0; //TODO Return moisture percentage
   //static const float MinAdcValue       = 0.0;    //TODO Return moisture percentage
 
   int adcVal = analogRead(SOIL_ANALOG_PIN); // Read analog value from soil moisture sensor
   return static_cast<int>(adcVal)
+}
+
+void relaySetup(int pin) {
+  pinMode(pin, OUTPUT);
+}
+
+void operateRelay() {
+  static const int VoltageThreshold  = 2800;  // Define dry / wet threshold
+  int soilMoistureValue = readSoilMoisture(); // Get soil moisture value
+
+  // If 0
+  if (soilMoistureValue == 0) {
+    Serial.println("Soil Moisture sensor not operating correctly");
+  }
+  // If DRY
+  else if (soilMoistureValue > VoltageThreshold) {
+    Serial.println("Soil is DRY\nRunning pump for " + String(PUMP_SLEEP_TIME) + "Milliseconds");
+    Serial.println("Turning pump ON")
+    digitalWrite(RELAY_PIN, HIGH);     // Turn on the pump 
+    delay(PUMP_SLEEP_TIME);            // Sleep for <PUMP_SLEEP_TIME> ms
+    Serial.println("Turning pump OFF")
+    digitalWrite(RELAY_PIN, LOW);      // Turn off the pump
+    delay(PUMP_SLEEP_TIME);            // Sleep for <PUMP_SLEEP_TIME> ms
+  }
+  // If WET
+  else if (soilMoistureValue < VoltageThreshold) {
+    Serial.println("Soil is WET");
+  }
+  else {
+    Serial.println("Soil is ELSE (this shouldnt happen often)")
+  }
 }
