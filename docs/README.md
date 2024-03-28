@@ -59,6 +59,9 @@ Once you have all the required parts in hand, you can start wiring
 
 > *Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code.*
 
+## ESP32 Pinout
+
+![ESP32 Pinout Image](/static/img/esp32-pinout.jpg)
 
 ## Configuration
 
