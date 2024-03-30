@@ -1,27 +1,39 @@
 #include "sensors.h"
 
+// Setup DHT sensor
 DHTesp dht;
-
 void dhtSetup(int pin) {
   dht.setup(pin, DHTesp::DHT_MODEL_t::DHT22);
 }
 
+// Function to combine all measurements into a format
 String getAllMeasurements() {
-  String measurements  = "Temperature : " + String(readTemperature()) + " ºC\n";
-         measurements += "Humidity    : " + String(readHumidity())    + " %\n" ;
-         measurements += "Moisture    : " + String(readSoilMoisture())         ;
-         measurements += "CO2 Level   : " + String(readCO2Level())    + " ppm" ;
+  float temperatureC = readTemperature();
+  String measurements  = "Temperature (F) : " + String(celsiusToFahrenheit(temperatureC)) + " F\n"; // º
+         measurements += "Temperature (C) : " + String(temperatureC)                      + " C\n";
+         measurements += "Humidity        : " + String(readHumidity())                    + " %\n";
+         measurements += "Moisture        : " + String(readSoilMoisture())                +  "\n" ;
+         measurements += "CO2 Level       : " + String(readCO2Level())                    + " ppm";
   return measurements;
 }
 
+// Function to convert Celsius to Fahrenheit
+float celsiusToFahrenheit(float celsius) {
+    float fahrenheit = (celsius * 9.0 / 5.0) + 32.0;
+    return fahrenheit;
+}
+
+// Function to read temperature
 float readTemperature() {
   return dht.getTemperature();
 }
 
+// Function to read humidity
 float readHumidity() {
   return dht.getHumidity();
 }
 
+// Function to read CO2 level
 int readCO2Level() {
   static const float ReferenceVoltage  = 3.3;
   static const float MaxAdcValue       = 4095.0;
@@ -43,11 +55,12 @@ int readCO2Level() {
   }
 }
 
+// Function to read soil moisture
 int readSoilMoisture() {
   // static const float VoltageThreshold = 2800.0; //TODO: Create Dry/Wet thresholds
   //static const float MaxAdcValue       = 4095.0; //TODO Return moisture percentage
   //static const float MinAdcValue       = 0.0;    //TODO Return moisture percentage
 
   int adcVal = analogRead(SOIL_ANALOG_PIN); // Read analog value from soil moisture sensor
-  return static_cast<int>(adcVal)
+  return static_cast<int>(adcVal);
 }
