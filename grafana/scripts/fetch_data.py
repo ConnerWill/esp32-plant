@@ -6,8 +6,11 @@ import json
 from influxdb import InfluxDBClient
 import time
 
+# Sleep time (seconds)
+sleep_wait: int = 60
+
 # ESP32 IP address
-esp32_ip = os.getenv("ESP32_IP", "http://<ESP32_IP>")
+esp32_ip: str = os.getenv("ESP32_IP", "http://esp32-plant")
 
 # InfluxDB configuration
 influxdb_host: str = os.getenv("INFLUXDB_HOST", "influxdb")
@@ -17,18 +20,18 @@ influxdb_password: str = os.getenv("INFLUXDB_PASSWORD", "admin")
 influxdb_dbname: str = os.getenv("INFLUXDB_DBNAME", "esp32_data")
 
 # Initialize InfluxDB client
-client = InfluxDBClient(
+client: InfluxDBClient = InfluxDBClient(
     influxdb_host, influxdb_port, influxdb_user, influxdb_password, influxdb_dbname
 )
 
 
 def fetch_and_store_data():
     try:
-        response = requests.get(esp32_ip)
-        data = response.json()
+        response: requests.Response = requests.get(esp32_ip)
+        data: Dict[str, Any] = response.json()
 
         # Create a JSON body for InfluxDB
-        json_body = [
+        json_body: List[Dict[str, Any]] = [
             {
                 "measurement": "sensor_data",
                 "tags": {"device": "esp32"},
@@ -50,4 +53,4 @@ def fetch_and_store_data():
 if __name__ == "__main__":
     while True:
         fetch_and_store_data()
-        time.sleep(60)  # Wait for 1 minute before fetching data again
+        time.sleep(sleep_wait)
