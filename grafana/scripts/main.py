@@ -32,8 +32,17 @@ client: InfluxDBClient = InfluxDBClient(
     database=influxdb_dbname,
 )
 
-
 def fetch_and_store_data():
+    """
+    Fetches sensor data from ESP32 device and stores it in InfluxDB.
+
+    This function performs the following steps:
+    1. Sends a GET request to ESP32 device to fetch sensor data.
+    2. Parses the JSON response and extracts temperature, humidity, and CO2 levels.
+    3. Constructs a JSON body formatted for InfluxDB.
+    4. Writes the data points to InfluxDB using InfluxDBClient.
+    5. Logs successful data write or errors encountered during the process.
+    """
     try:
         response: requests.Response = requests.get(url=esp32_ip)
         response.raise_for_status()  # Raise an HTTPError for bad responses
@@ -46,9 +55,9 @@ def fetch_and_store_data():
                 "measurement": "sensor_data",
                 "tags": {"device": "esp32"},
                 "fields": {
-                    "temperature": data["temperature"],
-                    "humidity": data["humidity"],
-                    "co2": data["co2"],
+                    "temperature": data.get("temperature", 0),
+                    "humidity": data.get("humidity", 0),
+                    "co2": data.get("co2", 0),
                 },
             }
         ]
@@ -71,6 +80,12 @@ def fetch_and_store_data():
 
 
 def main():
+    """
+    Main function that runs continuously to fetch and store sensor data.
+
+    This function executes fetch_and_store_data() in a loop with a sleep period.
+    Adjusts sleep time based on sleep_wait variable.
+    """
     while True:
         fetch_and_store_data()
         time.sleep(seconds=sleep_wait)
