@@ -52,7 +52,7 @@ def fetch_and_store_data():
         data: dict[str, float | int] = response.json()
 
         # Create a JSON body for InfluxDB
-        json_body: list[dict[str, str | int | float]] = [
+        json_body: list[dict[str, typing.Any]] = [
             {
                 "measurement": "sensor_data",
                 "tags": {"device": "esp32"},
@@ -65,8 +65,11 @@ def fetch_and_store_data():
         ]
 
         # Write data to InfluxDB
-        client.write_points(points=json_body)
-        logging.info(f"Data written to InfluxDB: {json_body}")
+        success: bool = client.write_points(points=json_body)
+        if success:
+            logging.info(f"Data written to InfluxDB: {json_body}")
+        else:
+            logging.error("Failed to write data to InfluxDB.")
 
     except requests.exceptions.HTTPError as e:
         logging.error(msg=f"HTTP error occurred: {e}")
@@ -90,7 +93,7 @@ def main():
     """
     while True:
         fetch_and_store_data()
-        time.sleep(seconds=sleep_wait)
+        time.sleep(sleep_wait)
 
 
 if __name__ == "__main__":
