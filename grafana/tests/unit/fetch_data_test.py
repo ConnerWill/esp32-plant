@@ -12,6 +12,7 @@ mock_response_data: dict[str, float | int] = {
     "co2": 800,
 }
 
+
 # Mock response object for requests.get()
 class MockResponse:
     def __init__(self, json_data, status_code):
@@ -21,11 +22,13 @@ class MockResponse:
     def json(self):
         return self.json_data
 
+
 @pytest.fixture
 def mock_requests_get():
-    with patch('requests.get') as mock_get:
+    with patch("requests.get") as mock_get:
         mock_get.return_value = MockResponse(mock_response_data, 200)
         yield mock_get
+
 
 def test_fetch_and_store_data(mock_requests_get):
     # Mock client.write_points() to assert its call
@@ -51,6 +54,7 @@ def test_fetch_and_store_data(mock_requests_get):
         }
     ]
     mock_write_points.assert_called_once_with(expected_json_body)
+
 
 if __name__ == "__main__":
     pytest.main()
