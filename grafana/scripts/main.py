@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from typing import Union
+import typing
 import requests
 import json
 from influxdb import InfluxDBClient
@@ -52,7 +52,7 @@ def fetch_and_store_data():
         data: dict[str, float | int] = response.json()
 
         # Create a JSON body for InfluxDB
-        json_body: list = [
+        json_body: list[dict[str, str | int | float]] = [
             {
                 "measurement": "sensor_data",
                 "tags": {"device": "esp32"},
