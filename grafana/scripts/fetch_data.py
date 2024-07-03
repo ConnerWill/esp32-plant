@@ -50,7 +50,11 @@ def fetch_and_store_data():
         print(f"Error: {e}")
 
 
-if __name__ == "__main__":
+def main():
     while True:
         fetch_and_store_data()
         time.sleep(sleep_wait)
+
+
+if __name__ == "__main__":
+    main()
