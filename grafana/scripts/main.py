@@ -32,6 +32,7 @@ client: InfluxDBClient = InfluxDBClient(
     database=influxdb_dbname,
 )
 
+
 def fetch_and_store_data():
     """
     Fetches sensor data from ESP32 device and stores it in InfluxDB.
