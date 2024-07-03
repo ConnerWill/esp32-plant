@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+from typing import Union
 import requests
 import json
 from influxdb import InfluxDBClient
@@ -48,7 +49,7 @@ def fetch_and_store_data():
         response: requests.Response = requests.get(url=esp32_ip)
         response.raise_for_status()  # Raise an HTTPError for bad responses
 
-        data: dict = response.json()
+        data: dict[str, float | int] = response.json()
 
         # Create a JSON body for InfluxDB
         json_body: list = [
