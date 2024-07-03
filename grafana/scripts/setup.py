@@ -12,6 +12,7 @@ setup(
     install_requires=[
         "requests",
         "influxdb",
+        "logging",
     ],
     entry_points={"console_scripts": ["esp32_data_collector = main:main"]},
 )
