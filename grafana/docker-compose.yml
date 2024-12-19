@@ -1,34 +1,54 @@
-version: '3'
+version: '3.8'
 
 services:
   influxdb:
-    image: influxdb:latest
+    image: influxdb:1.8
     container_name: influxdb
     ports:
       - "8086:8086"
     volumes:
-      - influxdb_data:/var/lib/influxdb
+      - influxdb-data:/var/lib/influxdb
     environment:
-      - INFLUXDB_DB=esp32_data
-      - INFLUXDB_ADMIN_USER=admin
-      - INFLUXDB_ADMIN_PASSWORD=admin
+      INFLUXDB_DB: esp32_data
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWORD: adminpassword
+    networks:
+      - esp32-network
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
       - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - influxdb
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
+    networks:
+      - esp32-network
 
-  script:
-    build: ./scripts
-    container_name: fetch_data
+  python-script:
+    build:
+      context: ./python-script
+    container_name: python-script
     depends_on:
       - influxdb
+    environment:
+      ESP32_IP: "http://192.168.1.100"   # Replace with the actual IP of your ESP32
+      INFLUXDB_HOST: "influxdb"          # Use the container name of the InfluxDB service
+      INFLUXDB_PORT: 8086
+      INFLUXDB_DB: "esp32_data"
+      POLL_INTERVAL: 2
+    networks:
+      - esp32-network
 
 volumes:
-  influxdb_data:
-  grafana_data:
+  influxdb-data:
+  grafana-data:
+
+networks:
+  esp32-network:
+    driver: bridge
