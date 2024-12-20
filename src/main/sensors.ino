@@ -1,3 +1,4 @@
+#include <ArduinoJson.h>
 #include "sensors.h"
 
 // Setup DHT sensor
@@ -9,12 +10,23 @@ void dhtSetup(int pin) {
 // Function to combine all measurements into a format
 String getAllMeasurements() {
   float temperatureC = readTemperature();
-  String measurements  = "Temperature (F) : " + String(celsiusToFahrenheit(temperatureC)) + " F\n"; // º
-         measurements += "Temperature (C) : " + String(temperatureC)                      + " C\n";
-         measurements += "Humidity        : " + String(readHumidity())                    + " %\n";
-         measurements += "Moisture        : " + String(readSoilMoisture())                +  "\n" ;
-         measurements += "CO2 Level       : " + String(readCO2Level())                    + " ppm";
-  return measurements;
+  float temperatureF = celsiusToFahrenheit(temperatureC);
+  float humidity = readHumidity();
+  int soilMoisture = readSoilMoisture();
+  int co2Level = readCO2Level();
+
+  // Create a JSON document
+  StaticJsonDocument<256> jsonDoc;
+  jsonDoc["temperature_c"] = temperatureC;
+  jsonDoc["temperature_f"] = temperatureF;
+  jsonDoc["humidity"] = humidity;
+  jsonDoc["soil_moisture"] = soilMoisture;
+  jsonDoc["co2_level"] = co2Level;
+
+  // Serialize JSON document to a string
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  return jsonString;
 }
 
 // Function to convert Celsius to Fahrenheit
