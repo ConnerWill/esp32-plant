@@ -47,7 +47,6 @@ def fetch_data() -> None:
                     "temperature_c": data.get("temperature_c", 0),
                     "temperature_f": data.get("temperature_f", 0),
                     "humidity": data.get("humidity", 0),
-                    "soil_moisture": data.get("soil_moisture", 0),
                     "co2": data.get("co2_level", 0),
                 },
             }
