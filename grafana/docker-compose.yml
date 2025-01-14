@@ -37,8 +37,8 @@ services:
     depends_on:
       - influxdb
     environment:
-      ESP32_IP: "http://192.168.1.100"   # Replace with the actual IP of your ESP32
-      INFLUXDB_HOST: "influxdb"          # Use the container name of the InfluxDB service
+      ESP32_IP: "http://esp32-plant.domain" # Replace with the actual IP of your ESP32
+      INFLUXDB_HOST: "influxdb"             # Use the container name of the InfluxDB service
       INFLUXDB_PORT: 8086
       INFLUXDB_DB: "esp32_data"
       POLL_INTERVAL: 2
