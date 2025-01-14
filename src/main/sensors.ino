@@ -12,7 +12,6 @@ String getAllMeasurements() {
   float temperatureC = readTemperature();
   float temperatureF = celsiusToFahrenheit(temperatureC);
   float humidity = readHumidity();
-  int soilMoisture = readSoilMoisture();
   int co2Level = readCO2Level();
 
   // Create a JSON document
@@ -20,7 +19,6 @@ String getAllMeasurements() {
   jsonDoc["temperature_c"] = temperatureC;
   jsonDoc["temperature_f"] = temperatureF;
   jsonDoc["humidity"] = humidity;
-  jsonDoc["soil_moisture"] = soilMoisture;
   jsonDoc["co2_level"] = co2Level;
 
   // Serialize JSON document to a string
@@ -65,14 +63,4 @@ int readCO2Level() {
     float voltageDifference = voltage - VoltageThreshold;
     return static_cast<int>((voltageDifference * CalibrationFactor) / VoltageOffset);
   }
-}
-
-// Function to read soil moisture
-int readSoilMoisture() {
-  // static const float VoltageThreshold = 2800.0; //TODO: Create Dry/Wet thresholds
-  //static const float MaxAdcValue       = 4095.0; //TODO Return moisture percentage
-  //static const float MinAdcValue       = 0.0;    //TODO Return moisture percentage
-
-  int adcVal = analogRead(SOIL_ANALOG_PIN); // Read analog value from soil moisture sensor
-  return static_cast<int>(adcVal);
 }
