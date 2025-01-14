@@ -1,3 +1,8 @@
+/*
+ * File: wifi_manager.ino
+ *
+ */
+
 #include "wifi_manager.h"
 #include "config.h"
 

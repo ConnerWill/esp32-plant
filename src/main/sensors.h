@@ -1,3 +1,8 @@
+/*
+ * File: sensors.h
+ *
+ */
+
 #pragma once
 
 #include "DHTesp.h"

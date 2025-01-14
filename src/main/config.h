@@ -1,3 +1,8 @@
+/*
+ * File: config.h
+ *
+ */
+
 #pragma once
 
 const char* const WIFI_SSID     = "YourWifiSSID";     // WiFi SSID (network name)
