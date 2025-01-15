@@ -43,7 +43,7 @@ This will:
 
 You can configure the following environment variables, which will be used by the Python script:
 
-- `ESP32_IP`: IP address of the ESP32 device *(defaults to [`http://192.168.1.100`](http://192.168.1.100))*.
+- `ESP32_IP`: IP address of the ESP32 device *(defaults to [`http://192.168.0.30`](http://192.168.0.30))*.
 - `INFLUXDB_HOST`: Hostname of the InfluxDB instance *(defaults to `influxdb`)*.
 - `INFLUXDB_PORT`: Port for InfluxDB *(defaults to `8086`)*.
 - `INFLUXDB_DB`: Name of the database to store data *(defaults to `esp32_data`)*.
@@ -52,6 +52,13 @@ You can configure the following environment variables, which will be used by the
 These environment variables can be set directly in your system
 or in the Docker container using .env files or
 Docker's environment variable configuration.
+
+```bash
+ESP32_IP=http://192.168.0.30
+INFLUXDB_HOST=influxdb
+INFLUXDB_DB=esp32_data
+POLL_INTERVAL=2
+```
 
 ### Step 3: Grafana Configuration
 
@@ -73,7 +80,6 @@ In Grafana, you'll need to add InfluxDB as a data source:
 Once InfluxDB is configured in Grafana,
 you can create dashboards to visualize the sensor data.
 You'll be able to plot the temperature, humidity, and CO2 values over time.
-
 
 ## Docker Compose Configuration
 
@@ -97,7 +103,7 @@ services:
     environment:
       INFLUXDB_DB: esp32_data
       INFLUXDB_ADMIN_USER: admin
-      INFLUXDB_ADMIN_PASSWORD: adminpassword
+      INFLUXDB_ADMIN_PASSWORD: admin
 
   grafana:
     image: grafana/grafana:latest
@@ -115,7 +121,7 @@ services:
   python-script:
     build:
       context: ./sensor_data_collector
-    container_name: python-script
+    container_name: sensor_data_collector
     depends_on:
       - influxdb
 
