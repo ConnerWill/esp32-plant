@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Get environment variables with default values if they do not exist
 ESP32_IP: str = os.getenv(
-    "ESP32_IP", "http://192.168.1.100"
+    "ESP32_IP", "http://192.168.0.30"
 )  # Default to a placeholder IP
 INFLUXDB_HOST: str = os.getenv(
     "INFLUXDB_HOST", "influxdb"
