@@ -17,4 +17,13 @@ void setup() {
 
 void loop() {
   checkWiFiConnection();
+
+  // Read sensor data
+  float temperatureC = readTemperature();
+  float temperatureF = celsiusToFahrenheit(temperatureC);
+  float humidity = readHumidity();
+  int co2Level = readCO2Level();
+
+  // Display on OLED
+  displaySensorData(temperatureF, humidity, co2Level);
 }
