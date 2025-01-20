@@ -11,8 +11,8 @@ const char* ssid = "YOUR_WIFI_SSID"; // Wi-Fi SSID
 const char* password = "YOUR_WIFI_PASSWORD"; // Wi-Fi password
 const char* WIFI_HOSTNAME = "esp32-oled";    // Hostname for ESP32
 
-const int DHT_PIN = 4;  // DHT22 sensor pin
-const int CO2_ANALOG_PIN = 34;  // CO2 sensor analog pin
+const int DHT_PIN = 27;  // DHT22 sensor pin
+const int CO2_ANALOG_PIN = 35;  // CO2 sensor analog pin
 
 const int CO2_SENSOR_VOLTAGE_THRESHOLD = 0.4; // CO2 sensor threshold voltage
 const int CO2_SENSOR_CALIBRATION_FACTOR = 5000; // CO2 sensor calibration factor
@@ -21,6 +21,8 @@ const int CO2_SENSOR_VOLTAGE_OFFSET = 1.6; // CO2 sensor voltage offset
 const int OLED_ADDRESS = 0x3C;  // OLED Address. 0x3D for 128x64
 const int SCREEN_WIDTH = 128;   // OLED screen width
 const int SCREEN_HEIGHT = 64;   // OLED screen height
+
+const int BAUD_RATE             = 115200;             // Baud rate for serial connection
 
 // DHT22 sensor setup
 DHT dht(DHT_PIN, DHT22);
@@ -52,7 +54,7 @@ int readCO2Level() {
 
 void setup() {
   // Initialize serial communication
-  Serial.begin(115200);
+  Serial.begin(BAUD_RATE);
 
   // Initialize DHT sensor
   dht.begin();
@@ -82,7 +84,7 @@ void setup() {
   server.on("/readings", HTTP_GET, [](AsyncWebServerRequest *request){
     float temperature = dht.readTemperature();
     float humidity = dht.readHumidity();
-    //int co2Level = readCO2Level();
+    int co2Level = readCO2Level();
 
     if (isnan(temperature) || isnan(humidity)) {
       request->send(500, "application/json", "{\"error\":\"Failed to read DHT sensor\"}");
@@ -93,7 +95,7 @@ void setup() {
     StaticJsonDocument<200> doc;
     doc["temperature"] = temperature;
     doc["humidity"] = humidity;
-    //doc["co2"] = co2Level;
+    doc["co2"] = co2Level;
 
     String jsonResponse;
     serializeJson(doc, jsonResponse);
