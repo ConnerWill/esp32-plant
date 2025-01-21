@@ -137,10 +137,13 @@ void initOLED() {
     Serial.println(F("Failed to start SSD1306 OLED"));
     while (1);
   }
+
+  // Setup
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
+  // Show start text
   display.clearDisplay();
   display.setTextSize(2);
   display.setCursor(0, 10);
@@ -154,12 +157,12 @@ void initOLED() {
   display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
 
-  //TODO: REMOVE IF NOT NEEDED
-  // Invert display
-  display.invertDisplay(1);
-  display.display();
+  // Scroll right
+  display.startscrollright(0x00, 0x0F);
   delay(SCREEN_STARTUP_DISPLAY_TIME);
+  display.stopscroll();
 
+  // Clear display
   display.clearDisplay();
 }
 
