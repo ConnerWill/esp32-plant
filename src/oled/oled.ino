@@ -163,8 +163,8 @@ void initOLED() {
 }
 
 // Function to update the OLED with sensor readings
-// TODO: Avoid full screen redraws when only specific values change
 void updateOLED(int co2, float temperature, float humidity) {
+  // Clear Display
   display.clearDisplay();
 
   // IP Address
@@ -193,6 +193,49 @@ void updateOLED(int co2, float temperature, float humidity) {
 
   // Update Display
   display.display();
+
+// TODO: Avoid full screen redraws when only specific values change
+//  static String lastIP = "";
+//  static float lastTemp = 0.0;
+//  static float lastHumidity = 0.0;
+//  static float lastCO2 = 0.0;
+//
+//  // IP Address
+//  if (WiFi.localIP().toString() != lastIP) {
+//    display.setCursor(0, 0);
+//    display.print("IP: ");
+//    //TODO: Figure out if i need the toString function here
+//    // display.println(WiFi.localIP().toString().c_str());
+//    display.println(WiFi.localIP().toString());
+//    lastIP = WiFi.localIP().toString();
+//  }
+//
+//  // Temperature
+//  if (temperature != lastTemp) {
+//    display.setCursor(0, 10);
+//    display.print("Temp: ");
+//    display.print(temperature);
+//    display.println(" C");
+//    lastTemp = temperature;
+//  }
+//
+//  // Humidity
+//  if (humidity != lastHumidity) {
+//    display.setCursor(0, 20);
+//    display.print("Humidity: ");
+//    display.print(humidity);
+//    display.println(" %");
+//    lastHumidity = humidity;
+//  }
+//
+//  // CO2
+//  if (co2 != lastCO2) {
+//    display.setCursor(0, 30);
+//    display.print("CO2: ");
+//    display.print(co2);
+//    display.println(" ppm");
+//    lastCO2 = co2
+//  }
 }
 
 // ============================================================================
