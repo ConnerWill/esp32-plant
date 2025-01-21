@@ -54,10 +54,8 @@ int readCO2() {
   float voltage = adcVal * (ReferenceVoltage / MaxAdcValue); // Calculate voltage based on ADC value
 
   // Calculate CO2 measurement based on voltage difference
-  if (voltage == 0) {
-    return -1; // Sensor not operating correctly
-  } else if (voltage < VoltageThreshold) {
-    return -2; // Sensor pre-heating
+  if (voltage == 0 || voltage < VoltageThreshold) {
+    return 0; // Return 0 for sensor errors or pre-heating
   } else {
     float voltageDifference = voltage - VoltageThreshold;
     return static_cast<int>((voltageDifference * CalibrationFactor) / VoltageOffset);
