@@ -159,9 +159,6 @@ void setup() {
     // Send the JSON response
     request->send(200, "application/json", jsonString);
 
-  // WE MIGHT WANT TO UPDATE THE DISPLAY IN LOOP INSTEAD OF SETUP
-  //  // Update OLED display with latest sensor data
-  //  //updateOLED(co2, temperature, humidity);
   });
 
   // Start the server
@@ -179,7 +176,7 @@ void loop() {
 
   // Debug values
   Serial.printf("Temperature: %s C\n", temperature);
-  Serial.printf("Humidity   : %s %\n", humidity);
+  Serial.printf("Humidity   : %s %%\n", humidity);
   Serial.printf("co2        : %s ppm\n", co2);
   Serial.println("Updating display...");
 
