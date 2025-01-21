@@ -39,7 +39,7 @@ constexpr uint8_t DHT_PIN = 27; // GPIO pin for DHT sensor
 #define SCREEN_STARTUP_DISPLAY_TIME 3000 // Startup screen delay time (ms)
 
 // SERIAL CONFIGURATION
-#define BAUD_RATE 115200; // Baud rate
+constexpr int BAUD_RATE = 115200; // Baud rate
 // ============================================================================
 
 // ============================================================================
@@ -104,7 +104,7 @@ float celsiusToFahrenheit(float celsius) {
 
 // Function to connect to Wi-Fi
 void connectToWiFi() {
-  Serial.println(F("Setting up Wi-Fi...");
+  Serial.println(F("Setting up Wi-Fi..."));
   if (!WiFi.setHostname(WIFI_HOSTNAME)) {
     Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", WIFI_HOSTNAME);
   }
@@ -126,8 +126,8 @@ void connectToWiFi() {
   Serial.println(F("Wi-Fi Connected"));
   Serial.printf("SSID    : %s\n", WIFI_SSID);
   // TODO: Figure out if i need to use the 'toString() function'
-  //Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
-  Serial.printf("IP      : %s\n", WiFi.localIP());
+  Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
+  //Serial.printf("IP      : %s\n", WiFi.localIP());
   Serial.printf("HOSTNAME: %s\n", WiFi.getHostname());
 }
 
@@ -170,9 +170,8 @@ void updateOLED(int co2, float temperature, float humidity) {
   // IP Address
   display.setCursor(0, 0);
   display.print("IP: ");
-  display.println(WiFi.localIP());
   //TODO: Figure out if i need the toString function here
-  // display.println(WiFi.localIP().toString().c_str());
+  display.println(WiFi.localIP().toString().c_str());
 
   // Temperature
   display.setCursor(0, 10);
