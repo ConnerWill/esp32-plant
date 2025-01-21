@@ -66,7 +66,7 @@ float readCO2() {
 
   // Calculate CO2 measurement based on voltage difference
   if (voltage == 0 || voltage < VoltageThreshold) {
-    Serial.println("Error reading CO2")
+    Serial.println("Error reading CO2");
     return 0.0; // Return 0 for sensor errors or pre-heating
   } else {
     float voltageDifference = voltage - VoltageThreshold;
@@ -78,7 +78,7 @@ float readCO2() {
 float readTemperature() {
   float temperature = dht.getTemperature();
   if (isnan(temperature)) {
-      Serial.printf("Error reading temperature: %s\n", String(dht.getStatusString()))
+      Serial.printf("Error reading temperature: %s\n", String(dht.getStatusString()));
       return 0.0;
   }
   return temperature;
@@ -88,7 +88,7 @@ float readTemperature() {
 float readHumidity() {
   float humidity = dht.getHumidity();
   if (isnan(humidity)) {
-      Serial.printf("Error reading humidity: %s\n", String(dht.getStatusString()))
+      Serial.printf("Error reading humidity: %s\n", String(dht.getStatusString()));
       return 0.0;
   }
   return humidity;
@@ -239,10 +239,10 @@ void loop() {
   float humidity = readHumidity();
 
   // Debug values
-  Serial.printf("Temperature: %s C\n", temperature);
-  Serial.printf("Temperature: %s F\n", temperatureF);
-  Serial.printf("Humidity   : %s %%\n", humidity);
-  Serial.printf("CO2        : %s ppm\n", co2);
+  Serial.printf("Temperature: %f C\n", temperature);
+  Serial.printf("Temperature: %f F\n", temperatureF);
+  Serial.printf("Humidity   : %f %%\n", humidity);
+  Serial.printf("CO2        : %f ppm\n", co2);
   Serial.println("Updating display...");
 
   // Update OLED display with latest sensor data
