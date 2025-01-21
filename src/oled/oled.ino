@@ -21,6 +21,7 @@ constexpr char WIFI_SSID[]       = "YourNetworkName"; // Wi-Fi SSID
 constexpr char WIFI_PASSWORD[]   = "YourNetworkPass"; // Wi-Fi password
 constexpr char WIFI_HOSTNAME[]   = "esp32-oled";      // Hostname
 constexpr int  WIFI_TIMEOUT_TIME = 30000;             // Timeout if unable to connect to WiFi (ms)
+const unsigned long WIFI_CHECK_INTERVAL = 5000;       // Check WiFi time (ms)
 
 // SERVER CONFIGURATION
 constexpr uint16_t SERVER_PORT = 80;    // Port for the web server
@@ -56,18 +57,18 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration
 
 // Function to get the CO2 measurement 
 float readCO2() {
-  static const float ReferenceVoltage  = 3.3;
-  static const float MaxAdcValue       = 4095.0;
-  static const float VoltageThreshold  = 0.4;
-  static const float CalibrationFactor = 5000.0;
-  static const float VoltageOffset     = 1.6;
+  constexpr float ReferenceVoltage  = 3.3;
+  constexpr float MaxAdcValue       = 4095.0;
+  constexpr float VoltageThreshold  = 0.4;
+  constexpr float CalibrationFactor = 5000.0;
+  constexpr float VoltageOffset     = 1.6;
 
   int adcVal = analogRead(CO2_PIN);                          // Read analog value from CO2 sensor
   float voltage = adcVal * (ReferenceVoltage / MaxAdcValue); // Calculate voltage based on ADC value
 
   // Calculate CO2 measurement based on voltage difference
   if (voltage == 0 || voltage < VoltageThreshold) {
-    Serial.println("Error reading CO2");
+    Serial.println(F("Error reading CO2"));
     return 0.0; // Return 0 for sensor errors or pre-heating
   } else {
     float voltageDifference = voltage - VoltageThreshold;
@@ -103,7 +104,7 @@ float celsiusToFahrenheit(float celsius) {
 
 // Function to connect to Wi-Fi
 void connectToWiFi() {
-  Serial.println("Setting up Wi-Fi...");
+  Serial.println(F("Setting up Wi-Fi...");
   if (!WiFi.setHostname(WIFI_HOSTNAME)) {
     Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", WIFI_HOSTNAME);
   }
@@ -122,7 +123,7 @@ void connectToWiFi() {
     Serial.print(".");
   }
 
-  Serial.println("Wi-Fi Connected");
+  Serial.println(F("Wi-Fi Connected"));
   Serial.printf("SSID    : %s\n", WIFI_SSID);
   // TODO: Figure out if i need to use the 'toString() function'
   //Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
@@ -247,28 +248,48 @@ void setup() {
 }
 
 void loop() {
-  // Get sensor values
-  float co2 = readCO2();
-  float temperature = readTemperature();
-  float temperatureF = celsiusToFahrenheit(temperature);
-  float humidity = readHumidity();
 
-  // Debug values
-  Serial.printf("Temperature: %f C\n", temperature);
-  Serial.printf("Temperature: %f F\n", temperatureF);
-  Serial.printf("Humidity   : %f %%\n", humidity);
-  Serial.printf("CO2        : %f ppm\n", co2);
-  Serial.println("Updating display...");
+  static unsigned long lastUpdateTime = 0;
+  static unsigned long lastWiFiCheck = 0;
+  unsigned long currentTime = millis();
 
-  // Update OLED display with latest sensor data
-  updateOLED(co2, temperature, humidity);
+  if (currentTime - lastUpdateTime >= SCREEN_UPDATE_TIME) {
+    lastUpdateTime = currentTime;
 
-  // Check WiFi
-  if (WiFi.status() != WL_CONNECTED) {
-      Serial.println("Wi-Fi connection lost. Reconnecting...");
-      connectToWiFi();
+    // Get sensor values
+    float co2 = readCO2();
+    float temperature = readTemperature();
+    float temperatureF = celsiusToFahrenheit(temperature);
+    float humidity = readHumidity();
+
+    // Debug values
+    Serial.printf("Temperature: %.2f C\n", temperature);
+    Serial.printf("Temperature: %.2f F\n", temperatureF);
+    Serial.printf("Humidity   : %.2f %%\n", humidity);
+    Serial.printf("CO2        : %.2f ppm\n", co2);
+    Serial.println("Updating display...");
+
+    // Update OLED display with latest sensor data
+    updateOLED(co2, temperature, humidity);
+  }
+
+  // Periodically check Wi-Fi status
+  if (currentTime - lastWiFiCheck >= WIFI_CHECK_INTERVAL) {
+      lastWiFiCheck = currentTime;
+
+      if (WiFi.status() != WL_CONNECTED) {
+          Serial.println(F("Wi-Fi disconnected. Attempting to reconnect..."));
+          WiFi.reconnect(); // Attempt to reconnect
+
+          if (WiFi.status() != WL_CONNECTED) {
+              Serial.println(F("Reconnection failed. Retrying full connection..."));
+              connectToWiFi(); // Fallback to full connection
+          } else {
+              Serial.println(F("Reconnected to Wi-Fi."));
+          }
+      }
   }
 
   // Pause before running again
-  delay(SCREEN_UPDATE_TIME);
+  // delay(SCREEN_UPDATE_TIME);
 }
