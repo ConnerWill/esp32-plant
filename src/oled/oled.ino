@@ -123,11 +123,11 @@ void connectToWiFi() {
   }
 
   Serial.println("Wi-Fi Connected");
-  // TODO: Figure out if i need to use the 'toString() function'
-  // Serial.printf("IP: %s\n", WiFi.localIP());
   Serial.printf("SSID    : %s\n", WIFI_SSID);
-  Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
-  Serial.printf("Hostname: %s\n", WiFi.getHostname());
+  // TODO: Figure out if i need to use the 'toString() function'
+  //Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
+  Serial.printf("IP      : %s\n", WiFi.localIP());
+  Serial.printf("HOSTNAME: %s\n", WiFi.getHostname());
 }
 
 // Function to initialize OLED
@@ -245,7 +245,6 @@ void setup() {
 }
 
 void loop() {
-
   // Get sensor values
   float co2 = readCO2();
   float temperature = readTemperature();
@@ -262,5 +261,12 @@ void loop() {
   // Update OLED display with latest sensor data
   updateOLED(co2, temperature, humidity);
 
+  // Check WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("Wi-Fi connection lost. Reconnecting...");
+      connectToWiFi();
+  }
+
+  // Pause before running again
   delay(SCREEN_UPDATE_TIME);
 }
