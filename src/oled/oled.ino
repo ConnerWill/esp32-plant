@@ -140,13 +140,13 @@ void initOLED() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0);
-  display.println("Starting up...");
+
+  display.clearDisplay();
+  display.setTextSize(2);
   display.setCursor(0, 10);
-  display.println("Initializing...");
+  display.println("Starting");
   display.display();
-  delay(SCREEN_STARTUP_DISPLAY_TIME);
-  display.clearDisplay(); // Clear display after delay
+  delay(1000);
 
   // Display bitmap
   display.clearDisplay();
@@ -157,9 +157,10 @@ void initOLED() {
   //TODO: REMOVE IF NOT NEEDED
   // Invert display
   display.invertDisplay(1);
+  display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
 
-  display.display();
+  display.clearDisplay();
 }
 
 // Function to update the OLED with sensor readings
