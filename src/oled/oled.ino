@@ -17,10 +17,10 @@
 // CONFIGURATION --------------------------------------------------------------
 // ============================================================================
 // WIFI CONFIGURATION
-constexpr char WIFI_SSID[]     = "YourNetworkName"; // Wi-Fi SSID
-constexpr char WIFI_PASSWORD[] = "YourNetworkPass"; // Wi-Fi password
-constexpr char WIFI_HOSTNAME[] = "esp32-oled";      // Hostname
-constexpr int  WIFI_TIMEOUT    = 30000;             // Timeout if unable to connect to WiFi (ms)
+constexpr char WIFI_SSID[]       = "YourNetworkName"; // Wi-Fi SSID
+constexpr char WIFI_PASSWORD[]   = "YourNetworkPass"; // Wi-Fi password
+constexpr char WIFI_HOSTNAME[]   = "esp32-oled";      // Hostname
+constexpr int  WIFI_TIMEOUT_TIME = 30000;             // Timeout if unable to connect to WiFi (ms)
 
 // SERVER CONFIGURATION
 constexpr uint16_t SERVER_PORT = 80;    // Port for the web server
@@ -114,7 +114,7 @@ void connectToWiFi() {
   // Record the start time of the connection attempt
   unsigned long startAttemptTime = millis();
   while (WiFi.status() != WL_CONNECTED) {
-    if (millis() - startAttemptTime >= WIFI_TIMEOUT) { // Timeout after X seconds
+    if (millis() - startAttemptTime >= WIFI_TIMEOUT_TIME) { // Timeout after X seconds
       Serial.printf("Failed to connect to WiFi: %s\n", WIFI_SSID);
       return;
     }
@@ -169,7 +169,9 @@ void updateOLED(int co2, float temperature, float humidity) {
   // IP Address
   display.setCursor(0, 0);
   display.print("IP: ");
-  display.println(WiFi.localIP().toString().c_str());
+  display.println(WiFi.localIP());
+  //TODO: Figure out if i need the toString function here
+  // display.println(WiFi.localIP().toString().c_str());
 
   // Temperature
   display.setCursor(0, 10);
