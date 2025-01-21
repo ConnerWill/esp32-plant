@@ -66,6 +66,7 @@ float readCO2() {
 
   // Calculate CO2 measurement based on voltage difference
   if (voltage == 0 || voltage < VoltageThreshold) {
+    Serial.println("Error reading CO2")
     return 0.0; // Return 0 for sensor errors or pre-heating
   } else {
     float voltageDifference = voltage - VoltageThreshold;
@@ -77,6 +78,7 @@ float readCO2() {
 float readTemperature() {
   float temperature = dht.getTemperature();
   if (isnan(temperature)) {
+      Serial.printf("Error reading temperature: %s\n", String(dht.getStatusString()))
       return 0.0;
   }
   return temperature;
@@ -86,6 +88,7 @@ float readTemperature() {
 float readHumidity() {
   float humidity = dht.getHumidity();
   if (isnan(humidity)) {
+      Serial.printf("Error reading humidity: %s\n", String(dht.getStatusString()))
       return 0.0;
   }
   return humidity;
