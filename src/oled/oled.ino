@@ -34,7 +34,8 @@ constexpr uint8_t DHT_PIN = 27; // GPIO pin for DHT sensor
 // SCREEN CONFIGURATION
 #define SCREEN_WIDTH 128                 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64                 // OLED display height, in pixels
-#define SCREEN_ADDRESS 0x3C              // Address of OLED display (could also be '0x3D' depending on screen resolution)
+//#define SCREEN_ADDRESS 0x3C
+constexpr uint8_t SCREEN_ADDRESS = 0x3C; // Address of OLED display (could also be '0x3D' depending on screen resolution)
 #define SCREEN_UPDATE_TIME 1000          // Time to wait before updating OLED (ms)
 #define SCREEN_STARTUP_DISPLAY_TIME 3000 // Startup screen delay time (ms)
 
