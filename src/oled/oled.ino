@@ -62,6 +62,9 @@ void connectToWiFi() {
 // ============================================================================
 
 void setup() {
+  // Set co2 pin mode
+  pinMode(CO2_PIN, INPUT);
+
   // Initialize DHT sensor
   dht.setup(DHT_PIN);
 
@@ -77,14 +80,14 @@ void setup() {
     StaticJsonDocument<256> jsonDoc;
 
     // Get sensor values
-    int   co2 = getCo2Measurement();
+    int co2 = getCo2Measurement();
     float temperature = dht.getTemperature();
     float humidity = dht.getHumidity();
 
     // Add values to the JSON document
     jsonDoc["co2"]         = co2;
     jsonDoc["temperature"] = isnan(temperature) ? 0 : temperature; // Handle NaN
-    jsonDoc["humidity"]    = isnan(humidity) ? 0 : humidity;       // Handle NaN
+    jsonDoc["humidity"]    = isnan(humidity)    ? 0 : humidity;    // Handle NaN
 
     // Serialize JSON to string
     String jsonString;
