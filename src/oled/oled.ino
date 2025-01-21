@@ -20,21 +20,22 @@
 constexpr char WIFI_SSID[]     = "YourNetworkName"; // Wi-Fi SSID
 constexpr char WIFI_PASSWORD[] = "YourNetworkPass"; // Wi-Fi password
 constexpr char WIFI_HOSTNAME[] = "esp32-oled";      // Hostname
+constexpr int  WIFI_TIMEOUT    = 30000;             // Timeout if unable to connect to WiFi (ms)
 
 // SERVER CONFIGURATION
-constexpr int  SERVER_PORT = 80;    // Port for the web server
-constexpr char SERVER_PATH[] = "/"; // Path for serving the data
+constexpr uint16_t SERVER_PORT = 80;    // Port for the web server
+constexpr char     SERVER_PATH[] = "/"; // Path for serving the data
 
 // PINS CONFIGURATION
-#define CO2_PIN 35 // Analog pin for CO2 sensor
-#define DHT_PIN 27 // GPIO pin for DHT sensor
+constexpr uint8_t CO2_PIN = 35; // Analog pin for CO2 sensor
+constexpr uint8_t DHT_PIN = 27; // GPIO pin for DHT sensor
 
 // SCREEN CONFIGURATION
-#define SCREEN_WIDTH 128        // OLED display width, in pixels
-#define SCREEN_HEIGHT 64        // OLED display height, in pixels
-#define SCREEN_UPDATE_TIME 1000 // Time to wait before updating OLED (ms)
-#define SCREEN_ADDRESS 0x3C     // Address of OLED display (could also be '0x3D' depending on screen resolution)
-#define SCREEN_STARTUP_DISPLAY_TIME 3000 // Startup screen delay time
+#define SCREEN_WIDTH 128                 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64                 // OLED display height, in pixels
+#define SCREEN_ADDRESS 0x3C              // Address of OLED display (could also be '0x3D' depending on screen resolution)
+#define SCREEN_UPDATE_TIME 1000          // Time to wait before updating OLED (ms)
+#define SCREEN_STARTUP_DISPLAY_TIME 3000 // Startup screen delay time (ms)
 
 // SERIAL CONFIGURATION
 #define BAUD_RATE 115200; // Baud rate
@@ -108,13 +109,24 @@ void connectToWiFi() {
   }
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.printf("Connecting to WiFi: %s\n", WIFI_SSID);
+
+  // Record the start time of the connection attempt
+  unsigned long startAttemptTime = millis();
   while (WiFi.status() != WL_CONNECTED) {
+    if (millis() - startAttemptTime >= WIFI_TIMEOUT) { // Timeout after X seconds
+      Serial.printf("Failed to connect to WiFi: %s\n", WIFI_SSID);
+      return;
+    }
     delay(1000);
-    Serial.printf("Connecting to WiFi: %s\n", WIFI_SSID);
+    Serial.print(".");
   }
 
   Serial.println("Wi-Fi Connected");
-  Serial.printf("IP: %s\n", WiFi.localIP().toString().c_str());
+  // TODO: Figure out if i need to use the 'toString() function'
+  // Serial.printf("IP: %s\n", WiFi.localIP());
+  Serial.printf("SSID    : %s\n", WIFI_SSID);
+  Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
   Serial.printf("Hostname: %s\n", WiFi.getHostname());
 }
 
@@ -141,7 +153,8 @@ void initOLED() {
   display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
 
-  // Invert display //TODO: REMOVE IF NOT NEEDED
+  //TODO: REMOVE IF NOT NEEDED
+  // Invert display
   display.invertDisplay(1);
   delay(SCREEN_STARTUP_DISPLAY_TIME);
 
@@ -149,6 +162,7 @@ void initOLED() {
 }
 
 // Function to update the OLED with sensor readings
+// TODO: Avoid full screen redraws when only specific values change
 void updateOLED(int co2, float temperature, float humidity) {
   display.clearDisplay();
 
