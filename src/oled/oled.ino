@@ -153,7 +153,7 @@ void initOLED() {
     display.println("Starting");
     display.display();
     // Scroll right
-    display.startscrollleft(0x00, 0x0F);
+    display.startscrollright(0x00, 0x0F);
     delay(SCREEN_STARTUP_DISPLAY_TIME);
     display.stopscroll();
 
@@ -164,7 +164,7 @@ void initOLED() {
       display.display();
       delay(SCREEN_STARTUP_DISPLAY_TIME);
       // Scroll right
-      display.startscrollright(0x00, 0x0F);
+      display.startscrollleft(0x00, 0x0F);
       delay(SCREEN_STARTUP_DISPLAY_TIME);
       display.stopscroll();
     }
