@@ -59,7 +59,7 @@ Once you have all the required parts in hand, you can start wiring
 
 ## Configuration
 
-You will need to define values to suite your needs. Variables are defined in [`./src/main/config.h`](/src/main/config.h)
+You will need to define values to suite your needs. Variables are defined in the code
 
 ### WiFI Configuration
 
@@ -76,7 +76,7 @@ Here is a list of WiFi variables that **must** be defined and their descriptions
 
 ### Other Configuration
 
-Other variables in [`config.h`](/src/main/config.h) can be changed to suite your needs
+Other variables in the code can be changed to suite your needs
 
 ## Uploading
 
@@ -128,6 +128,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * https://maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32
 * https://www.thingiverse.com/thing:4521313
 * https://www.thingiverse.com/thing:2893581
+* https://javl.github.io/image2cpp
 
 ---
 
