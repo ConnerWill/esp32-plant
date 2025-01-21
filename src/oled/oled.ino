@@ -298,7 +298,7 @@ void setup() {
 
   // Start the server
   server.begin();
-  Serial.println("Server started.");
+  Serial.println(F("Server started"));
 }
 
 void loop() {
