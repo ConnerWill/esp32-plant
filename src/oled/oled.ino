@@ -74,7 +74,7 @@ void setup() {
   // Define the root endpoint
   server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
     // Create a JSON document
-    StaticJsonDocument<200> jsonDoc;
+    StaticJsonDocument<256> jsonDoc;
 
     // Get sensor values
     int   co2 = getCo2Measurement();
