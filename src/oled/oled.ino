@@ -186,7 +186,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 // ============================================================================
 
 // Function to get the CO2 measurement 
-int readCO2() {
+float readCO2() {
   static const float ReferenceVoltage  = 3.3;
   static const float MaxAdcValue       = 4095.0;
   static const float VoltageThreshold  = 0.4;
@@ -198,21 +198,29 @@ int readCO2() {
 
   // Calculate CO2 measurement based on voltage difference
   if (voltage == 0 || voltage < VoltageThreshold) {
-    return 0; // Return 0 for sensor errors or pre-heating
+    return 0.0; // Return 0 for sensor errors or pre-heating
   } else {
     float voltageDifference = voltage - VoltageThreshold;
-    return static_cast<int>((voltageDifference * CalibrationFactor) / VoltageOffset);
+    return (voltageDifference * CalibrationFactor) / VoltageOffset;
   }
 }
 
 // Function to read temperature
 float readTemperature() {
-  return dht.getTemperature();
+  float temperature = dht.getTemperature();
+  if (isnan(temperature)) {
+      return 0.0;
+  }
+  return temperature;
 }
 
 // Function to read humidity
 float readHumidity() {
-  return dht.getHumidity();
+  float humidity = dht.getHumidity();
+  if (isnan(humidity)) {
+      return 0.0;
+  }
+  return humidity;
 }
 
 // Function to convert Celsius to Fahrenheit
@@ -225,14 +233,13 @@ float celsiusToFahrenheit(float celsius) {
 void connectToWiFi() {
   Serial.println("Setting up Wi-Fi...");
   if (!WiFi.setHostname(WIFI_HOSTNAME)) {
-    Serial.println("Error: Failed to set Wi-Fi hostname");
+    Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", WIFI_HOSTNAME);
   }
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
-    Serial.println("Connecting to WiFi...");
+    Serial.printf("Connecting to WiFi: %s\n", WIFI_SSID);
   }
 
   Serial.println("Wi-Fi Connected");
@@ -257,17 +264,15 @@ void initOLED() {
   delay(SCREEN_STARTUP_DISPLAY_TIME);
   display.clearDisplay(); // Clear display after delay
 
-
   // Display bitmap
-  oled.clearDisplay();
+  display.clearDisplay();
   display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
-  oled.display();
+  display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
 
-  // Invert display
-  oled.invertDisplay(1);
+  // Invert display //TODO: REMOVE IF NOT NEEDED
+  display.invertDisplay(1);
   delay(SCREEN_STARTUP_DISPLAY_TIME);
-
 
   display.display();
 }
@@ -324,19 +329,21 @@ void setup() {
   // Define the root endpoint
   server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
     // Create a JSON document
-    StaticJsonDocument<256> jsonDoc;
+    JsonDocument jsonDoc;
+    //TODO: Old method that works but gives warning
+    //StaticJsonDocument<256> jsonDoc;
 
     // Get sensor values
-    int co2 = readCO2();
+    float co2 = readCO2();
     float temperature = readTemperature();
     float temperatureF = celsiusToFahrenheit(temperature);
     float humidity = readHumidity();
 
     // Add values to the JSON document
     jsonDoc["co2"]          = co2;
-    jsonDoc["temperature"]  = isnan(temperature)  ? 0 : temperature;  // Handle NaN
-    jsonDoc["temperatureF"] = isnan(temperatureF) ? 0 : temperatureF; // Handle NaN
-    jsonDoc["humidity"]     = isnan(humidity)     ? 0 : humidity;     // Handle NaN
+    jsonDoc["temperature"]  = temperature;
+    jsonDoc["temperatureF"] = temperatureF;
+    jsonDoc["humidity"]     = humidity;
 
     // Serialize JSON to string
     String jsonString;
@@ -355,7 +362,7 @@ void setup() {
 void loop() {
 
   // Get sensor values
-  int co2 = readCO2();
+  float co2 = readCO2();
   float temperature = readTemperature();
   float temperatureF = celsiusToFahrenheit(temperature);
   float humidity = readHumidity();
@@ -364,7 +371,7 @@ void loop() {
   Serial.printf("Temperature: %s C\n", temperature);
   Serial.printf("Temperature: %s F\n", temperatureF);
   Serial.printf("Humidity   : %s %%\n", humidity);
-  Serial.printf("co2        : %s ppm\n", co2);
+  Serial.printf("CO2        : %s ppm\n", co2);
   Serial.println("Updating display...");
 
   // Update OLED display with latest sensor data
