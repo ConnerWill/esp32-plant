@@ -24,7 +24,6 @@ constexpr int DHT_PIN = 27; // GPIO pin for DHT sensor
 #define SCREEN_UPDATE_TIME 1000 // Time to wait before updating OLED (ms)
 #define SCREEN_ADDRESS 0x3C     // Address of OLED display (could also be '0x3D' depending on screen resolution)
 
-
 constexpr int BAUD_RATE = 115200; // Baud rate
 // ============================================================================
 
@@ -43,17 +42,42 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 // FUNCTIONS ------------------------------------------------------------------
 // ============================================================================
 
-// Function to get the CO2 measurement
-int getCo2Measurement() {
-  int adcVal = analogRead(CO2_PIN);
-  float voltage = adcVal * (3.3 / 4095.0);
+// Function to get the CO2 measurement 
+int readCO2() {
+  static const float ReferenceVoltage  = 3.3;
+  static const float MaxAdcValue       = 4095.0;
+  static const float VoltageThreshold  = 0.4;
+  static const float CalibrationFactor = 5000.0;
+  static const float VoltageOffset     = 1.6;
 
-  if (voltage == 0 || voltage < 0.4) {
-    return 0; // Return 0 for sensor errors or preheating
+  int adcVal = analogRead(CO2_PIN);                          // Read analog value from CO2 sensor
+  float voltage = adcVal * (ReferenceVoltage / MaxAdcValue); // Calculate voltage based on ADC value
+
+  // Calculate CO2 measurement based on voltage difference
+  if (voltage == 0) {
+    return -1; // Sensor not operating correctly
+  } else if (voltage < VoltageThreshold) {
+    return -2; // Sensor pre-heating
   } else {
-    float voltageDifference = voltage - 0.4;
-    return static_cast<int>((voltageDifference * 5000.0) / 1.6);
+    float voltageDifference = voltage - VoltageThreshold;
+    return static_cast<int>((voltageDifference * CalibrationFactor) / VoltageOffset);
   }
+}
+
+// Function to read temperature
+float readTemperature() {
+  return dht.getTemperature();
+}
+
+// Function to read humidity
+float readHumidity() {
+  return dht.getHumidity();
+}
+
+// Function to convert Celsius to Fahrenheit
+float celsiusToFahrenheit(float celsius) {
+    float fahrenheit = (celsius * 9.0 / 5.0) + 32.0;
+    return fahrenheit;
 }
 
 // Function to connect to Wi-Fi
@@ -126,7 +150,7 @@ void setup() {
   pinMode(CO2_PIN, INPUT);
 
   // Initialize DHT sensor
-  dht.setup(DHT_PIN);
+  dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22);
 
   // Initialize Serial for debugging
   Serial.begin(BAUD_RATE);
@@ -143,14 +167,16 @@ void setup() {
     StaticJsonDocument<256> jsonDoc;
 
     // Get sensor values
-    int co2 = getCo2Measurement();
-    float temperature = dht.getTemperature();
-    float humidity = dht.getHumidity();
+    int co2 = readCO2();
+    float temperature = readTemperature();
+    float temperatureF = celsiusToFahrenheit(temperature);
+    float humidity = readHumidity();
 
     // Add values to the JSON document
-    jsonDoc["co2"]         = co2;
-    jsonDoc["temperature"] = isnan(temperature) ? 0 : temperature; // Handle NaN
-    jsonDoc["humidity"]    = isnan(humidity)    ? 0 : humidity;    // Handle NaN
+    jsonDoc["co2"]          = co2;
+    jsonDoc["temperature"]  = isnan(temperature)  ? 0 : temperature;  // Handle NaN
+    jsonDoc["temperatureF"] = isnan(temperatureF) ? 0 : temperatureF; // Handle NaN
+    jsonDoc["humidity"]     = isnan(humidity)     ? 0 : humidity;     // Handle NaN
 
     // Serialize JSON to string
     String jsonString;
@@ -168,14 +194,15 @@ void setup() {
 
 void loop() {
 
-// WE MIGHT WANT TO UPDATE THE DISPLAY IN LOOP INSTEAD OF SETUP
   // Get sensor values
-  int co2 = getCo2Measurement();
-  float temperature = dht.getTemperature();
-  float humidity = dht.getHumidity();
+  int co2 = readCO2();
+  float temperature = readTemperature();
+  float temperatureF = celsiusToFahrenheit(temperature);
+  float humidity = readHumidity();
 
   // Debug values
   Serial.printf("Temperature: %s C\n", temperature);
+  Serial.printf("Temperature: %s F\n", temperatureF);
   Serial.printf("Humidity   : %s %%\n", humidity);
   Serial.printf("co2        : %s ppm\n", co2);
   Serial.println("Updating display...");
