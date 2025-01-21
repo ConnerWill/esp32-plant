@@ -37,6 +37,8 @@ constexpr int     SCREEN_HEIGHT               = 64;   // OLED display height, in
 constexpr uint8_t SCREEN_ADDRESS              = 0x3C; // Address of OLED display (could also be '0x3D' depending on screen resolution)
 constexpr int     SCREEN_UPDATE_TIME          = 1000; // Time to wait before updating OLED (ms)
 constexpr int     SCREEN_STARTUP_DISPLAY_TIME = 3000; // Startup screen delay time (ms)
+bool              SHOW_STARTUP                = true; // Set to true to show the startup sequence
+bool              SHOW_BITMAP                 = true; // Set to true to show the bitmap
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200; // Baud rate
@@ -143,26 +145,30 @@ void initOLED() {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
-  // Show start text
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setCursor(0, 10);
-  display.println("Starting");
-  display.display();
-  display.startscrollleft(0x00, 0x0F);
-  delay(SCREEN_STARTUP_DISPLAY_TIME);
-  display.stopscroll();
+  // Show start text if SHOW_STARTUP is true
+  if (SHOW_STARTUP) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0, 10);
+    display.println("Starting");
+    display.display();
+    // Scroll right
+    display.startscrollleft(0x00, 0x0F);
+    delay(SCREEN_STARTUP_DISPLAY_TIME);
+    display.stopscroll();
 
-  // Display bitmap
-  display.clearDisplay();
-  display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
-  display.display();
-  delay(SCREEN_STARTUP_DISPLAY_TIME);
-
-  // Scroll right
-  display.startscrollright(0x00, 0x0F);
-  delay(SCREEN_STARTUP_DISPLAY_TIME);
-  display.stopscroll();
+    // Display bitmap if SHOW_BITMAP is true
+    if (SHOW_BITMAP) {
+      display.clearDisplay();
+      display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
+      display.display();
+      delay(SCREEN_STARTUP_DISPLAY_TIME);
+      // Scroll right
+      display.startscrollright(0x00, 0x0F);
+      delay(SCREEN_STARTUP_DISPLAY_TIME);
+      display.stopscroll();
+    }
+  }
 
   // Clear display
   display.clearDisplay();
