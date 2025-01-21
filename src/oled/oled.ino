@@ -78,7 +78,7 @@ float readCO2() {
 float readTemperature() {
   float temperature = dht.getTemperature();
   if (isnan(temperature)) {
-      Serial.printf("Error reading temperature: %s\n", String(dht.getStatusString()));
+      Serial.printf("Error reading temperature: %s\n", dht.getStatusString());
       return 0.0;
   }
   return temperature;
@@ -88,7 +88,7 @@ float readTemperature() {
 float readHumidity() {
   float humidity = dht.getHumidity();
   if (isnan(humidity)) {
-      Serial.printf("Error reading humidity: %s\n", String(dht.getStatusString()));
+      Serial.printf("Error reading humidity: %s\n", dht.getStatusString());
       return 0.0;
   }
   return humidity;
