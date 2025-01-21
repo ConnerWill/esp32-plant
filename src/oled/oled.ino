@@ -149,7 +149,9 @@ void initOLED() {
   display.setCursor(0, 10);
   display.println("Starting");
   display.display();
-  delay(1000);
+  display.startscrollleft(0x00, 0x0F);
+  delay(SCREEN_STARTUP_DISPLAY_TIME);
+  display.stopscroll();
 
   // Display bitmap
   display.clearDisplay();
