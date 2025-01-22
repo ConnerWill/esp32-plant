@@ -78,4 +78,3 @@ const unsigned char bitmap_image[] PROGMEM = {
 };
 
 #endif
-

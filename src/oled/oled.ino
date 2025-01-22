@@ -236,16 +236,14 @@ void setup() {
 
   // Define the root endpoint
   server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
-    // Create a JSON document
-    JsonDocument jsonDoc;
-    //TODO: Old method that works but gives warning
-    //StaticJsonDocument<256> jsonDoc;
-
     // Get sensor values
     float co2 = readCO2();
     float temperature = readTemperature();
     float temperatureF = celsiusToFahrenheit(temperature);
     float humidity = readHumidity();
+
+    // Create a JSON document
+    JsonDocument jsonDoc;
 
     // Add values to the JSON document
     jsonDoc["co2"]          = co2;

@@ -33,7 +33,7 @@ bool              SHOW_STARTUP                = true; // Set to true to show the
 bool              SHOW_BITMAP                 = true; // Set to true to show the bitmap
 bool              SHOW_CUSTOM_TEXT            = true; // Set to true to show custom text
 constexpr char    STARTUP_TEXT[]              = "HI"; // Startup custom text
-constexpr char    CUSTOM_TEXT[]               = ""; // OLED custom text
+constexpr char    CUSTOM_TEXT[]               = "";   // OLED custom text
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                     // Baud rate
