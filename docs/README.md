@@ -4,64 +4,63 @@
 
 ---
 
-# Overview
+## Overview
 
-This project implements a monitoring system using an ESP32 microcontroller to measure and display temperature, humidity, and CO2 levels in real-time.
+This project implements a monitoring system using an ESP32 microcontroller to
+measure and display temperature, humidity, and CO2 levels in real-time.
 
 This is designed to be used to monitor the environment when growing plants
 
 ---
 
-# Shopping List
+## Shopping List
 
 Here is a list of parts used in this project
 
 > *Amazon links are non-affiliate*
 
-| NAME           | PRICE | COUNT | DESCRIPTION                     | LINK                                                                                                | NOTE                                               |
-|----------------|-------|-------|---------------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------------------|
-| ESP32          | $5    | 1     | Microcontroller                 | https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528 |                                                    |
-| DHT22          | $7    | 1     | Temp/Humidity Sensor            | https://www.amazon.com/gp/product/B0795F19W6                                                        |                                                    |
-| MQ-135         | $3    | 1     | CO2 Sensor                      | https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY                   |                                                    |
-| 1K Ω Resistor  | $0.25 | 1     | 1K Ohm Resistor                 | https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B                       | MQ-135 analog pin                                  |
-| 10K Ω Resistor | $0.25 | 0/1   | 10K Ohm Resistor                | https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM                       | Most DHT22 sensor modules have a built-in resistor |
-| Wire/Breadboard| $1    | 1     | Jumper wire or breadboard       | https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6                           | Optional depending on setup                        |
+| NAME           | PRICE | COUNT | DESCRIPTION                       | LINK   | NOTE                                               |
+|----------------|-------|-------|-----------------------------------|--------|----------------------------------------------------|
+| ESP32          | $5    | 1     | Microcontroller                   | [Amazon](https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528) |                                                    |
+| DHT22          | $7    | 1     | Temp/Humidity Sensor              | [Amazon](https://www.amazon.com/gp/product/B0795F19W6) |                                                    |
+| MQ-135         | $3    | 1     | CO2 Sensor                        | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
+| OLED Display   | $3    | 1     | 0.96" OLED Display 128x64 SSD1306 | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
+| 1K Ω Resistor  | $0.25 | 1     | 1K Ohm Resistor                   | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
+| 10K Ω Resistor | $0.25 | 0/1   | 10K Ohm Resistor                  | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM) | Most DHT22 sensor modules have a built-in resistor |
+| Wire/Breadboard| $1    | 1     | Jumper wire or breadboard         | [Amazon](https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6) | Optional depending on setup                        |
 
 > *Lower prices can be found if you shop around*
 
-
 ---
 
-# Setup
+## Setup
 
 Once you have all the required parts in hand, you can start wiring
 
-
-## Circuit Schematic
+### Circuit Schematic
 
 ![ESP32 Plant Monitoring Circuit Schematic Image](/static/img/circuit-schematic.png)
 
 ![ESP32 OLED Circuit Schematic Image](/static/img/esp32-oled-schematic.jpg)
 
-
 | ESP32 Pin | Destination | Type    | Power Requirements (Volts) | ESP32 VCC Pin | ESP32 GND Pin |
 |-----------|-------------|---------|----------------------------|---------------|---------------|
 | 27        | DHT22       | Digital | 3.3 - 5                    | 3.3V          | GND           |
 | 35        | CO2 Sensor  | Analog  | 5                          | 5V            | GND           |
-| 21        | OLED        | SCL     | 3.3                        | 3.3V          | GND           |
-| 22        | OLED        | SDA     | 3.3                        | 3.3V          | GND           |
+| 21        | OLED SCL    | SCL     | 3.3                        | 3.3V          | GND           |
+| 22        | OLED SDA    | SDA     | 3.3                        | 3.3V          | GND           |
 
 > *Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code.*
 
-## ESP32 Pinout
+### ESP32 Pinout
 
 ![ESP32 Pinout Image](/static/img/esp32-pinout.jpg)
 
-## Configuration
+### Configuration
 
-You will need to define values to suite your needs. Variables are defined in the code
+You will need to define values to suite your needs. Variables are defined in [`config.h`](/src/main/config.h)
 
-### WiFI Configuration
+#### WiFI Configuration
 
 Here is a list of WiFi variables that **must** be defined and their descriptions...
 
@@ -74,11 +73,11 @@ Here is a list of WiFi variables that **must** be defined and their descriptions
 `WIFI_HOSTNAME`
 : Hostname of ESP32 to set
 
-### Other Configuration
+#### Other Configuration
 
 Other variables in the code can be changed to suite your needs
 
-## Uploading
+### Uploading
 
 I use Arduino IDE to upload the code to the board. I had to install additional drivers ***[(Download)](https://www.silabs.com/documents/public/software/CP210x_Universal_Windows_Driver.zip)*** to get connected to my board.
 
@@ -86,7 +85,7 @@ I installed the ESP32 boards and selected ESP32dev board.
 
 ---
 
-# 3D Print
+## 3D Print
 
 ![ESP32 Plant Monitoring Housing Image](/static/img/3d-housing.png)
 
@@ -94,15 +93,14 @@ The housing to hold the ESP32 and sensors can be 3D printed.
 
 The 3D model files are located under the [3D-models](/3D-models) directory.
 
-## DHT22 Case
+### DHT22 Case
 
 ![DHT22 3D Printed Case](/static/img/DHT22-3D-model.jpg)
 
 [Over-engineered DHT22 / AM2302 Board Case](https://www.thingiverse.com/thing:4521313)
 : (Credit [SciMonster](https://www.thingiverse.com/SciMonster))
 
-
-## MQ-135 Case
+### MQ-135 Case
 
 ![MQ-135 3D Printed Case](/static/img/MQ-135-3D-model.jpg)
 
@@ -111,7 +109,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 
 ---
 
-# TODO
+## TODO
 
 * Add wiring/setup instructions
 * Add 3D models
@@ -121,7 +119,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 
 ---
 
-# Links
+## Links
 
 * https://microcontrollerslab.com/esp32-dht11-dht22-web-server
 * https://blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt
@@ -131,4 +129,3 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * https://javl.github.io/image2cpp
 
 ---
-
