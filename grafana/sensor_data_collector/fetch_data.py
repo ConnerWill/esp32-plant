@@ -44,10 +44,10 @@ def fetch_data() -> None:
             {
                 "measurement": "sensor_data",
                 "fields": {
-                    "temperature_c": data.get("temperature_c", 0),
-                    "temperature_f": data.get("temperature_f", 0),
-                    "humidity": data.get("humidity", 0),
-                    "co2": data.get("co2_level", 0),
+                    "temperature": data.get("temperature", 0.0),
+                    "temperatureF": data.get("temperatureF", 0.0),
+                    "humidity": data.get("humidity", 0.0),
+                    "co2": data.get("co2", 0.0),
                 },
             }
         ]
