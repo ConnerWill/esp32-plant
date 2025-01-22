@@ -94,6 +94,15 @@ void connectToWiFi() {
     Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", WIFI_HOSTNAME);
   }
 
+  // TODO: Add an if oled display check
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println("Connecting to WiFi");
+  display.setCursor(0, 16);
+  display.println(WIFI_SSID);
+  display.display();
+  delay(100);
+
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.printf("Connecting to WiFi: %s\n", WIFI_SSID);
 
@@ -102,18 +111,37 @@ void connectToWiFi() {
   while (WiFi.status() != WL_CONNECTED) {
     if (millis() - startAttemptTime >= WIFI_TIMEOUT_TIME) { // Timeout after X seconds
       Serial.printf("Failed to connect to WiFi: %s\n", WIFI_SSID);
+      
+      // TODO: Add an if oled display check
+      display.clearDisplay();
+      display.setCursor(0, 0);
+      display.println("Failed to connect to WiFi!");
+      display.setCursor(0, 16);
+      display.println(WIFI_SSID);
+      display.display();
+      //TODO: Find a better time interval
+      delay(SCREEN_STARTUP_DISPLAY_TIME);
+      display.clearDisplay();
+      // TODO: Values are not updating when wifi is disconnected
+
       return;
     }
     delay(1000);
     Serial.print(".");
+
+    // TODO: Add an if oled display check
+    display.print("_");
+    display.display();
   }
 
   Serial.println(F("Wi-Fi Connected"));
   Serial.printf("SSID    : %s\n", WIFI_SSID);
   Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
   Serial.printf("HOSTNAME: %s\n", WiFi.getHostname());
+  
+  showIPInfo();
+  delay(SCREEN_STARTUP_DISPLAY_TIME);
 }
-
 
 // -------------------------------------
 // OLED Functions
@@ -136,26 +164,29 @@ void initOLED() {
   }
 
   // Default text settings
+  display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.clearDisplay();
+  
 }
 
 
 // Function to show startup display
 void showStart() {
-
     display.clearDisplay();
-    display.setTextSize(2);
+    display.setTextSize(3);
     display.setTextColor(SSD1306_WHITE);
-    display.setCursor(0, 0);
+    display.setCursor(32, 16);
     display.println(STARTUP_TEXT);
     display.display();
-
-    // Scroll right
-    display.startscrollright(0x00, 0x0F);
+    
+    // Scroll diag right
+    //display.startscrolldiagright(0x00, 0x07);
+    // Scroll left
+    display.startscrollleft(0x00, 0x0F);
     delay(SCREEN_STARTUP_DISPLAY_TIME);
     display.stopscroll();
+    display.clearDisplay();
 }
 
 // Function to show bitmap image
@@ -165,10 +196,35 @@ void showBitmap() {
       display.display();
       delay(SCREEN_STARTUP_DISPLAY_TIME);
 
-      // Scroll left
-      display.startscrollleft(0x00, 0x0F);
+      // Scroll right
+      display.startscrollright(0x00, 0x0F);
       delay(SCREEN_STARTUP_DISPLAY_TIME);
       display.stopscroll();
+      delay(100);
+      display.clearDisplay();
+}
+
+// Function to display IP Info
+void showIPInfo() {
+  // TODO: Add an if oled display check
+  // TODO: Wrap in bool if statemtn variable to show network info on oled
+  display.clearDisplay();
+  display.setCursor(0, 16);
+  display.print("SSID:     ");
+  display.println(WIFI_SSID);
+  display.setCursor(0, 26);
+  display.print("Hostname: ");
+  display.println(WiFi.getHostname());
+  display.setCursor(0, 36);
+  display.print("IP:       ");
+  display.println(WiFi.localIP().toString().c_str());
+
+  // Custom Text
+  if (SHOW_CUSTOM_TEXT || CUSTOM_TEXT == "") {
+    display.setCursor(0, 56);
+    display.print(CUSTOM_TEXT);
+  }
+  display.display();
 }
 
 // Function to update the OLED with sensor readings
