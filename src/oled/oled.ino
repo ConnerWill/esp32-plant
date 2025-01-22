@@ -220,6 +220,7 @@ void showIPInfo() {
   display.println(WiFi.localIP().toString().c_str());
 
   // Custom Text
+  // TODO: This gives a warning 
   if (SHOW_CUSTOM_TEXT || CUSTOM_TEXT == "") {
     display.setCursor(0, 56);
     display.print(CUSTOM_TEXT);
