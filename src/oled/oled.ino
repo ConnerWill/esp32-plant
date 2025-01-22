@@ -110,9 +110,7 @@ void connectToWiFi() {
 
   Serial.println(F("Wi-Fi Connected"));
   Serial.printf("SSID    : %s\n", WIFI_SSID);
-  // TODO: Figure out if i need to use the 'toString() function'
   Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
-  //Serial.printf("IP      : %s\n", WiFi.localIP());
   Serial.printf("HOSTNAME: %s\n", WiFi.getHostname());
 }
 
@@ -207,6 +205,12 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
   display.print("CO2:  ");
   display.print(co2);
   display.println(" ppm");
+
+  // Custom Text
+  if (SHOW_CUSTOM_TEXT || CUSTOM_TEXT == "") {
+    display.setCursor(0, 56);
+    display.print(CUSTOM_TEXT);
+  }
 
   // Update Display
   display.display();
