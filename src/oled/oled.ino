@@ -2,6 +2,7 @@
  * File: ./oled.ino
  */
 
+// Dependencies
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
@@ -10,39 +11,12 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+// Include config header file
+#include "config.h"
+
 // Include bitmap header file
 #include "bitmap.h"
 
-// ============================================================================
-// CONFIGURATION --------------------------------------------------------------
-// ============================================================================
-// WIFI CONFIGURATION
-constexpr char WIFI_SSID[]         = "YourNetworkName"; // Wi-Fi SSID
-constexpr char WIFI_PASSWORD[]     = "YourNetworkPass"; // Wi-Fi password
-constexpr char WIFI_HOSTNAME[]     = "esp32-oled";      // Hostname
-constexpr int  WIFI_TIMEOUT_TIME   = 30000;             // Timeout if unable to connect to WiFi (ms)
-constexpr int  WIFI_CHECK_INTERVAL = 5000;              // Check WiFi time (ms)
-
-// SERVER CONFIGURATION
-constexpr uint16_t SERVER_PORT = 80;    // Port for the web server
-constexpr char     SERVER_PATH[] = "/"; // Path for serving the data
-
-// PINS CONFIGURATION
-constexpr uint8_t CO2_PIN = 35; // Analog pin for CO2 sensor
-constexpr uint8_t DHT_PIN = 27; // GPIO pin for DHT sensor
-
-// SCREEN CONFIGURATION
-constexpr int     SCREEN_WIDTH                = 128;  // OLED display width, in pixels
-constexpr int     SCREEN_HEIGHT               = 64;   // OLED display height, in pixels
-constexpr uint8_t SCREEN_ADDRESS              = 0x3C; // Address of OLED display (could also be '0x3D' depending on screen resolution)
-constexpr int     SCREEN_UPDATE_TIME          = 1000; // Time to wait before updating OLED (ms)
-constexpr int     SCREEN_STARTUP_DISPLAY_TIME = 3000; // Startup screen delay time (ms)
-bool              SHOW_STARTUP                = true; // Set to true to show the startup sequence
-bool              SHOW_BITMAP                 = true; // Set to true to show the bitmap
-
-// SERIAL CONFIGURATION
-constexpr int BAUD_RATE = 115200; // Baud rate
-// ============================================================================
 
 // ============================================================================
 // GLOBAL INSTANCES -----------------------------------------------------------
@@ -148,9 +122,9 @@ void initOLED() {
   // Show start text if SHOW_STARTUP is true
   if (SHOW_STARTUP) {
     display.clearDisplay();
-    display.setTextSize(2);
-    display.setCursor(0, 10);
-    display.println("Starting");
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.println("HELLO, TOMMY");
     display.display();
     // Scroll right
     display.startscrollright(0x00, 0x0F);
@@ -175,7 +149,7 @@ void initOLED() {
 }
 
 // Function to update the OLED with sensor readings
-void updateOLED(int co2, float temperature, float humidity) {
+void updateOLED(float co2, float temperature, float temperatureF, float humidity) {
   // Clear Display
   display.clearDisplay();
 
@@ -186,20 +160,26 @@ void updateOLED(int co2, float temperature, float humidity) {
   display.println(WiFi.localIP().toString().c_str());
 
   // Temperature
-  display.setCursor(0, 10);
-  display.print("Temp: ");
+  display.setCursor(0, 16);
+  display.print("Temp:     ");
   display.print(temperature);
   display.println(" C");
 
+  // Temperature
+  display.setCursor(0, 26);
+  display.print("Temp:     ");
+  display.print(temperatureF);
+  display.println(" F");
+
   // Humidity
-  display.setCursor(0, 20);
+  display.setCursor(0, 36);
   display.print("Humidity: ");
   display.print(humidity);
   display.println(" %");
 
   // CO2
-  display.setCursor(0, 30);
-  display.print("CO2: ");
+  display.setCursor(0, 46);
+  display.print("CO2:      ");
   display.print(co2);
   display.println(" ppm");
 
@@ -324,7 +304,7 @@ void loop() {
     Serial.println("Updating display...");
 
     // Update OLED display with latest sensor data
-    updateOLED(co2, temperature, humidity);
+    updateOLED(co2, temperature, temperatureF, humidity);
   }
 
   // Periodically check Wi-Fi status
