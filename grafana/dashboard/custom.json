@@ -1,0 +1,137 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "ESP32 Sensor Data",
+    "timezone": "browser",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Temperature (°C)",
+        "gridPos": { "x": 0, "y": 0, "w": 12, "h": 9 },
+        "datasource": "InfluxDB",
+        "targets": [
+          {
+            "refId": "A",
+            "policy": "default",
+            "resultFormat": "time_series",
+            "orderByTime": "ASC",
+            "tags": [],
+            "groupBy": [
+              { "type": "time", "params": ["$__interval"] },
+              { "type": "fill", "params": ["null"] }
+            ],
+            "select": [
+              [
+                { "type": "field", "params": ["temperature"] },
+                { "type": "mean", "params": [] }
+              ]
+            ],
+            "measurement": "sensor_data"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "celsius"
+          }
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Temperature (°F)",
+        "gridPos": { "x": 12, "y": 0, "w": 12, "h": 9 },
+        "datasource": "InfluxDB",
+        "targets": [
+          {
+            "refId": "B",
+            "policy": "default",
+            "resultFormat": "time_series",
+            "orderByTime": "ASC",
+            "tags": [],
+            "groupBy": [
+              { "type": "time", "params": ["$__interval"] },
+              { "type": "fill", "params": ["null"] }
+            ],
+            "select": [
+              [
+                { "type": "field", "params": ["temperatureF"] },
+                { "type": "mean", "params": [] }
+              ]
+            ],
+            "measurement": "sensor_data"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "fahrenheit"
+          }
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Humidity (%)",
+        "gridPos": { "x": 0, "y": 9, "w": 12, "h": 9 },
+        "datasource": "InfluxDB",
+        "targets": [
+          {
+            "refId": "C",
+            "policy": "default",
+            "resultFormat": "time_series",
+            "orderByTime": "ASC",
+            "tags": [],
+            "groupBy": [
+              { "type": "time", "params": ["$__interval"] },
+              { "type": "fill", "params": ["null"] }
+            ],
+            "select": [
+              [
+                { "type": "field", "params": ["humidity"] },
+                { "type": "mean", "params": [] }
+              ]
+            ],
+            "measurement": "sensor_data"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "type": "graph",
+        "title": "CO2 (ppm)",
+        "gridPos": { "x": 12, "y": 9, "w": 12, "h": 9 },
+        "datasource": "InfluxDB",
+        "targets": [
+          {
+            "refId": "D",
+            "policy": "default",
+            "resultFormat": "time_series",
+            "orderByTime": "ASC",
+            "tags": [],
+            "groupBy": [
+              { "type": "time", "params": ["$__interval"] },
+              { "type": "fill", "params": ["null"] }
+            ],
+            "select": [
+              [
+                { "type": "field", "params": ["co2"] },
+                { "type": "mean", "params": [] }
+              ]
+            ],
+            "measurement": "sensor_data"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ppm"
+          }
+        }
+      }
+    ],
+    "schemaVersion": 30,
+    "version": 1,
+    "refresh": "5s"
+  },
+  "overwrite": true
+}
