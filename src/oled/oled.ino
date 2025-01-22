@@ -31,6 +31,10 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration
 // FUNCTIONS ------------------------------------------------------------------
 // ============================================================================
 
+// -------------------------------------
+// Sensor Functions
+// -------------------------------------
+
 // Function to get the CO2 measurement 
 float readCO2() {
   constexpr float ReferenceVoltage  = 3.3;
@@ -78,6 +82,11 @@ float celsiusToFahrenheit(float celsius) {
     return fahrenheit;
 }
 
+
+// -------------------------------------
+// WIFI Functions
+// -------------------------------------
+
 // Function to connect to Wi-Fi
 void connectToWiFi() {
   Serial.println(F("Setting up Wi-Fi..."));
@@ -107,6 +116,11 @@ void connectToWiFi() {
   Serial.printf("HOSTNAME: %s\n", WiFi.getHostname());
 }
 
+
+// -------------------------------------
+// OLED Functions
+// -------------------------------------
+
 // Function to initialize OLED
 void initOLED() {
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -114,41 +128,53 @@ void initOLED() {
     while (1);
   }
 
-  // Setup
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
-
   // Show start text if SHOW_STARTUP is true
   if (SHOW_STARTUP) {
+    showStart();
+    // Display bitmap if SHOW_BITMAP is true
+    if (SHOW_BITMAP) {
+      showBitmap();
+    }
+  }
+
+  // Default text settings
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.clearDisplay();
+}
+
+
+// Function to show startup display
+void showStart() {
+
     display.clearDisplay();
-    display.setTextSize(1);
+    display.setTextSize(2);
+    display.setTextColor(SSD1306_WHITE);
     display.setCursor(0, 0);
-    display.println("HELLO, TOMMY");
+    display.println(STARTUP_TEXT);
     display.display();
+
     // Scroll right
     display.startscrollright(0x00, 0x0F);
     delay(SCREEN_STARTUP_DISPLAY_TIME);
     display.stopscroll();
+}
 
-    // Display bitmap if SHOW_BITMAP is true
-    if (SHOW_BITMAP) {
+// Function to show bitmap image
+void showBitmap() {
       display.clearDisplay();
       display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
       display.display();
       delay(SCREEN_STARTUP_DISPLAY_TIME);
-      // Scroll right
+
+      // Scroll left
       display.startscrollleft(0x00, 0x0F);
       delay(SCREEN_STARTUP_DISPLAY_TIME);
       display.stopscroll();
-    }
-  }
-
-  // Clear display
-  display.clearDisplay();
 }
 
 // Function to update the OLED with sensor readings
+//   - TODO: Avoid full screen redraws when only specific values change
 void updateOLED(float co2, float temperature, float temperatureF, float humidity) {
   // Clear Display
   display.clearDisplay();
@@ -156,78 +182,34 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
   // IP Address
   display.setCursor(0, 0);
   display.print("IP: ");
-  //TODO: Figure out if i need the toString function here
   display.println(WiFi.localIP().toString().c_str());
 
   // Temperature
   display.setCursor(0, 16);
-  display.print("Temp:     ");
+  display.print("Temp: ");
   display.print(temperature);
   display.println(" C");
 
   // Temperature
   display.setCursor(0, 26);
-  display.print("Temp:     ");
+  display.print("Temp: ");
   display.print(temperatureF);
   display.println(" F");
 
   // Humidity
   display.setCursor(0, 36);
-  display.print("Humidity: ");
+  display.print("RH:   ");
   display.print(humidity);
   display.println(" %");
 
   // CO2
   display.setCursor(0, 46);
-  display.print("CO2:      ");
+  display.print("CO2:  ");
   display.print(co2);
   display.println(" ppm");
 
   // Update Display
   display.display();
-
-// TODO: Avoid full screen redraws when only specific values change
-//  static String lastIP = "";
-//  static float lastTemp = 0.0;
-//  static float lastHumidity = 0.0;
-//  static float lastCO2 = 0.0;
-//
-//  // IP Address
-//  if (WiFi.localIP().toString() != lastIP) {
-//    display.setCursor(0, 0);
-//    display.print("IP: ");
-//    //TODO: Figure out if i need the toString function here
-//    // display.println(WiFi.localIP().toString().c_str());
-//    display.println(WiFi.localIP().toString());
-//    lastIP = WiFi.localIP().toString();
-//  }
-//
-//  // Temperature
-//  if (temperature != lastTemp) {
-//    display.setCursor(0, 10);
-//    display.print("Temp: ");
-//    display.print(temperature);
-//    display.println(" C");
-//    lastTemp = temperature;
-//  }
-//
-//  // Humidity
-//  if (humidity != lastHumidity) {
-//    display.setCursor(0, 20);
-//    display.print("Humidity: ");
-//    display.print(humidity);
-//    display.println(" %");
-//    lastHumidity = humidity;
-//  }
-//
-//  // CO2
-//  if (co2 != lastCO2) {
-//    display.setCursor(0, 30);
-//    display.print("CO2: ");
-//    display.print(co2);
-//    display.println(" ppm");
-//    lastCO2 = co2
-//  }
 }
 
 // ============================================================================
@@ -323,7 +305,4 @@ void loop() {
           }
       }
   }
-
-  // Pause before running again
-  // delay(SCREEN_UPDATE_TIME);
 }

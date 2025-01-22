@@ -31,6 +31,7 @@ constexpr int     SCREEN_UPDATE_TIME          = 1000; // Time to wait before upd
 constexpr int     SCREEN_STARTUP_DISPLAY_TIME = 3000; // Startup screen delay time (ms)
 bool              SHOW_STARTUP                = true; // Set to true to show the startup sequence
 bool              SHOW_BITMAP                 = true; // Set to true to show the bitmap
+constexpr char    STARTUP_TEXT[]              = "HI"; // Hostname
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                     // Baud rate
