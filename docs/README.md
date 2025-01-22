@@ -41,11 +41,15 @@ Once you have all the required parts in hand, you can start wiring
 
 ![ESP32 Plant Monitoring Circuit Schematic Image](/static/img/circuit-schematic.png)
 
+![ESP32 OLED Circuit Schematic Image](/static/img/esp32-oled-schematic.jpg)
+
 
 | ESP32 Pin | Destination | Type    | Power Requirements (Volts) | ESP32 VCC Pin | ESP32 GND Pin |
 |-----------|-------------|---------|----------------------------|---------------|---------------|
 | 27        | DHT22       | Digital | 3.3 - 5                    | 3.3V          | GND           |
 | 35        | CO2 Sensor  | Analog  | 5                          | 5V            | GND           |
+| 21        | OLED        | SCL     | 3.3                        | 3.3V          | GND           |
+| 22        | OLED        | SDA     | 3.3                        | 3.3V          | GND           |
 
 > *Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code.*
 
@@ -55,7 +59,7 @@ Once you have all the required parts in hand, you can start wiring
 
 ## Configuration
 
-You will need to define values to suite your needs. Variables are defined in [`./src/main/config.h`](/src/main/config.h)
+You will need to define values to suite your needs. Variables are defined in the code
 
 ### WiFI Configuration
 
@@ -72,7 +76,7 @@ Here is a list of WiFi variables that **must** be defined and their descriptions
 
 ### Other Configuration
 
-Other variables in [`config.h`](/src/main/config.h) can be changed to suite your needs
+Other variables in the code can be changed to suite your needs
 
 ## Uploading
 
@@ -124,6 +128,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * https://maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32
 * https://www.thingiverse.com/thing:4521313
 * https://www.thingiverse.com/thing:2893581
+* https://javl.github.io/image2cpp
 
 ---
 
