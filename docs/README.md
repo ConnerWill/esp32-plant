@@ -1,4 +1,26 @@
-# ESP32 Plant Monitoring / Watering System
+# ESP32 Plant Monitoring System
+
+<!--toc:start-->
+- [ESP32 Plant Monitoring System](#esp32-plant-monitoring-system)
+  - [Overview](#overview)
+  - [Shopping List](#shopping-list)
+  - [Setup](#setup)
+    - [Circuit Schematic](#circuit-schematic)
+    - [ESP32 Pinout](#esp32-pinout)
+      - [30 Pin](#30-pin)
+      - [38 Pin](#38-pin)
+    - [Configuration](#configuration)
+      - [WiFI Configuration](#wifi-configuration)
+      - [Other Configuration](#other-configuration)
+    - [Libraries](#libraries)
+      - [External Libraries](#external-libraries)
+    - [Uploading](#uploading)
+  - [3D Print](#3d-print)
+    - [DHT22 Case](#dht22-case)
+    - [MQ-135 Case](#mq-135-case)
+  - [TODO](#todo)
+  - [Links](#links)
+<!--toc:end-->
 
 ![ESP32 Plant Monitoring Project Image](/static/img/project.png)
 
@@ -85,6 +107,19 @@ Here is a list of WiFi variables that **must** be defined and their descriptions
 #### Other Configuration
 
 Other variables in the code can be changed to suite your needs
+
+### Libraries
+
+You will need to install additional libraries.
+
+In Arduino IDE, go to library manager and search and install the
+required libraries listed in the `DEPENDENCIES` section in [`main.ino`](/src/main/main.ino)
+
+#### External Libraries
+
+- [KasaSmartPlug Github](https://github.com/kj831ca/KasaSmartPlug)
+
+---
 
 ### Uploading
 
