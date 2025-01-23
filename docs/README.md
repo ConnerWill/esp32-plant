@@ -45,6 +45,7 @@ This is designed to be used to monitor the environment when growing plants
 
 Here is a list of parts used in this project
 
+> [!NOTE]
 > *Amazon links are non-affiliate*
 
 | NAME            | PRICE   | COUNT | DESCRIPTION                       | LINK   | NOTE                                               |
