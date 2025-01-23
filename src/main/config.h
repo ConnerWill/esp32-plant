@@ -14,7 +14,6 @@ constexpr char WIFI_PASSWORD[]     = "";                 // Wi-Fi password
 constexpr char WIFI_HOSTNAME[]     = "esp32-plant";      // Hostname
 constexpr int  WIFI_TIMEOUT_TIME   = 30000;              // Timeout if unable to connect to WiFi (ms)
 constexpr int  WIFI_CHECK_INTERVAL = 5000;               // Check WiFi time (ms)
-bool           WIFI_OFFLINE        = false;              // If 'true', dont connect to wifi and dont run server
 
 // SERVER CONFIGURATION
 constexpr uint16_t SERVER_PORT = 80;                     // Port for the web server

@@ -22,10 +22,8 @@
 // GLOBAL INSTANCES -----------------------------------------------------------
 // ============================================================================
 DHTesp dht;                         //
+AsyncWebServer server(SERVER_PORT); // Define server on port
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-if (!WIFI_OFFLINE) {
-  AsyncWebServer server(SERVER_PORT); // Define server on port
-}
 
 // ============================================================================
 
@@ -96,16 +94,13 @@ void connectToWiFi() {
     Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", WIFI_HOSTNAME);
   }
 
-  // If OLED is working, display message
-  if (isOledWorking) {
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.println("Connecting to WiFi");
-    display.setCursor(0, 16);
-    display.println(WIFI_SSID);
-    display.display();
-    delay(100);
-  }
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println("Connecting to WiFi");
+  display.setCursor(0, 16);
+  display.println(WIFI_SSID);
+  display.display();
+  delay(100);
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.printf("Connecting to WiFi: %s\n", WIFI_SSID);
@@ -117,16 +112,14 @@ void connectToWiFi() {
       Serial.printf("Failed to connect to WiFi: %s\n", WIFI_SSID);
 
       // TODO: Values are not updating when wifi is disconnected
-      if (isOledWorking) {
-        display.clearDisplay();
-        display.setCursor(0, 0);
-        display.println("Failed to connect to WiFi!");
-        display.setCursor(0, 16);
-        display.println(WIFI_SSID);
-        display.display();
-        delay(SCREEN_STARTUP_DISPLAY_TIME);
-        display.clearDisplay();
-      }
+      display.clearDisplay();
+      display.setCursor(0, 0);
+      display.println("Failed to connect to WiFi!");
+      display.setCursor(0, 16);
+      display.println(WIFI_SSID);
+      display.display();
+      delay(SCREEN_STARTUP_DISPLAY_TIME);
+      display.clearDisplay();
 
       return;
     }
@@ -134,19 +127,15 @@ void connectToWiFi() {
     Serial.print(".");
 
     // Connecting loading bar
-    if (isOledWorking) {
-      display.print("_");
-      display.display();
-    }
+    display.print("_");
+    display.display();
   }
 
   Serial.println(F("Wi-Fi Connected"));
 
   // Display IP info
-  if (isOledWorking) {
-    showIPInfo();
-    delay(SCREEN_STARTUP_DISPLAY_TIME);
-  }
+  showIPInfo();
+  delay(SCREEN_STARTUP_DISPLAY_TIME);
 }
 
 // -------------------------------------
@@ -159,9 +148,6 @@ void initOLED() {
     Serial.println(F("Failed to start SSD1306 OLED"));
     while (1);
   }
-
-  // Mark the OLED as functional
-  isOledWorking = true; 
 
   // Show start text if SHOW_STARTUP is true
   if (SHOW_STARTUP) {
@@ -176,7 +162,6 @@ void initOLED() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-
 }
 
 
@@ -304,40 +289,37 @@ void setup() {
   // Initialize OLED
   initOLED();
 
-  // Check WIFI_OFFLINE flag
-  if (!WIFI_OFFLINE) {
-    // Connect to Wi-Fi
-    connectToWiFi();
+  // Connect to Wi-Fi
+  connectToWiFi();
 
-    // Define the root endpoint
-    server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
-      // Get sensor values
-      float co2 = readCO2();
-      float temperature = readTemperature();
-      float temperatureF = celsiusToFahrenheit(temperature);
-      float humidity = readHumidity();
+  // Define the root endpoint
+  server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
+    // Get sensor values
+    float co2 = readCO2();
+    float temperature = readTemperature();
+    float temperatureF = celsiusToFahrenheit(temperature);
+    float humidity = readHumidity();
 
-      // Create a JSON document
-      JsonDocument jsonDoc;
+    // Create a JSON document
+    JsonDocument jsonDoc;
 
-      // Add values to the JSON document
-      jsonDoc["co2"]          = co2;
-      jsonDoc["temperature"]  = temperature;
-      jsonDoc["temperatureF"] = temperatureF;
-      jsonDoc["humidity"]     = humidity;
+    // Add values to the JSON document
+    jsonDoc["co2"]          = co2;
+    jsonDoc["temperature"]  = temperature;
+    jsonDoc["temperatureF"] = temperatureF;
+    jsonDoc["humidity"]     = humidity;
 
-      // Serialize JSON to string
-      String jsonString;
-      serializeJson(jsonDoc, jsonString);
+    // Serialize JSON to string
+    String jsonString;
+    serializeJson(jsonDoc, jsonString);
 
-      // Send the JSON response
-      request->send(200, "application/json", jsonString);
+    // Send the JSON response
+    request->send(200, "application/json", jsonString);
 
-    });
-    // Start the server
-    server.begin();
-    Serial.println(F("Server started"));
-  }
+  });
+  // Start the server
+  server.begin();
+  Serial.println(F("Server started"));
 }
 // ============================================================================
 
@@ -371,23 +353,21 @@ void loop() {
     updateOLED(co2, temperature, temperatureF, humidity);
   }
 
-  if (!WIFI_OFFLINE) {
-    // Periodically check Wi-Fi status
-    if (currentTime - lastWiFiCheck >= WIFI_CHECK_INTERVAL) {
-        lastWiFiCheck = currentTime;
+  // Periodically check Wi-Fi status
+  if (currentTime - lastWiFiCheck >= WIFI_CHECK_INTERVAL) {
+      lastWiFiCheck = currentTime;
 
-        if (WiFi.status() != WL_CONNECTED) {
-            Serial.println(F("Wi-Fi disconnected. Attempting to reconnect..."));
-            WiFi.reconnect(); // Attempt to reconnect
+      if (WiFi.status() != WL_CONNECTED) {
+          Serial.println(F("Wi-Fi disconnected. Attempting to reconnect..."));
+          WiFi.reconnect(); // Attempt to reconnect
 
-            if (WiFi.status() != WL_CONNECTED) {
-                Serial.println(F("Reconnection failed. Retrying full connection..."));
-                connectToWiFi(); // Fallback to full connection
-            } else {
-                Serial.println(F("Reconnected to Wi-Fi."));
-            }
-        }
-    }
+          if (WiFi.status() != WL_CONNECTED) {
+              Serial.println(F("Reconnection failed. Retrying full connection..."));
+              connectToWiFi(); // Fallback to full connection
+          } else {
+              Serial.println(F("Reconnected to Wi-Fi."));
+          }
+      }
   }
 }
 // ============================================================================
