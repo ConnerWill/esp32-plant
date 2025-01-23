@@ -11,11 +11,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-// Include config header file
-#include "config.h"
-
-// Include bitmap header file
-#include "bitmap.h"
+#include "config.h" // Include config header file
+#include "bitmap.h" // Include bitmap header file
 
 // ============================================================================
 // GLOBAL INSTANCES -----------------------------------------------------------
