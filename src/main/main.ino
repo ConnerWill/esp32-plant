@@ -20,9 +20,9 @@
 // ============================================================================
 // GLOBAL INSTANCES -----------------------------------------------------------
 // ============================================================================
-DHTesp dht;                         //
-AsyncWebServer server(SERVER_PORT); // Define server on port
+DHTesp dht;                                                       // DHT
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+AsyncWebServer server(SERVER_PORT);                               // Define server on port
 // ============================================================================
 
 // ============================================================================
@@ -77,7 +77,6 @@ float celsiusToFahrenheit(float celsius) {
   float fahrenheit = (celsius * 9.0 / 5.0) + 32.0;
   return fahrenheit;
 }
-
 
 // -------------------------------------
 // WIFI Functions
@@ -269,20 +268,11 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
 // SETUP ----------------------------------------------------------------------
 // ============================================================================
 void setup() {
-  // Set co2 pin mode
-  pinMode(CO2_PIN, INPUT);
-
-  // Initialize DHT sensor
-  dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22);
-
-  // Initialize Serial for debugging
-  Serial.begin(BAUD_RATE);
-
-  // Initialize OLED
-  initOLED();
-
-  // Connect to Wi-Fi
-  connectToWiFi();
+  pinMode(CO2_PIN, INPUT); 			  // Set co2 pin mode
+  dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22); // Initialize DHT sensor
+  Serial.begin(BAUD_RATE);			  // Initialize Serial for debugging
+  initOLED(); 					  // Initialize OLED
+  connectToWiFi(); 				  // Connect to Wi-Fi
 
   // Define the root endpoint
   server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
@@ -321,6 +311,7 @@ void setup() {
 void loop() {
   static unsigned long lastUpdateTime = 0;
   static unsigned long lastWiFiCheck = 0;
+  static unsigned long lastBitmapCheck = 0;
   unsigned long currentTime = millis();
 
   if (currentTime - lastUpdateTime >= SCREEN_UPDATE_TIME) {
@@ -345,19 +336,27 @@ void loop() {
 
   // Periodically check Wi-Fi status
   if (currentTime - lastWiFiCheck >= WIFI_CHECK_INTERVAL) {
-      lastWiFiCheck = currentTime;
+    lastWiFiCheck = currentTime;
+
+    if (WiFi.status() != WL_CONNECTED) {
+      Serial.println(F("Wi-Fi disconnected. Attempting to reconnect..."));
+      WiFi.reconnect(); // Attempt to reconnect
 
       if (WiFi.status() != WL_CONNECTED) {
-          Serial.println(F("Wi-Fi disconnected. Attempting to reconnect..."));
-          WiFi.reconnect(); // Attempt to reconnect
-
-          if (WiFi.status() != WL_CONNECTED) {
-              Serial.println(F("Reconnection failed. Retrying full connection..."));
-              connectToWiFi(); // Fallback to full connection
-          } else {
-              Serial.println(F("Reconnected to Wi-Fi."));
-          }
+        Serial.println(F("Reconnection failed. Retrying full connection..."));
+        connectToWiFi(); // Fallback to full connection
+      } else {
+        Serial.println(F("Reconnected to Wi-Fi."));
       }
+    }
+  }
+
+  // Periodically show bitmap
+  if (INTERUPT_WITH_BITMAP) {
+    if (currentTime - lastBitmapCheck >= INTERUPT_BITMAP_TIME) {
+      lastBitmapCheck = currentTime;
+      showBitmap();
+    }
   }
 }
 // ============================================================================

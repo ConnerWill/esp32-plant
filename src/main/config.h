@@ -35,6 +35,8 @@ bool              SHOW_CUSTOM_TEXT            = true;    // Set to true to show 
 bool              SHOW_IP_INFO                = true;    // Set to true to show IP information
 constexpr char    STARTUP_TEXT[]              = "HI";    // Startup custom text
 constexpr char    CUSTOM_TEXT[]               = "";      // OLED custom text "_____________________"
+bool              INTERUPT_WITH_BITMAP        = true;    // Periodically show bitmap
+constexpr int     INTERUPT_BITMAP_TIME        = 300000;  // Check WiFi time (ms)
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                        // Baud rate
