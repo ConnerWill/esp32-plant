@@ -54,7 +54,13 @@ Once you have all the required parts in hand, you can start wiring
 
 ### ESP32 Pinout
 
-![ESP32 Pinout Image](/static/img/esp32-pinout.jpg)
+#### 30 Pin
+
+![ESP32 30 pin Pinout Image](/static/img/esp32-pinout-30-pin.png)
+
+#### 38 Pin
+
+![ESP32 38 pin Pinout Image](/static/img/esp32-pinout-38-pin.jpg)
 
 ### Configuration
 
