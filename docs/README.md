@@ -22,6 +22,7 @@
     - [Libraries](#libraries)
       - [External Libraries](#external-libraries)
     - [Uploading](#uploading)
+  - [Images](#images)
   - [3D Print](#3d-print)
     - [DHT22 Case](#dht22-case)
     - [MQ-135 Case](#mq-135-case)
@@ -131,6 +132,13 @@ required libraries listed in the `DEPENDENCIES` section in [`main.ino`](/src/mai
 I use Arduino IDE to upload the code to the board. I had to install additional drivers ***[(Download)](https://www.silabs.com/documents/public/software/CP210x_Universal_Windows_Driver.zip)*** to get connected to my board.
 
 I installed the ESP32 boards and selected ESP32dev board.
+
+---
+
+## Images
+
+<!--TODO: Add more images-->
+![ESP32 Plant Monitoring Project Image](/static/img/project.png)
 
 ---
 
