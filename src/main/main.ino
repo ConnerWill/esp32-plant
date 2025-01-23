@@ -17,24 +17,20 @@
 // Include bitmap header file
 #include "bitmap.h"
 
-
 // ============================================================================
 // GLOBAL INSTANCES -----------------------------------------------------------
 // ============================================================================
 DHTesp dht;                         //
 AsyncWebServer server(SERVER_PORT); // Define server on port
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-
 // ============================================================================
 
 // ============================================================================
 // FUNCTIONS ------------------------------------------------------------------
 // ============================================================================
-
 // -------------------------------------
 // Sensor Functions
 // -------------------------------------
-
 // Function to get the CO2 measurement 
 float readCO2() {
   constexpr float ReferenceVoltage  = 3.3;
@@ -78,15 +74,14 @@ float readHumidity() {
 
 // Function to convert Celsius to Fahrenheit
 float celsiusToFahrenheit(float celsius) {
-    float fahrenheit = (celsius * 9.0 / 5.0) + 32.0;
-    return fahrenheit;
+  float fahrenheit = (celsius * 9.0 / 5.0) + 32.0;
+  return fahrenheit;
 }
 
 
 // -------------------------------------
 // WIFI Functions
 // -------------------------------------
-
 // Function to connect to Wi-Fi
 void connectToWiFi() {
   Serial.println(F("Setting up Wi-Fi..."));
@@ -141,7 +136,6 @@ void connectToWiFi() {
 // -------------------------------------
 // OLED Functions
 // -------------------------------------
-
 // Function to initialize OLED
 void initOLED() {
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -167,35 +161,35 @@ void initOLED() {
 
 // Function to show startup display
 void showStart() {
-    display.clearDisplay();
-    display.setTextSize(3);
-    display.setTextColor(SSD1306_WHITE);
-    display.setCursor(32, 16);
-    display.println(STARTUP_TEXT);
-    display.display();
+  display.clearDisplay();
+  display.setTextSize(3);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(32, 16);
+  display.println(STARTUP_TEXT);
+  display.display();
 
-    // Scroll diag right
-    //display.startscrolldiagright(0x00, 0x07);
-    // Scroll left
-    display.startscrollleft(0x00, 0x0F);
-    delay(SCREEN_STARTUP_DISPLAY_TIME);
-    display.stopscroll();
-    display.clearDisplay();
+  // Scroll diag right
+  //display.startscrolldiagright(0x00, 0x07);
+  // Scroll left
+  display.startscrollleft(0x00, 0x0F);
+  delay(SCREEN_STARTUP_DISPLAY_TIME);
+  display.stopscroll();
+  display.clearDisplay();
 }
 
 // Function to show bitmap image
 void showBitmap() {
-      display.clearDisplay();
-      display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
-      display.display();
-      delay(SCREEN_STARTUP_DISPLAY_TIME);
+  display.clearDisplay();
+  display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
+  display.display();
+  delay(SCREEN_STARTUP_DISPLAY_TIME);
 
-      // Scroll right
-      display.startscrollright(0x00, 0x0F);
-      delay(SCREEN_STARTUP_DISPLAY_TIME);
-      display.stopscroll();
-      delay(100);
-      display.clearDisplay();
+  // Scroll right
+  display.startscrollright(0x00, 0x0F);
+  delay(SCREEN_STARTUP_DISPLAY_TIME);
+  display.stopscroll();
+  delay(100);
+  display.clearDisplay();
 }
 
 // Function to display IP Info
@@ -271,11 +265,9 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
 }
 // ============================================================================
 
-
 // ============================================================================
 // SETUP ----------------------------------------------------------------------
 // ============================================================================
-
 void setup() {
   // Set co2 pin mode
   pinMode(CO2_PIN, INPUT);
@@ -326,9 +318,7 @@ void setup() {
 // ============================================================================
 // LOOP -----------------------------------------------------------------------
 // ============================================================================
-
 void loop() {
-
   static unsigned long lastUpdateTime = 0;
   static unsigned long lastWiFiCheck = 0;
   unsigned long currentTime = millis();
