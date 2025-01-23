@@ -184,5 +184,6 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * https://www.thingiverse.com/thing:4521313
 * https://www.thingiverse.com/thing:2893581
 * https://javl.github.io/image2cpp
+* https://github.com/kj831ca/KasaSmartPlug
 
 ---
