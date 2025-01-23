@@ -10,13 +10,16 @@ fetches sensor data, InfluxDB for storing the data, and Grafana for visualizatio
 
 ```console
 .
-├── docker-compose.yml    # Docker Compose file to bring up all services
-├── README.md             # Documentation
-├── sensor_data_collector # Directory for Python script and requirements
-│   ├── Dockerfile        # Dockerfile to build the Python script container
-│   ├── fetch_data.py     # Python script to fetch data from ESP32 and store in InfluxDB
-│   └── requirements.txt  # Python dependencies
-└── setup.sh              # Setup script to install and configure docker
+├── docker-compose.yml              # Docker Compose file to bring up all services
+├── README.md                       # Documentation
+├── grafana-provisioning            # Directory for grafana configuration
+│   └── datasources                 # Directory for custom grafana configurations
+│       └── influxdb-datasource.yml # InfluxDB grafana datasource
+├── sensor_data_collector           # Directory for Python script and requirements
+│   ├── Dockerfile                  # Dockerfile to build the Python script container
+│   ├── fetch_data.py               # Python script to fetch data from ESP32 and store in InfluxDB
+│   └── requirements.txt            # Python dependencies
+└── setup.sh                        # Setup script to install and configure docker
 ```
 
 ## Prerequisites
