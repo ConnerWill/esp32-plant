@@ -1,7 +1,14 @@
 # ESP32 Plant Monitoring System
 
+![ESP32 Plant Monitoring Project Image](/static/img/project.png)
+
+---
+
+## Table of Contents
+
 <!--toc:start-->
 - [ESP32 Plant Monitoring System](#esp32-plant-monitoring-system)
+  - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Shopping List](#shopping-list)
   - [Setup](#setup)
@@ -21,8 +28,6 @@
   - [TODO](#todo)
   - [Links](#links)
 <!--toc:end-->
-
-![ESP32 Plant Monitoring Project Image](/static/img/project.png)
 
 ---
 
