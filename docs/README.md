@@ -138,10 +138,11 @@ I installed the ESP32 boards and selected ESP32dev board.
 ## Images
 
 <!--TODO: Add more images-->
-![ESP32 Plant Monitoring Project Image](/static/img/project.png)
 
-> [!TIP]
-> gggg
+|                                      |                                      |
+|--------------------------------------|--------------------------------------|
+| ![ESP32 Plant Monitoring Project Image](/static/img/project.png) | ![ESP32 Plant Monitoring Project Image](/static/img/project.png) |
+| ![ESP32 Plant Monitoring Project Image](/static/img/project.png) | ![ESP32 Plant Monitoring Project Image](/static/img/project.png) |
 
 ---
 
