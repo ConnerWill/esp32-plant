@@ -170,6 +170,9 @@ void setPlugState(const char *alias, bool state) {
 // Function to connect to Wi-Fi
 void connectToWiFi() {
   Serial.println(F("Setting up Wi-Fi..."));
+
+  WiFi.mode(WIFI_STA); // Station mode only
+
   if (!WiFi.setHostname(WIFI_HOSTNAME)) {
     Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", WIFI_HOSTNAME);
   }
@@ -417,7 +420,7 @@ void loop() {
     Serial.printf("Temperature: %.2f F\n", temperatureF);
     Serial.printf("Humidity   : %.2f %%\n", humidity);
     Serial.printf("CO2        : %.2f ppm\n", co2);
-    Serial.println("Updating display...");
+    Serial.println(F("Updating display..."));
 
     // Update OLED display with latest sensor data
     updateOLED(co2, temperature, temperatureF, humidity);
@@ -444,11 +447,11 @@ void loop() {
 
     // Temperature control logic
     if (temperatureF > DESIRED_TEMP + TEMP_HYSTERESIS) { // Temp too high
-      Serial.println("Temperature too high! Turning on intake and exhaust fans...");
+      Serial.println(F("Temperature too high! Turning on intake and exhaust fans..."));
       setPlugState(exhaustPlug, true);  // Turn on exhaust fan
       setPlugState(intakePlug, true);   // Turn on intake fan
     } else if (temperatureF < DESIRED_TEMP - TEMP_HYSTERESIS) { // Temp too low
-      Serial.println("Temperature too low! Turning off intake and exhaust fans...");
+      Serial.println(F("Temperature too low! Turning off intake and exhaust fans..."));
       setPlugState(exhaustPlug, false); // Turn off exhaust fan
       setPlugState(intakePlug, false);  // Turn off intake fan
     } else {
@@ -459,10 +462,10 @@ void loop() {
 
     // Humidity control logic
     if (humidity > DESIRED_HUMIDITY + HUMIDITY_HYSTERESIS) { // Humidity too high
-      Serial.println("Humidity too high! Turning on exhaust fan...");
+      Serial.println(F("Humidity too high! Turning on exhaust fan..."));
       setPlugState(exhaustPlug, true); // Turn on exhaust fan
     } else if (humidity < DESIRED_HUMIDITY - HUMIDITY_HYSTERESIS) { // Humidity too low
-      Serial.println("Humidity too low! Turning off intake and exhaust fans...");
+      Serial.println(F("Humidity too low! Turning off intake and exhaust fans..."));
       setPlugState(intakePlug, false);  // Turn off intake fan
       setPlugState(exhaustPlug, false); // Turn off exhaust fan
       // Optionally, activate a humidifier if available
