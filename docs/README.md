@@ -140,6 +140,9 @@ I installed the ESP32 boards and selected ESP32dev board.
 <!--TODO: Add more images-->
 ![ESP32 Plant Monitoring Project Image](/static/img/project.png)
 
+> [!TIP]
+> gggg
+
 ---
 
 ## 3D Print
