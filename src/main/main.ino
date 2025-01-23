@@ -2,7 +2,9 @@
  * File: ./main.ino
  */
 
-// Dependencies
+// ============================================================================
+// DEPENDENCIES -----------------------------------------------------------
+// ============================================================================
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
@@ -10,9 +12,10 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-
-#include "config.h" // Include config header file
-#include "bitmap.h" // Include bitmap header file
+#include "KasaSmartPlug.h"     // KASA TP-link smart plug library: https://github.com/kj831ca/KasaSmartPlug
+#include "config.h"            // Include config header file
+#include "bitmap.h"            // Include bitmap header file
+// ============================================================================
 
 // ============================================================================
 // GLOBAL INSTANCES -----------------------------------------------------------
@@ -20,6 +23,9 @@
 DHTesp dht;                                                       // DHT
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 AsyncWebServer server(SERVER_PORT);                               // Define server on port
+KASAUtil kasaUtil;                                                // Kasa utility object
+KASASmartPlug *intakePlug = NULL;                                 // Smart plug pointers (Intake)
+KASASmartPlug *exhaustPlug = NULL;                                // Smart plug pointers (Exhaust)
 // ============================================================================
 
 // ============================================================================
@@ -73,6 +79,89 @@ float readHumidity() {
 float celsiusToFahrenheit(float celsius) {
   float fahrenheit = (celsius * 9.0 / 5.0) + 32.0;
   return fahrenheit;
+}
+
+// -------------------------------------
+// KASA TP-Link Smart Plug Functions
+// -------------------------------------
+// Function to initialize smart plugs
+void initSmartPlugs() {
+  int found = kasaUtil.ScanDevices();
+  Serial.printf("Found %d Kasa devices\n", found);
+
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.print("KASA devices found: ");
+  display.println(found);
+  display.display();
+  delay(500);
+
+  // Loop through found devices and match aliases
+  for (int i = 0; i < found; i++) {
+    KASASmartPlug *plug = kasaUtil.GetSmartPlugByIndex(i);
+    if (plug == NULL) continue;
+
+    Serial.printf("Found Plug: %s (IP: %s, State: %d)\n", plug->alias, plug->ip_address, plug->state);
+
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("KASA Smart Plugs");
+    display.setCursor(0, 16);
+    display.print("Alias: ");
+    display.println(plug->alias);
+    display.print("IP   : ");
+    display.println(plug->ip_address);
+    display.print("State   : ");
+    display.println(plug->state);
+    display.display();
+    delay(1000);
+
+    // Match plugs by their aliases
+    if (strcmp(plug->alias, intakePlugAlias) == 0) {
+      intakePlug = plug;
+      Serial.println("Intake plug initialized.");
+    } else if (strcmp(plug->alias, exhaustPlugAlias) == 0) {
+      exhaustPlug = plug;
+      Serial.println("Exhaust plug initialized.");
+    }
+  }
+
+  // Check if plugs were found
+  if (intakePlug == NULL) {
+    Serial.println("Error: Intake plug not found!");
+
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("ERROR: Intake plug not found");
+    display.display();
+    delay(1000);
+  }
+  if (exhaustPlug == NULL) {
+    Serial.println("Error: Exhaust plug not found!");
+
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("ERROR: Exhaust plug not found");
+    display.display();
+    delay(1000);
+  }
+}
+
+// Function to turn a plug on or off
+void setPlugState(const char *alias, bool state) {
+  KASASmartPlug *plug = kasaUtil.GetSmartPlug(alias);
+  if (plug == NULL) {
+    Serial.printf("Error: Could not find plug with alias '%s'\n", alias);
+    return;
+  }
+
+  if (state) {
+    Serial.printf("Turning ON plug: %s\n", alias);
+    plug->SetRelayState(1); // Turn on
+  } else {
+    Serial.printf("Turning OFF plug: %s\n", alias);
+    plug->SetRelayState(0); // Turn off
+  }
 }
 
 // -------------------------------------
@@ -265,11 +354,12 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
 // SETUP ----------------------------------------------------------------------
 // ============================================================================
 void setup() {
-  pinMode(CO2_PIN, INPUT); 			  // Set co2 pin mode
+  pinMode(CO2_PIN, INPUT);                        // Set co2 pin mode
   dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22); // Initialize DHT sensor
-  Serial.begin(BAUD_RATE);			  // Initialize Serial for debugging
-  initOLED(); 					  // Initialize OLED
-  connectToWiFi(); 				  // Connect to Wi-Fi
+  Serial.begin(BAUD_RATE);                        // Initialize Serial for debugging
+  initOLED();                                     // Initialize OLED
+  connectToWiFi();                                // Connect to Wi-Fi
+  initSmartPlugs()                                // Initialize Smart Plugs
 
   // Define the root endpoint
   server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
@@ -309,8 +399,10 @@ void loop() {
   static unsigned long lastUpdateTime = 0;
   static unsigned long lastWiFiCheck = 0;
   static unsigned long lastBitmapCheck = 0;
+  static unsigned long lastPlugCheck = 0;
   unsigned long currentTime = millis();
 
+  // Update OLED display
   if (currentTime - lastUpdateTime >= SCREEN_UPDATE_TIME) {
     lastUpdateTime = currentTime;
 
@@ -331,6 +423,57 @@ void loop() {
     updateOLED(co2, temperature, temperatureF, humidity);
   }
 
+/*
+ * Temperature Too High -> Turn on the exhaust fan, consider additional cooling (e.g., A/C).
+ * Temperature Too Low  -> Turn off the exhaust fan, possibly add a heater.
+ * Humidity Too High    -> Turn on the exhaust fan to vent humid air, or use a dehumidifier.
+ * Humidity Too Low     -> Turn off the exhaust fan, reduce intake, and add a humidifier if needed.
+ * CO2 Too High         -> Turn on the exhaust fan to vent excess CO2.
+ * CO2 Too Low          -> Turn off the exhaust fan to retain CO2, or add a CO2 source.
+*/
+
+  // Update Smart plugs
+  if (currentTime - lastPlugCheck >= SMARTPLUG_UPDATE_TIME) {
+    lastPlugCheck = currentTime;
+
+    // Get sensor values
+    float co2 = readCO2();
+    float temperature = readTemperature();
+    float temperatureF = celsiusToFahrenheit(temperature);
+    float humidity = readHumidity();
+
+    // Temperature control logic
+    if (temperatureF > DESIRED_TEMP + TEMP_HYSTERESIS) { // Temp too high
+      Serial.println("Temperature too high! Turning on intake and exhaust fans...");
+      setPlugState(exhaustPlug, true);  // Turn on exhaust fan
+      setPlugState(intakePlug, true);   // Turn on intake fan
+    } else if (temperatureF < DESIRED_TEMP - TEMP_HYSTERESIS) { // Temp too low
+      Serial.println("Temperature too low! Turning off intake and exhaust fans...");
+      setPlugState(exhaustPlug, false); // Turn off exhaust fan
+      setPlugState(intakePlug, false);  // Turn off intake fan
+    } else {
+      // If temperature is within the target range, ensure both fans are off
+      setPlugState(exhaustPlug, false); // Turn off exhaust fan
+      setPlugState(intakePlug, false);  // Turn off intake fan
+    }
+
+    // Humidity control logic
+    if (humidity > DESIRED_HUMIDITY + HUMIDITY_HYSTERESIS) { // Humidity too high
+      Serial.println("Humidity too high! Turning on exhaust fan...");
+      setPlugState(exhaustPlug, true); // Turn on exhaust fan
+    } else if (humidity < DESIRED_HUMIDITY - HUMIDITY_HYSTERESIS) { // Humidity too low
+      Serial.println("Humidity too low! Turning off intake and exhaust fans...");
+      setPlugState(intakePlug, false);  // Turn off intake fan
+      setPlugState(exhaustPlug, false); // Turn off exhaust fan
+      // Optionally, activate a humidifier if available
+    } else {
+      // If humidity is within the target range, ensure both fans are off
+      setPlugState(exhaustPlug, false); // Turn off exhaust fan
+      setPlugState(intakePlug, false);  // Turn off intake fan
+    }
+    //TODO: Add CO2 levels
+  }
+
   // Periodically check Wi-Fi status
   if (currentTime - lastWiFiCheck >= WIFI_CHECK_INTERVAL) {
     lastWiFiCheck = currentTime;
@@ -349,8 +492,8 @@ void loop() {
   }
 
   // Periodically show bitmap
-  if (INTERUPT_WITH_BITMAP) {
-    if (currentTime - lastBitmapCheck >= INTERUPT_BITMAP_TIME) {
+  if (INTERRUPT_WITH_BITMAP) {
+    if (currentTime - lastBitmapCheck >= INTERRUPT_BITMAP_TIME) {
       lastBitmapCheck = currentTime;
       showBitmap();
     }
