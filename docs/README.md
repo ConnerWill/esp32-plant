@@ -25,11 +25,11 @@ Here is a list of parts used in this project
 | DHT22           | $3      | 1     | Temp/Humidity Sensor              | [Amazon](https://www.amazon.com/dp/B0CPHQC9SF) |                                                    |
 | MQ-135          | $3      | 1     | CO2 Sensor                        | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
 | OLED Display    | $3      | 1     | 0.96" OLED Display 128x64 SSD1306 | [Amazon](https://www.amazon.com/Hosyond-Display-Self-Luminous-Compatible-Raspberry/dp/B09C5K91H7) |                                                    |
+| Kasa Smart Plug | $7.50   | 2     | TP-Link Kasa Smart Plug HS103     | [Amazon](https://www.amazon.com/dp/B07RCNB2L3) | Intake and exhaust fans smart plugs                |
 | 1K Ω Resistor   | $0.25   | 1     | 1K Ohm Resistor                   | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
 | 10K Ω Resistor  | $0.25   | 0/1   | 10K Ohm Resistor                  | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM) | Most DHT22 sensor modules have a built-in resistor |
 | Wire/Breadboard | $1      | 0/1   | Jumper wire or breadboard         | [Amazon](https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6) | Optional depending on setup                        |
 | Breakout Board  | $4      | 0/1   | ESP32 Breakout Board GPIO         | [Amazon](https://www.amazon.com/dp/B0BNQ8V65G) | Optional depending on setup                        |
-| Kasa Smart Plug | $7.50   | 2     | TP-Link Kasa Smart Plug HS103     | [Amazon](https://www.amazon.com/dp/B07RCNB2L3) | Intake and exhaust fans                            |
 | **TOTAL**           | ~$34.25 |       |                                   |        |                                                    |
 
 > *Lower prices can be found if you shop around*
