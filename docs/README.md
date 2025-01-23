@@ -19,15 +19,16 @@ Here is a list of parts used in this project
 
 > *Amazon links are non-affiliate*
 
-| NAME           | PRICE | COUNT | DESCRIPTION                       | LINK   | NOTE                                               |
-|----------------|-------|-------|-----------------------------------|--------|----------------------------------------------------|
-| ESP32          | $5    | 1     | Microcontroller                   | [Amazon](https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528) |                                                    |
-| DHT22          | $7    | 1     | Temp/Humidity Sensor              | [Amazon](https://www.amazon.com/gp/product/B0795F19W6) |                                                    |
-| MQ-135         | $3    | 1     | CO2 Sensor                        | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
-| OLED Display   | $3    | 1     | 0.96" OLED Display 128x64 SSD1306 | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
-| 1K Ω Resistor  | $0.25 | 1     | 1K Ohm Resistor                   | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
-| 10K Ω Resistor | $0.25 | 0/1   | 10K Ohm Resistor                  | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM) | Most DHT22 sensor modules have a built-in resistor |
-| Wire/Breadboard| $1    | 1     | Jumper wire or breadboard         | [Amazon](https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6) | Optional depending on setup                        |
+| NAME            | PRICE | COUNT | DESCRIPTION                       | LINK   | NOTE                                               |
+|-----------------|-------|-------|-----------------------------------|--------|----------------------------------------------------|
+| ESP32           | $5    | 1     | Microcontroller                   | [Amazon](https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528) | [USB-C ESP32 Amazon](https://www.amazon.com/dp/B0CR5Y2JVD)                                 |
+| DHT22           | $7    | 1     | Temp/Humidity Sensor              | [Amazon](https://www.amazon.com/gp/product/B0795F19W6) |                                                    |
+| MQ-135          | $3    | 1     | CO2 Sensor                        | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
+| OLED Display    | $3    | 1     | 0.96" OLED Display 128x64 SSD1306 | [Amazon](https://www.amazon.com/Hosyond-Display-Self-Luminous-Compatible-Raspberry/dp/B09C5K91H7) |                                                    |
+| 1K Ω Resistor   | $0.25 | 1     | 1K Ohm Resistor                   | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
+| 10K Ω Resistor  | $0.25 | 0/1   | 10K Ohm Resistor                  | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM) | Most DHT22 sensor modules have a built-in resistor |
+| Wire/Breadboard | $1    | 0/1   | Jumper wire or breadboard         | [Amazon](https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6) | Optional depending on setup                        |
+| Breakout Board  | $4    | 0/1   | ESP32 Breakout Board GPIO         | [Amazon](https://www.amazon.com/dp/B0BNQ8V65G) | Optional depending on setup                        |
 
 > *Lower prices can be found if you shop around*
 
