@@ -145,10 +145,10 @@ void initOLED() {
   // Show start text if SHOW_STARTUP is true
   if (SHOW_STARTUP) {
     showStart();
-    // Display bitmap if SHOW_BITMAP is true
-    if (SHOW_BITMAP) {
-      showBitmap();
-    }
+  }
+  // Display bitmap if SHOW_BITMAP is true
+  if (SHOW_BITMAP) {
+    showBitmap();
   }
 
   // Default text settings
