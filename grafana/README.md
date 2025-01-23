@@ -164,13 +164,19 @@ ensuring the required dependencies are installed.
 ```bash
 FROM python:3.9-slim
 
+# Set working directory
 WORKDIR /app
 
-COPY ./sensor_data_collector/requirements.txt /app/requirements.txt
+# Copy requirements.txt into the container
+COPY requirements.txt .
+
+# Install dependencies from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./sensor_data_collector /app
+# Copy the Python script into the container
+COPY fetch_data.py .
 
+# Run the Python script
 CMD ["python", "fetch_data.py"]
 ```
 
