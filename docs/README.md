@@ -1,6 +1,34 @@
-# ESP32 Plant Monitoring / Watering System
+# ESP32 Plant Monitoring System
 
 ![ESP32 Plant Monitoring Project Image](/static/img/project.png)
+
+---
+
+## Table of Contents
+
+<!--toc:start-->
+- [ESP32 Plant Monitoring System](#esp32-plant-monitoring-system)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Shopping List](#shopping-list)
+  - [Setup](#setup)
+    - [Circuit Schematic](#circuit-schematic)
+    - [ESP32 Pinout](#esp32-pinout)
+      - [30 Pin](#30-pin)
+      - [38 Pin](#38-pin)
+    - [Configuration](#configuration)
+      - [WiFI Configuration](#wifi-configuration)
+      - [Other Configuration](#other-configuration)
+    - [Libraries](#libraries)
+      - [External Libraries](#external-libraries)
+    - [Uploading](#uploading)
+  - [Images](#images)
+  - [3D Print](#3d-print)
+    - [DHT22 Case](#dht22-case)
+    - [MQ-135 Case](#mq-135-case)
+  - [TODO](#todo)
+  - [Links](#links)
+<!--toc:end-->
 
 ---
 
@@ -17,19 +45,23 @@ This is designed to be used to monitor the environment when growing plants
 
 Here is a list of parts used in this project
 
+> [!NOTE]
 > *Amazon links are non-affiliate*
 
-| NAME            | PRICE | COUNT | DESCRIPTION                       | LINK   | NOTE                                               |
-|-----------------|-------|-------|-----------------------------------|--------|----------------------------------------------------|
-| ESP32           | $5    | 1     | Microcontroller                   | [Amazon](https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528) | [USB-C ESP32 Amazon](https://www.amazon.com/dp/B0CR5Y2JVD)                                 |
-| DHT22           | $7    | 1     | Temp/Humidity Sensor              | [Amazon](https://www.amazon.com/gp/product/B0795F19W6) |                                                    |
-| MQ-135          | $3    | 1     | CO2 Sensor                        | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
-| OLED Display    | $3    | 1     | 0.96" OLED Display 128x64 SSD1306 | [Amazon](https://www.amazon.com/Hosyond-Display-Self-Luminous-Compatible-Raspberry/dp/B09C5K91H7) |                                                    |
-| 1K Ω Resistor   | $0.25 | 1     | 1K Ohm Resistor                   | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
-| 10K Ω Resistor  | $0.25 | 0/1   | 10K Ohm Resistor                  | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM) | Most DHT22 sensor modules have a built-in resistor |
-| Wire/Breadboard | $1    | 0/1   | Jumper wire or breadboard         | [Amazon](https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6) | Optional depending on setup                        |
-| Breakout Board  | $4    | 0/1   | ESP32 Breakout Board GPIO         | [Amazon](https://www.amazon.com/dp/B0BNQ8V65G) | Optional depending on setup                        |
+| NAME            | PRICE   | COUNT | DESCRIPTION                       | LINK   | NOTE                                               |
+|-----------------|---------|-------|-----------------------------------|--------|----------------------------------------------------|
+| ESP32           | $5      | 1     | Microcontroller                   | [Amazon](https://www.amazon.com/ESP-WROOM-31-Development-Microcontroller-Integrated-Compatible/dp/B08D5ZD528) | [USB-C ESP32 Amazon](https://www.amazon.com/dp/B0CR5Y2JVD)                                 |
+| DHT22           | $3      | 1     | Temp/Humidity Sensor              | [Amazon](https://www.amazon.com/dp/B0CPHQC9SF) |                                                    |
+| MQ-135          | $3      | 1     | CO2 Sensor                        | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
+| OLED Display    | $3      | 1     | 0.96" OLED Display 128x64 SSD1306 | [Amazon](https://www.amazon.com/Hosyond-Display-Self-Luminous-Compatible-Raspberry/dp/B09C5K91H7) |                                                    |
+| Kasa Smart Plug | $7.50   | 2     | TP-Link Kasa Smart Plug HS103     | [Amazon](https://www.amazon.com/dp/B07RCNB2L3) | Intake and exhaust fans smart plugs                |
+| 1K Ω Resistor   | $0.25   | 1     | 1K Ohm Resistor                   | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
+| 10K Ω Resistor  | $0.25   | 0/1   | 10K Ohm Resistor                  | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM) | Most DHT22 sensor modules have a built-in resistor |
+| Wire/Breadboard | $1      | 0/1   | Jumper wire or breadboard         | [Amazon](https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6) | Optional depending on setup                        |
+| Breakout Board  | $4      | 0/1   | ESP32 Breakout Board GPIO         | [Amazon](https://www.amazon.com/dp/B0BNQ8V65G) | Optional depending on setup                        |
+| **TOTAL**           | ~$34.25 |       |                                   |        |                                                    |
 
+> [!TIP]
 > *Lower prices can be found if you shop around*
 
 ---
@@ -51,6 +83,7 @@ Once you have all the required parts in hand, you can start wiring
 | 21        | OLED SCL    | SCL     | 3.3                        | 3.3V          | GND           |
 | 22        | OLED SDA    | SDA     | 3.3                        | 3.3V          | GND           |
 
+> [!NOTE]
 > *Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code.*
 
 ### ESP32 Pinout
@@ -84,11 +117,35 @@ Here is a list of WiFi variables that **must** be defined and their descriptions
 
 Other variables in the code can be changed to suite your needs
 
+### Libraries
+
+You will need to install additional libraries.
+
+In Arduino IDE, go to library manager and search and install the
+required libraries listed in the `DEPENDENCIES` section in [`main.ino`](/src/main/main.ino)
+
+#### External Libraries
+
+- [KasaSmartPlug Github](https://github.com/kj831ca/KasaSmartPlug)
+
+---
+
 ### Uploading
 
 I use Arduino IDE to upload the code to the board. I had to install additional drivers ***[(Download)](https://www.silabs.com/documents/public/software/CP210x_Universal_Windows_Driver.zip)*** to get connected to my board.
 
 I installed the ESP32 boards and selected ESP32dev board.
+
+---
+
+## Images
+
+<!--TODO: Add more images-->
+
+|                                      |                                      |
+|--------------------------------------|--------------------------------------|
+| ![ESP32 Plant Monitoring Project Image](/static/img/project.png) | ![ESP32 Plant Monitoring Project Image](/static/img/project.png) |
+| ![ESP32 Plant Monitoring Project Image](/static/img/project.png) | ![ESP32 Plant Monitoring Project Image](/static/img/project.png) |
 
 ---
 
@@ -134,5 +191,6 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 * https://www.thingiverse.com/thing:4521313
 * https://www.thingiverse.com/thing:2893581
 * https://javl.github.io/image2cpp
+* https://github.com/kj831ca/KasaSmartPlug
 
 ---
