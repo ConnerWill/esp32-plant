@@ -460,25 +460,25 @@ void loop() {
       setPlugState(exhaustPlug, false); // Turn off exhaust fan
       setPlugState(intakePlug, false);  // Turn off intake fan
     } else {
-      // If temperature is within the target range, ensure both fans are off
+      // If temperature is within the target range, turn off fans to save energy
       setPlugState(exhaustPlug, false); // Turn off exhaust fan
       setPlugState(intakePlug, false);  // Turn off intake fan
     }
 
-    // Humidity control logic
-    if (humidity > DESIRED_HUMIDITY + HUMIDITY_HYSTERESIS) { // Humidity too high
-      Serial.println(F("Humidity too high! Turning on exhaust fan..."));
-      setPlugState(exhaustPlug, true); // Turn on exhaust fan
-    } else if (humidity < DESIRED_HUMIDITY - HUMIDITY_HYSTERESIS) { // Humidity too low
-      Serial.println(F("Humidity too low! Turning off intake and exhaust fans..."));
-      setPlugState(intakePlug, false);  // Turn off intake fan
-      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-      // Optionally, activate a humidifier if available
-    } else {
-      // If humidity is within the target range, ensure both fans are off
-      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-      setPlugState(intakePlug, false);  // Turn off intake fan
-    }
+//    // Humidity control logic
+//    if (humidity > DESIRED_HUMIDITY + HUMIDITY_HYSTERESIS) { // Humidity too high
+//      Serial.println(F("Humidity too high! Turning on exhaust fan..."));
+//      setPlugState(exhaustPlug, true); // Turn on exhaust fan
+//    } else if (humidity < DESIRED_HUMIDITY - HUMIDITY_HYSTERESIS) { // Humidity too low
+//      Serial.println(F("Humidity too low! Turning off intake and exhaust fans..."));
+//      setPlugState(intakePlug, false);  // Turn off intake fan
+//      setPlugState(exhaustPlug, false); // Turn off exhaust fan
+//      // Optionally, activate a humidifier if available
+//    } else {
+//      // If humidity is within the target range, turn off fans to save energy
+//      setPlugState(exhaustPlug, false); // Turn off exhaust fan
+//      setPlugState(intakePlug, false);  // Turn off intake fan
+//    }
     //TODO: Add CO2 levels
   }
 
