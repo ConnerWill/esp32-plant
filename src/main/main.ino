@@ -150,6 +150,7 @@ void initSmartPlugs() {
 // Function to turn a plug on or off
 void setPlugState(KASASmartPlug* plug, bool state) {
   // Setting variable for printing. otherwise dont need this
+  //TODO: Figure out how to turn this into a string
   KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
 
   if (plug == NULL) {
@@ -165,6 +166,8 @@ void setPlugState(KASASmartPlug* plug, bool state) {
     plug->SetRelayState(0); // Turn off
   }
 }
+
+//TODO: Function to get plug state
 
 // -------------------------------------
 // WIFI Functions
