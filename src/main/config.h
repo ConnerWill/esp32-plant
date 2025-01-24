@@ -39,15 +39,16 @@ bool              INTERRUPT_WITH_BITMAP       = true;    // Periodically show bi
 constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
 
 // SMART PLUG CONFIGURATION
-const char      *intakePlugAlias      = "plug_intake";  // Kasa plug alias (Intake)
-const char      *exhaustPlugAlias     = "plug_exhaust"; // Kasa plug aliases (Exhaust)
-constexpr int   SMARTPLUG_UPDATE_TIME = 30000;          // Update smart plugs time (ms)
-constexpr float DESIRED_TEMP          = 75.0;           // Desired temperature in F
-constexpr float DESIRED_HUMIDITY      = 50.0;           // Desired humidity in percentage
-constexpr float DESIRED_CO2           = 800.0;          // Desired CO2 level (ppm)
-constexpr float TEMP_HYSTERESIS       = 1.0;            // Temperature hysteresis to prevent rapid switching
-constexpr float HUMIDITY_HYSTERESIS   = 5.0;            // Humidity hysteresis to prevent rapid switching
-constexpr float CO2_HYSTERESIS        = 100.0;          // CO2 hysteresis to prevent rapid switching
+const char      *intakePlugAlias      = "plug_intake";     // Kasa plug alias (Intake)
+const char      *exhaustPlugAlias     = "plug_exhaust";    // Kasa plug aliases (Exhaust)
+const char      *humidifierPlugAlias  = "plug_humidifier"; // Kasa plug aliases (Humidifier)
+constexpr int   SMARTPLUG_UPDATE_TIME = 30000;             // Update smart plugs time (ms)
+constexpr float DESIRED_TEMP          = 75.0;              // Desired temperature in F
+constexpr float DESIRED_HUMIDITY      = 50.0;              // Desired humidity in percentage
+constexpr float DESIRED_CO2           = 800.0;             // Desired CO2 level (ppm)
+constexpr float TEMP_HYSTERESIS       = 1.0;               // Temperature hysteresis to prevent rapid switching
+constexpr float HUMIDITY_HYSTERESIS   = 5.0;               // Humidity hysteresis to prevent rapid switching
+constexpr float CO2_HYSTERESIS        = 100.0;             // CO2 hysteresis to prevent rapid switching
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                        // Baud rate
