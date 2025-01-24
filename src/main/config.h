@@ -35,14 +35,12 @@ bool              SHOW_CUSTOM_TEXT            = true;    // Set to true to show 
 bool              SHOW_IP_INFO                = true;    // Set to true to show IP information
 constexpr char    STARTUP_TEXT[]              = ":)";    // Startup custom text
 constexpr char    CUSTOM_TEXT[]               = "";      // OLED custom text "_____________________"
-bool              INTERRUPT_WITH_BITMAP       = true;    // Periodically show bitmap
-constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
 
 // SMART PLUG CONFIGURATION
-const char      *intakePlugAlias        = "tent1_intake";     // Kasa plug alias (Intake)
-const char      *exhaustPlugAlias       = "tent1_exhaust";    // Kasa plug aliases (Exhaust)
-const char      *humidifierPlugAlias    = "tent1_humidifier"; // Kasa plug aliases (Humidifier)
-const char      *lightPlugAlias         = "tent1_light";      // Kasa plug aliases (Lights)
+const     char  *intakePlugAlias        = "tent1_intake";     // Kasa plug alias (Intake)
+const     char  *exhaustPlugAlias       = "tent1_exhaust";    // Kasa plug aliases (Exhaust)
+const     char  *humidifierPlugAlias    = "tent1_humidifier"; // Kasa plug aliases (Humidifier)
+const     char  *lightPlugAlias         = "tent1_light";      // Kasa plug aliases (Lights)
 constexpr int   SMARTPLUG_UPDATE_TIME   = 30000;              // Update smart plugs time (ms)
 bool            FLOWER                  = false;              // Set to true to set flower mode //TODO: Link this to a physical switch
 constexpr float DESIRED_TEMP_VEG        = 75.0;               // Desired temperature in F (veg)
@@ -54,6 +52,14 @@ constexpr float DESIRED_CO2_FLOWER      = 1000.0;             // Desired CO2 lev
 constexpr float TEMP_HYSTERESIS         = 1.0;                // Temperature hysteresis to prevent rapid switching
 constexpr float HUMIDITY_HYSTERESIS     = 5.0;                // Humidity hysteresis to prevent rapid switching
 constexpr float CO2_HYSTERESIS          = 100.0;              // CO2 hysteresis to prevent rapid switching
+
+// LIGHT CONFIGURATION
+constexpr char LIGHT_SCHEDULE_START_VEG[]     = "08:00"; // Time to turn on lights (24hr) (Veg)
+constexpr char LIGHT_SCHEDULE_START_FLOWER[]  = "20:00"; // Time to turn on lights (24hr) (Flower)
+constexpr int  LIGHT_SCHEDULE_DURATION_VEG    = 18;      // Hours to have lights on (Veg)
+constexpr int  LIGHT_SCHEDULE_DURATION_FLOWER = 12;      // Hours to have lights on (Flower)
+const     bool USE_DAYLIGHT_SAVINGS           = true;    // Set to true if daylight saving time is active
+constexpr int  LIGHT_UPDATE_TIME              = 1000;    // Update lights time (ms)
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                        // Baud rate

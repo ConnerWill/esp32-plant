@@ -12,6 +12,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <RTClib.h>
 #include "KasaSmartPlug.h"     // KASA TP-link smart plug library: https://github.com/ConnerWill/KasaSmartPlug
 #include "config.h"            // Include config header file
 #include "bitmap.h"            // Include bitmap header file
@@ -199,6 +200,75 @@ void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
     setPlugState(humidifierPlugAlias, false);                                         // Turn off humidifier to save energy
   }
 }
+
+// -------------------------------------
+// Time Functions
+// -------------------------------------
+// Function to initialize RTC
+void initRTC() {
+  // Start RTC
+  if (!rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    while (1);
+  }
+
+  // Check if RTC lost power
+  if (rtc.lostPower()) {
+    Serial.println("RTC lost power, setting default time!");
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); // Set to compile time
+  }
+}
+
+// Function to check time and turn on lights
+void checkLightSchedule(const char* lightStart, int lightDuration) {
+  DateTime now = rtc.now(); // Get current time
+
+  // Adjust for daylight saving time if needed
+  if (USE_DAYLIGHT_SAVINGS) {
+    now = adjustForDaylightSavings(now);
+  }
+
+  // Check if it's time to turn on the lights
+  if (shouldTurnOnLights(now, lightStart, lightDuration)) {
+    setPlugState(lightPlugAlias, true);  // Turn lights ON
+  } else {
+    setPlugState(lightPlugAlias, false); // Turn lights OFF
+  }
+}
+
+// Function to check if we should turn on lights
+bool shouldTurnOnLights(DateTime now, const char* lightStart, int lightDuration) {
+  int startHour, startMinute;
+  parseTime(lightStart, startHour, startMinute);
+
+  // Calculate end time
+  int endHour = (startHour + lightDuration) % 24;
+  int endMinute = startMinute;
+
+  DateTime start(now.year(), now.month(), now.day(), startHour, startMinute, 0);
+  DateTime end(now.year(), now.month(), now.day(), endHour, endMinute, 0);
+
+  // Handle cases where the end time wraps to the next day
+  if (endHour < startHour || (endHour == startHour && endMinute < startMinute)) {
+    if (now >= start || now < end) return true;
+  } else {
+    if (now >= start && now < end) return true;
+  }
+  return false;
+}
+
+// Function to parse time
+void parseTime(const char* timeStr, int& hour, int& minute) {
+  hour = atoi(strtok((char*)timeStr, ":"));
+  minute = atoi(strtok(NULL, ":"));
+}
+
+// Function to adjust for daylight savings
+DateTime adjustForDaylightSavings(DateTime now) {
+  // Adjust by adding one hour for daylight saving time
+  return now + TimeSpan(0, 1, 0, 0); // Add 1 hour
+}
+
 
 // -------------------------------------
 // WIFI Functions
@@ -409,6 +479,7 @@ void setup() {
   Serial.begin(BAUD_RATE);                        // Initialize Serial for debugging
   initOLED();                                     // Initialize OLED
   connectToWiFi();                                // Connect to Wi-Fi
+  initRTC();                                      // Initialize RTC
   initSmartPlugs();                               // Initialize Smart Plugs
 
   // Define the root endpoint
@@ -448,8 +519,8 @@ void setup() {
 void loop() {
   static unsigned long lastUpdateTime = 0;
   static unsigned long lastWiFiCheck = 0;
-  static unsigned long lastBitmapCheck = 0;
   static unsigned long lastPlugCheck = 0;
+  static unsigned long lastLightCheck = 0;
   unsigned long currentTime = millis();
 
   // Update OLED display
@@ -490,7 +561,7 @@ void loop() {
     }
   }
 
-  // Update Smart plugs
+  // Update Smart plugs temp and humidity
   if (currentTime - lastPlugCheck >= SMARTPLUG_UPDATE_TIME) {
     lastPlugCheck = currentTime;
 
@@ -510,13 +581,18 @@ void loop() {
     handleHumidity(humidity, desiredHumidity, mode);
   }
 
-  // Periodically show bitmap
-  if (INTERRUPT_WITH_BITMAP) {
-    if (currentTime - lastBitmapCheck >= INTERRUPT_BITMAP_TIME) {
-      lastBitmapCheck = currentTime;
-      showBitmap();
-    }
+  // Update Smart plugs lights
+  if (currentTime - lastLightCheck >= LIGHT_UPDATE_TIME) {
+    lastLightCheck = currentTime;
+
+    // Determine mode (Flower or Veg) and set desired values
+    const char* lightStart = FLOWER ? LIGHT_SCHEDULE_START_FLOWER : LIGHT_SCHEDULE_START_VEG;
+    int lightDuration = FLOWER ? LIGHT_SCHEDULE_DURATION_FLOWER : LIGHT_SCHEDULE_DURATION_VEG;
+
+    // Check light schedule and turn on/off lights as needed
+    checkLightSchedule(lightStart, lightDuration);
   }
+
 }
 // ============================================================================
 //vim: filetype=arduino:shiftwidth=2:softtabstop=2:expandtab:nowrap:cursorline:cursorcolumn:number:relativenumber
