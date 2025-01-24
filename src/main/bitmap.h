@@ -78,3 +78,4 @@ const unsigned char bitmap_image[] PROGMEM = {
 };
 
 #endif
+//vim: filetype=arduino:shiftwidth=2:softtabstop=2:expandtab:nowrap:cursorline:cursorcolumn:number:relativenumber

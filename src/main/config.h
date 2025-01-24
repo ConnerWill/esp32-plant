@@ -39,17 +39,23 @@ bool              INTERRUPT_WITH_BITMAP       = true;    // Periodically show bi
 constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
 
 // SMART PLUG CONFIGURATION
-const char      *intakePlugAlias      = "plug_intake";     // Kasa plug alias (Intake)
-const char      *exhaustPlugAlias     = "plug_exhaust";    // Kasa plug aliases (Exhaust)
-const char      *humidifierPlugAlias  = "plug_humidifier"; // Kasa plug aliases (Humidifier)
-constexpr int   SMARTPLUG_UPDATE_TIME = 30000;             // Update smart plugs time (ms)
-constexpr float DESIRED_TEMP          = 75.0;              // Desired temperature in F
-constexpr float DESIRED_HUMIDITY      = 50.0;              // Desired humidity in percentage
-constexpr float DESIRED_CO2           = 800.0;             // Desired CO2 level (ppm)
-constexpr float TEMP_HYSTERESIS       = 1.0;               // Temperature hysteresis to prevent rapid switching
-constexpr float HUMIDITY_HYSTERESIS   = 5.0;               // Humidity hysteresis to prevent rapid switching
-constexpr float CO2_HYSTERESIS        = 100.0;             // CO2 hysteresis to prevent rapid switching
+const char      *intakePlugAlias        = "tent1_intake";     // Kasa plug alias (Intake)
+const char      *exhaustPlugAlias       = "tent1_exhaust";    // Kasa plug aliases (Exhaust)
+const char      *humidifierPlugAlias    = "tent1_humidifier"; // Kasa plug aliases (Humidifier)
+const char      *lightPlugAlias         = "tent1_light";      // Kasa plug aliases (Lights)
+constexpr int   SMARTPLUG_UPDATE_TIME   = 30000;              // Update smart plugs time (ms)
+bool            FLOWER                  = false;              // Set to true to set flower mode //TODO: Link this to a physical switch
+constexpr float DESIRED_TEMP_VEG        = 75.0;               // Desired temperature in F (veg)
+constexpr float DESIRED_HUMIDITY_VEG    = 65.0;               // Desired humidity in percentage (veg)
+constexpr float DESIRED_CO2_VEG         = 800.0;              // Desired CO2 level (ppm) (veg)
+constexpr float DESIRED_TEMP_FLOWER     = 70.0;               // Desired temperature in F (flower)
+constexpr float DESIRED_HUMIDITY_FLOWER = 45.0;               // Desired humidity in percentage (flower)
+constexpr float DESIRED_CO2_FLOWER      = 1000.0;             // Desired CO2 level (ppm) (flower)
+constexpr float TEMP_HYSTERESIS         = 1.0;                // Temperature hysteresis to prevent rapid switching
+constexpr float HUMIDITY_HYSTERESIS     = 5.0;                // Humidity hysteresis to prevent rapid switching
+constexpr float CO2_HYSTERESIS          = 100.0;              // CO2 hysteresis to prevent rapid switching
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                        // Baud rate
 // ============================================================================
+//vim: filetype=arduino:shiftwidth=2:softtabstop=2:expandtab:nowrap:cursorline:cursorcolumn:number:relativenumber
