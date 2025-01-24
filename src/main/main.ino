@@ -327,13 +327,17 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
   display.setCursor(0, 16);
   display.print("Temp: ");
   display.print(temperature);
-  display.println(" C");
+  display.print(" ");  // print space
+  display.write(0xF8); // Print the degrees symbol
+  display.println("C");
 
   // Temperature
   display.setCursor(0, 26);
   display.print("Temp: ");
   display.print(temperatureF);
-  display.println(" F");
+  display.print(" ");  // print space
+  display.write(0xF8); // Print the degrees symbol
+  display.println("F");
 
   // Humidity
   display.setCursor(0, 36);
