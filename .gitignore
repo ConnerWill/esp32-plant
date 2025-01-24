@@ -2,6 +2,11 @@
 
 *.egg-info
 
+*.theia
+*.theia/
+launch.json
+src/main/.theia
+
 venv/
 .venv/
 __pycache__/

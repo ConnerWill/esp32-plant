@@ -12,7 +12,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include "KasaSmartPlug.h"     // KASA TP-link smart plug library: https://github.com/kj831ca/KasaSmartPlug
+#include "KasaSmartPlug.h"     // KASA TP-link smart plug library: https://github.com/ConnerWill/KasaSmartPlug
 #include "config.h"            // Include config header file
 #include "bitmap.h"            // Include bitmap header file
 // ============================================================================
@@ -431,6 +431,23 @@ void loop() {
     updateOLED(co2, temperature, temperatureF, humidity);
   }
 
+  // Periodically check Wi-Fi status
+  if (currentTime - lastWiFiCheck >= WIFI_CHECK_INTERVAL) {
+    lastWiFiCheck = currentTime;
+
+    if (WiFi.status() != WL_CONNECTED) {
+      Serial.println(F("Wi-Fi disconnected. Attempting to reconnect..."));
+      WiFi.reconnect(); // Attempt to reconnect
+
+      if (WiFi.status() != WL_CONNECTED) {
+        Serial.println(F("Reconnection failed. Retrying full connection..."));
+        connectToWiFi(); // Fallback to full connection
+      } else {
+        Serial.println(F("Reconnected to Wi-Fi."));
+      }
+    }
+  }
+
 /*
  * Temperature Too High -> Turn on the exhaust fan, consider additional cooling (e.g., A/C).
  * Temperature Too Low  -> Turn off the exhaust fan, possibly add a heater.
@@ -479,25 +496,10 @@ void loop() {
 //      setPlugState(exhaustPlug, false); // Turn off exhaust fan
 //      setPlugState(intakePlug, false);  // Turn off intake fan
 //    }
+
     //TODO: Add CO2 levels
   }
 
-  // Periodically check Wi-Fi status
-  if (currentTime - lastWiFiCheck >= WIFI_CHECK_INTERVAL) {
-    lastWiFiCheck = currentTime;
-
-    if (WiFi.status() != WL_CONNECTED) {
-      Serial.println(F("Wi-Fi disconnected. Attempting to reconnect..."));
-      WiFi.reconnect(); // Attempt to reconnect
-
-      if (WiFi.status() != WL_CONNECTED) {
-        Serial.println(F("Reconnection failed. Retrying full connection..."));
-        connectToWiFi(); // Fallback to full connection
-      } else {
-        Serial.println(F("Reconnected to Wi-Fi."));
-      }
-    }
-  }
 
   // Periodically show bitmap
   if (INTERRUPT_WITH_BITMAP) {
