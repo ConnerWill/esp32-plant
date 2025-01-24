@@ -246,9 +246,10 @@ void initOLED() {
   }
 
   // Default text settings
-  display.clearDisplay();
+  display.cp437(true);  // Use correct CP437 character codes
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
+  display.clearDisplay();
 }
 
 
