@@ -58,3 +58,4 @@ constexpr float CO2_HYSTERESIS          = 100.0;              // CO2 hysteresis 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                        // Baud rate
 // ============================================================================
+//vim: filetype=arduino:shiftwidth=2:softtabstop=2:expandtab:nowrap:cursorline:cursorcolumn:number:relativenumber
