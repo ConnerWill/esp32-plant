@@ -12,7 +12,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include "KasaSmartPlug.h"     // KASA TP-link smart plug library: https://github.com/kj831ca/KasaSmartPlug
+#include "KasaSmartPlug.h"     // KASA TP-link smart plug library: https://github.com/ConnerWill/KasaSmartPlug
 #include "config.h"            // Include config header file
 #include "bitmap.h"            // Include bitmap header file
 // ============================================================================
