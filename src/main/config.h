@@ -33,7 +33,7 @@ bool              SHOW_STARTUP                = true;    // Set to true to show 
 bool              SHOW_BITMAP                 = true;    // Set to true to show the bitmap
 bool              SHOW_CUSTOM_TEXT            = true;    // Set to true to show custom text
 bool              SHOW_IP_INFO                = true;    // Set to true to show IP information
-constexpr char    STARTUP_TEXT[]              = "HI";    // Startup custom text
+constexpr char    STARTUP_TEXT[]              = ":)";    // Startup custom text
 constexpr char    CUSTOM_TEXT[]               = "";      // OLED custom text "_____________________"
 bool              INTERRUPT_WITH_BITMAP       = true;    // Periodically show bitmap
 constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
@@ -41,7 +41,7 @@ constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
 // SMART PLUG CONFIGURATION
 const char      *intakePlugAlias      = "plug_intake";  // Kasa plug alias (Intake)
 const char      *exhaustPlugAlias     = "plug_exhaust"; // Kasa plug aliases (Exhaust)
-constexpr int   SMARTPLUG_UPDATE_TIME = 60000;          // Update smart plugs time (ms)
+constexpr int   SMARTPLUG_UPDATE_TIME = 30000;          // Update smart plugs time (ms)
 constexpr float DESIRED_TEMP          = 75.0;           // Desired temperature in F
 constexpr float DESIRED_HUMIDITY      = 50.0;           // Desired humidity in percentage
 constexpr float DESIRED_CO2           = 800.0;          // Desired CO2 level (ppm)
