@@ -148,18 +148,20 @@ void initSmartPlugs() {
 }
 
 // Function to turn a plug on or off
-void setPlugState(const char *alias, bool state) {
-  KASASmartPlug *plug = kasaUtil.GetSmartPlug(alias);
+void setPlugState(KASASmartPlug* plug, bool state) {
+  // Setting variable for printing. otherwise dont need this
+  KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
+
   if (plug == NULL) {
-    Serial.printf("Error: Could not find plug with alias '%s'\n", alias);
+    //Serial.printf("Error: Could not find plug with alias '%s'\n", plugAlias);
     return;
   }
 
   if (state) {
-    Serial.printf("Turning ON plug: %s\n", alias);
+    //Serial.printf("Turning ON plug: %s\n", plugAlias);
     plug->SetRelayState(1); // Turn on
   } else {
-    Serial.printf("Turning OFF plug: %s\n", alias);
+    //Serial.printf("Turning OFF plug: %s\n", plugAlias);
     plug->SetRelayState(0); // Turn off
   }
 }
@@ -290,13 +292,13 @@ void showIPInfo() {
   if (SHOW_IP_INFO) {
     display.clearDisplay();
     display.setCursor(0, 16);
-    display.print("SSID:     ");
+    display.print("SSID: ");
     display.println(WIFI_SSID);
     display.setCursor(0, 26);
-    display.print("Hostname: ");
+    display.print("Host: ");
     display.println(WiFi.getHostname());
     display.setCursor(0, 36);
-    display.print("IP:       ");
+    display.print("IP:   ");
     display.println(WiFi.localIP().toString().c_str());
 
     // Custom Text
