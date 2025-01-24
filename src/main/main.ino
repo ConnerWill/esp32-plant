@@ -508,7 +508,6 @@ void loop() {
     // Handle temperature and humidity
     handleTemperature(temperatureF, desiredTemp, mode);
     handleHumidity(humidity, desiredHumidity, mode);
-    //TODO: Add CO2 levels
   }
 
   // Periodically show bitmap
