@@ -478,31 +478,63 @@ void loop() {
     float temperatureF = celsiusToFahrenheit(temperature);
     float humidity = readHumidity();
 
+    // TODO: Link if we are in flower to a physical switch
+    // TODO: simplify so there is not 2 sets of if statements. Dynamic desired temp and humidity values
+    //
     // Temperature control logic
-    if (temperatureF > DESIRED_TEMP + TEMP_HYSTERESIS) { // Temp too high
-      Serial.println(F("Temperature too high! Turning on intake and exhaust fans..."));
-      setPlugState(exhaustPlug, true);  // Turn on exhaust fan
-      setPlugState(intakePlug, true);   // Turn on intake fan
-    } else if (temperatureF < DESIRED_TEMP - TEMP_HYSTERESIS) { // Temp too low
-      Serial.println(F("Temperature too low! Turning off intake and exhaust fans..."));
-      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-      setPlugState(intakePlug, false);  // Turn off intake fan
-    } else {
-      // If temperature is within the target range, turn off fans to save energy
-      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-      setPlugState(intakePlug, false);  // Turn off intake fan
-    }
+    if (FLOWER) { // FLOWER
+      if (temperatureF > DESIRED_TEMP_FLOWER + TEMP_HYSTERESIS) { // Temp too high
+        Serial.println(F("Temperature too high! Turning on intake and exhaust fans..."));
+        setPlugState(exhaustPlug, true);  // Turn on exhaust fan
+        setPlugState(intakePlug, true);   // Turn on intake fan
+      } else if (temperatureF < DESIRED_TEMP_FLOWER - TEMP_HYSTERESIS) { // Temp too low
+        Serial.println(F("Temperature too low! Turning off intake and exhaust fans..."));
+        setPlugState(exhaustPlug, false); // Turn off exhaust fan
+        setPlugState(intakePlug, false);  // Turn off intake fan
+      } else {
+        // If temperature is within the target range, turn off fans to save energy
+        setPlugState(exhaustPlug, false); // Turn off exhaust fan
+        setPlugState(intakePlug, false);  // Turn off intake fan
+      }
 
-    // Humidity control logic
-    if (humidity > DESIRED_HUMIDITY + HUMIDITY_HYSTERESIS) {             // Humidity too high
-      Serial.println(F("Humidity too high! Turning off humidifier..."));
-      setPlugState(humidifierPlugAlias, false);                          // Turn off humidifier
-    } else if (humidity < DESIRED_HUMIDITY - HUMIDITY_HYSTERESIS) {      // Humidity too low
-      Serial.println(F("Humidity too low! Turning on humidifier..."));
-      setPlugState(humidifierPlugAlias, true);                           // Turn on humidifier
-    } else {
-      // If humidity is within the target range, turn off humidifier to save energy
-      setPlugState(humidifierPlugAlias, false); // Turn off humidifier
+      // Humidity control logic
+      if (humidity > DESIRED_HUMIDITY_FLOWER + HUMIDITY_HYSTERESIS) {             // Humidity too high
+        Serial.println(F("Humidity too high! Turning off humidifier..."));
+        setPlugState(humidifierPlugAlias, false);                          // Turn off humidifier
+      } else if (humidity < DESIRED_HUMIDITY_FLOWER - HUMIDITY_HYSTERESIS) {      // Humidity too low
+        Serial.println(F("Humidity too low! Turning on humidifier..."));
+        setPlugState(humidifierPlugAlias, true);                           // Turn on humidifier
+      } else {
+        // If humidity is within the target range, turn off humidifier to save energy
+        setPlugState(humidifierPlugAlias, false); // Turn off humidifier
+      }
+
+    } else { // VEG
+      if (temperatureF > DESIRED_TEMP_VEG + TEMP_HYSTERESIS) { // Temp too high
+        Serial.println(F("Temperature too high! Turning on intake and exhaust fans..."));
+        setPlugState(exhaustPlug, true);  // Turn on exhaust fan
+        setPlugState(intakePlug, true);   // Turn on intake fan
+      } else if (temperatureF < DESIRED_TEMP_VEG - TEMP_HYSTERESIS) { // Temp too low
+        Serial.println(F("Temperature too low! Turning off intake and exhaust fans..."));
+        setPlugState(exhaustPlug, false); // Turn off exhaust fan
+        setPlugState(intakePlug, false);  // Turn off intake fan
+      } else {
+        // If temperature is within the target range, turn off fans to save energy
+        setPlugState(exhaustPlug, false); // Turn off exhaust fan
+        setPlugState(intakePlug, false);  // Turn off intake fan
+      }
+
+      // Humidity control logic
+      if (humidity > DESIRED_HUMIDITY_VEG + HUMIDITY_HYSTERESIS) {             // Humidity too high
+        Serial.println(F("Humidity too high! Turning off humidifier..."));
+        setPlugState(humidifierPlugAlias, false);                          // Turn off humidifier
+      } else if (humidity < DESIRED_HUMIDITY_VEG - HUMIDITY_HYSTERESIS) {      // Humidity too low
+        Serial.println(F("Humidity too low! Turning on humidifier..."));
+        setPlugState(humidifierPlugAlias, true);                           // Turn on humidifier
+      } else {
+        // If humidity is within the target range, turn off humidifier to save energy
+        setPlugState(humidifierPlugAlias, false); // Turn off humidifier
+      }
     }
 
     //TODO: Add CO2 levels
