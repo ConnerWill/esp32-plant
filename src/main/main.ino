@@ -254,19 +254,25 @@ void initOLED() {
 
 // Function to show startup display
 void showStart() {
-  display.clearDisplay();
-  display.setTextSize(3);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(32, 16);
-  display.println(STARTUP_TEXT);
-  display.display();
+  int16_t text_x, text_y;
+  uint16_t text_w, text_h;
 
-  // Scroll diag right
-  //display.startscrolldiagright(0x00, 0x07);
-  // Scroll left
-  display.startscrollleft(0x00, 0x0F);
+  // Clear display, set size
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+
+  // Calculate text bounds (0, 0 is a dummy position for now)
+  display.getTextBounds(STARTUP_TEXT, 0, 0, &text_x, &text_y, &text_w, &text_h);
+
+  // Calculate coordinates to center the text
+  int16_t x = (SCREEN_WIDTH - text_w) / 2;
+  int16_t y = (SCREEN_HEIGHT - text_h) / 2;
+
+  display.setCursor(x, y);
+  display.print(text);
+  display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
-  display.stopscroll();
   display.clearDisplay();
 }
 
