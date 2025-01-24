@@ -362,7 +362,7 @@ void setup() {
   Serial.begin(BAUD_RATE);                        // Initialize Serial for debugging
   initOLED();                                     // Initialize OLED
   connectToWiFi();                                // Connect to Wi-Fi
-  initSmartPlugs()                                // Initialize Smart Plugs
+  initSmartPlugs();                               // Initialize Smart Plugs
 
   // Define the root endpoint
   server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
