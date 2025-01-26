@@ -151,9 +151,9 @@ I installed the ESP32 boards and selected ESP32dev board.
 
 ## 3D Print
 
-![ESP32 Plant Monitoring Housing Image](/static/img/3d-housing.png)
+![ESP32 Plant Monitoring Housing 3D Image](/static/img/ESP32-Housing.jpg)
 
-The housing to hold the ESP32 and sensors can be 3D printed.
+The housing to hold the ESP32 can be 3D printed.
 
 The 3D model files are located under the [3D-models](/3D-models) directory.
 
