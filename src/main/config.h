@@ -54,6 +54,10 @@ constexpr float DESIRED_CO2_FLOWER      = 1000.0;             // Desired CO2 lev
 constexpr float TEMP_HYSTERESIS         = 1.0;                // Temperature hysteresis to prevent rapid switching
 constexpr float HUMIDITY_HYSTERESIS     = 5.0;                // Humidity hysteresis to prevent rapid switching
 constexpr float CO2_HYSTERESIS          = 100.0;              // CO2 hysteresis to prevent rapid switching
+bool            LOW_TEMP_TIMER_ACTIVE   = false;              // Whether the low temperature timer is active (this is updated by the code) //TODO: Move to main.ino
+constexpr int   MAX_LOW_TEMP_DURATION   = 600000;             // Run fans periodically when temperatures are low and fans are off. This is to recurculate the air (ms)
+constexpr int   PERIODIC_RUN_FANS       = 30000;              // Run fans for this long periodically (ms)
+
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                        // Baud rate

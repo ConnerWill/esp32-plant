@@ -186,15 +186,37 @@ void handleTemperature(float temperatureF, float desiredTemp, const char* mode) 
     Serial.printf("Temperature too high in %s mode! Turning on intake and exhaust fans...\n", mode); //
     setPlugState(exhaustPlug, true);                                                                 // Turn on exhaust fan
     setPlugState(intakePlug, true);                                                                  // Turn on intake fan
+    LOW_TEMP_TIMER_ACTIVE = false;
 
   } else if (temperatureF < desiredTemp - TEMP_HYSTERESIS) {                                         // Temp too low
     Serial.printf("Temperature too low in %s mode! Turning off intake and exhaust fans...\n", mode); //
     setPlugState(exhaustPlug, false);                                                                // Turn off exhaust fan
     setPlugState(intakePlug, false);                                                                 // Turn off intake fan
+    if (!LOW_TEMP_TIMER_ACTIVE) {                                                                       // Start timer if not already active
+      lowTempStartTime = millis();
+      LOW_TEMP_TIMER_ACTIVE = true;
+    }
+
+    unsigned long currentTime = millis();
+    if (LOW_TEMP_TIMER_ACTIVE && (currentTime - lowTempStartTime > MAX_LOW_TEMP_DURATION)) {               // Check if duration exceeded
+      Serial.printf("Temperature too low for too long in %s mode! Activating fans to recirculate air...\n", mode);
+      setPlugState(exhaustPlug, true);                                                               // Turn on exhaust fan
+      setPlugState(intakePlug, true);                                                                // Turn on intake fan
+      delay(PERIODIC_RUN_FANS);                                                                      // Keep fans on for x time
+      setPlugState(exhaustPlug, false);                                                              // Turn off exhaust fan
+      setPlugState(intakePlug, false);                                                               // Turn off intake fan
+      LOW_TEMP_TIMER_ACTIVE = false;                                                                    // Reset timer
+    } else {
+      Serial.printf("Temperature too low in %s mode! Waiting...\n", mode);
+      setPlugState(exhaustPlug, false);                                                              // Turn off exhaust fan
+      setPlugState(intakePlug, false);                                                               // Turn off intake fan
+    }
 
   } else {                                                                                           // Temperature within range
+    Serial.printf("Temperature within range in %s mode. Fans off.\n", mode);
     setPlugState(exhaustPlug, false);                                                                // Turn off exhaust fan to save energy
     setPlugState(intakePlug, false);                                                                 // Turn off intake fan to save energy
+    LOW_TEMP_TIMER_ACTIVE = false;                                                                      // Reset timer
   }
 }
 
