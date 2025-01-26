@@ -123,6 +123,9 @@ void initSmartPlugs() {
     } else if (strcmp(plug->alias, exhaustPlugAlias) == 0) {
       exhaustPlug = plug;
       Serial.println("Exhaust plug initialized.");
+    } else if (strcmp(plug->alias, humidifierPlugAlias) == 0) {
+      humidifierPlugAlias = plug;
+      Serial.println("Humidifier plug initialized.");
     }
   }
 
@@ -142,6 +145,15 @@ void initSmartPlugs() {
     display.clearDisplay();
     display.setCursor(0, 0);
     display.print("ERROR: Exhaust plug not found");
+    display.display();
+    delay(1000);
+  }
+  if (humidifierPlugAlias == NULL) {
+    Serial.println("Error: Humidifier plug not found!");
+
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("ERROR: Humidifier plug not found");
     display.display();
     delay(1000);
   }
