@@ -6,7 +6,6 @@
 *.theia/
 launch.json
 src/main/.theia
-
 *.FCBak
 3D-models/ESP32-housing/ESP32-housing.20250126-111227.FCBak
 

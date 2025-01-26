@@ -26,6 +26,7 @@ AsyncWebServer server(SERVER_PORT);                               // Define serv
 KASAUtil kasaUtil;                                                // Kasa utility object
 KASASmartPlug *intakePlug = NULL;                                 // Smart plug pointers (Intake)
 KASASmartPlug *exhaustPlug = NULL;                                // Smart plug pointers (Exhaust)
+KASASmartPlug *humidifierPlug = NULL;                             // Smart plug pointers (Humidifier)
 // ============================================================================
 
 // ============================================================================
@@ -123,10 +124,14 @@ void initSmartPlugs() {
     } else if (strcmp(plug->alias, exhaustPlugAlias) == 0) {
       exhaustPlug = plug;
       Serial.println("Exhaust plug initialized.");
+    } else if (strcmp(plug->alias, humidifierPlugAlias) == 0) {
+      humidifierPlug = plug;
+      Serial.println("Humidifier plug initialized.");
     }
   }
 
   // Check if plugs were found
+  //TODO: Could clean this up
   if (intakePlug == NULL) {
     Serial.println("Error: Intake plug not found!");
 
@@ -145,13 +150,21 @@ void initSmartPlugs() {
     display.display();
     delay(1000);
   }
+  if (humidifierPlug == NULL) {
+    Serial.println("Error: Humidifier plug not found!");
+
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("ERROR: Humidifier plug not found");
+    display.display();
+    delay(1000);
+  }
 }
 
 // Function to turn a plug on or off
 void setPlugState(KASASmartPlug* plug, bool state) {
   // Setting variable for printing. otherwise dont need this
-  //TODO: Figure out how to turn this into a string
-  KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
+  //KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
 
   if (plug == NULL) {
     //Serial.printf("Error: Could not find plug with alias '%s'\n", plugAlias);
@@ -167,7 +180,38 @@ void setPlugState(KASASmartPlug* plug, bool state) {
   }
 }
 
-//TODO: Function to get plug state
+// Function to control fans based on temperature
+void handleTemperature(float temperatureF, float desiredTemp, const char* mode) {
+  if (temperatureF > desiredTemp + TEMP_HYSTERESIS) {                                                // Temp too high
+    Serial.printf("Temperature too high in %s mode! Turning on intake and exhaust fans...\n", mode); //
+    setPlugState(exhaustPlug, true);                                                                 // Turn on exhaust fan
+    setPlugState(intakePlug, true);                                                                  // Turn on intake fan
+
+  } else if (temperatureF < desiredTemp - TEMP_HYSTERESIS) {                                         // Temp too low
+    Serial.printf("Temperature too low in %s mode! Turning off intake and exhaust fans...\n", mode); //
+    setPlugState(exhaustPlug, false);                                                                // Turn off exhaust fan
+    setPlugState(intakePlug, false);                                                                 // Turn off intake fan
+
+  } else {                                                                                           // Temperature within range
+    setPlugState(exhaustPlug, false);                                                                // Turn off exhaust fan to save energy
+    setPlugState(intakePlug, false);                                                                 // Turn off intake fan to save energy
+  }
+}
+
+// Function to control humidifier based on humidity
+void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
+  if (humidity > desiredHumidity + HUMIDITY_HYSTERESIS) {                             // Humidity too high
+    Serial.printf("Humidity too high in %s mode! Turning off humidifier...\n", mode); //
+    setPlugState(humidifierPlug, false);                                              // Turn off humidifier
+
+  } else if (humidity < desiredHumidity - HUMIDITY_HYSTERESIS) {                      // Humidity too low
+    Serial.printf("Humidity too low in %s mode! Turning on humidifier...\n", mode);   //
+    setPlugState(humidifierPlug, true);                                               // Turn on humidifier
+
+  } else {                                                                            // Humidity within range
+    setPlugState(humidifierPlug, false);                                              // Turn off humidifier to save energy
+  }
+}
 
 // -------------------------------------
 // WIFI Functions
@@ -246,27 +290,34 @@ void initOLED() {
   }
 
   // Default text settings
-  display.clearDisplay();
+  display.cp437(true);  // Use correct CP437 character codes
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
+  display.clearDisplay();
 }
 
 
 // Function to show startup display
 void showStart() {
-  display.clearDisplay();
-  display.setTextSize(3);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(32, 16);
-  display.println(STARTUP_TEXT);
-  display.display();
+  int16_t text_x, text_y;
+  uint16_t text_w, text_h;
 
-  // Scroll diag right
-  //display.startscrolldiagright(0x00, 0x07);
-  // Scroll left
-  display.startscrollleft(0x00, 0x0F);
+  // Clear display, set size
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+
+  // Calculate text bounds (0, 0 is a dummy position for now)
+  display.getTextBounds(STARTUP_TEXT, 0, 0, &text_x, &text_y, &text_w, &text_h);
+
+  // Calculate coordinates to center the text
+  int16_t x = (SCREEN_WIDTH - text_w) / 2;
+  int16_t y = (SCREEN_HEIGHT - text_h) / 2;
+
+  display.setCursor(x, y);
+  display.print(STARTUP_TEXT);
+  display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
-  display.stopscroll();
   display.clearDisplay();
 }
 
@@ -327,13 +378,17 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
   display.setCursor(0, 16);
   display.print("Temp: ");
   display.print(temperature);
-  display.println(" C");
+  display.print(" ");  // print space
+  display.write(0xF8); // Print the degrees symbol
+  display.println("C");
 
   // Temperature
   display.setCursor(0, 26);
   display.print("Temp: ");
   display.print(temperatureF);
-  display.println(" F");
+  display.print(" ");  // print space
+  display.write(0xF8); // Print the degrees symbol
+  display.println("F");
 
   // Humidity
   display.setCursor(0, 36);
@@ -448,15 +503,6 @@ void loop() {
     }
   }
 
-/*
- * Temperature Too High -> Turn on the exhaust fan, consider additional cooling (e.g., A/C).
- * Temperature Too Low  -> Turn off the exhaust fan, possibly add a heater.
- * Humidity Too High    -> Turn on the exhaust fan to vent humid air, or use a dehumidifier.
- * Humidity Too Low     -> Turn off the exhaust fan, reduce intake, and add a humidifier if needed.
- * CO2 Too High         -> Turn on the exhaust fan to vent excess CO2.
- * CO2 Too Low          -> Turn off the exhaust fan to retain CO2, or add a CO2 source.
-*/
-
   // Update Smart plugs
   if (currentTime - lastPlugCheck >= SMARTPLUG_UPDATE_TIME) {
     lastPlugCheck = currentTime;
@@ -467,39 +513,15 @@ void loop() {
     float temperatureF = celsiusToFahrenheit(temperature);
     float humidity = readHumidity();
 
-    // Temperature control logic
-    if (temperatureF > DESIRED_TEMP + TEMP_HYSTERESIS) { // Temp too high
-      Serial.println(F("Temperature too high! Turning on intake and exhaust fans..."));
-      setPlugState(exhaustPlug, true);  // Turn on exhaust fan
-      setPlugState(intakePlug, true);   // Turn on intake fan
-    } else if (temperatureF < DESIRED_TEMP - TEMP_HYSTERESIS) { // Temp too low
-      Serial.println(F("Temperature too low! Turning off intake and exhaust fans..."));
-      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-      setPlugState(intakePlug, false);  // Turn off intake fan
-    } else {
-      // If temperature is within the target range, turn off fans to save energy
-      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-      setPlugState(intakePlug, false);  // Turn off intake fan
-    }
+    // Determine mode (Flower or Veg) and set desired values
+    const char* mode = FLOWER ? "FLOWER" : "VEG";
+    float desiredTemp = FLOWER ? DESIRED_TEMP_FLOWER : DESIRED_TEMP_VEG;
+    float desiredHumidity = FLOWER ? DESIRED_HUMIDITY_FLOWER : DESIRED_HUMIDITY_VEG;
 
-//    // Humidity control logic
-//    if (humidity > DESIRED_HUMIDITY + HUMIDITY_HYSTERESIS) { // Humidity too high
-//      Serial.println(F("Humidity too high! Turning on exhaust fan..."));
-//      setPlugState(exhaustPlug, true); // Turn on exhaust fan
-//    } else if (humidity < DESIRED_HUMIDITY - HUMIDITY_HYSTERESIS) { // Humidity too low
-//      Serial.println(F("Humidity too low! Turning off intake and exhaust fans..."));
-//      setPlugState(intakePlug, false);  // Turn off intake fan
-//      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-//      // Optionally, activate a humidifier if available
-//    } else {
-//      // If humidity is within the target range, turn off fans to save energy
-//      setPlugState(exhaustPlug, false); // Turn off exhaust fan
-//      setPlugState(intakePlug, false);  // Turn off intake fan
-//    }
-
-    //TODO: Add CO2 levels
+    // Handle temperature and humidity
+    handleTemperature(temperatureF, desiredTemp, mode);
+    handleHumidity(humidity, desiredHumidity, mode);
   }
-
 
   // Periodically show bitmap
   if (INTERRUPT_WITH_BITMAP) {
@@ -510,3 +532,4 @@ void loop() {
   }
 }
 // ============================================================================
+//vim: filetype=arduino:shiftwidth=2:softtabstop=2:expandtab:nowrap:cursorline:cursorcolumn:number:relativenumber
