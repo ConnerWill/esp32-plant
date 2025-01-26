@@ -26,6 +26,7 @@ AsyncWebServer server(SERVER_PORT);                               // Define serv
 KASAUtil kasaUtil;                                                // Kasa utility object
 KASASmartPlug *intakePlug = NULL;                                 // Smart plug pointers (Intake)
 KASASmartPlug *exhaustPlug = NULL;                                // Smart plug pointers (Exhaust)
+KASASmartPlug *humidifierPlug = NULL;                             // Smart plug pointers (Humidifier)
 // ============================================================================
 
 // ============================================================================
@@ -124,12 +125,13 @@ void initSmartPlugs() {
       exhaustPlug = plug;
       Serial.println("Exhaust plug initialized.");
     } else if (strcmp(plug->alias, humidifierPlugAlias) == 0) {
-      humidifierPlugAlias = plug;
+      humidifierPlug = plug;
       Serial.println("Humidifier plug initialized.");
     }
   }
 
   // Check if plugs were found
+  //TODO: Could clean this up
   if (intakePlug == NULL) {
     Serial.println("Error: Intake plug not found!");
 
@@ -148,7 +150,7 @@ void initSmartPlugs() {
     display.display();
     delay(1000);
   }
-  if (humidifierPlugAlias == NULL) {
+  if (humidifierPlug == NULL) {
     Serial.println("Error: Humidifier plug not found!");
 
     display.clearDisplay();
@@ -162,8 +164,7 @@ void initSmartPlugs() {
 // Function to turn a plug on or off
 void setPlugState(KASASmartPlug* plug, bool state) {
   // Setting variable for printing. otherwise dont need this
-  //TODO: Figure out how to turn this into a string
-  KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
+  //KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
 
   if (plug == NULL) {
     //Serial.printf("Error: Could not find plug with alias '%s'\n", plugAlias);
@@ -201,14 +202,14 @@ void handleTemperature(float temperatureF, float desiredTemp, const char* mode) 
 void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
   if (humidity > desiredHumidity + HUMIDITY_HYSTERESIS) {                             // Humidity too high
     Serial.printf("Humidity too high in %s mode! Turning off humidifier...\n", mode); //
-    setPlugState(humidifierPlugAlias, false);                                         // Turn off humidifier
+    setPlugState(humidifierPlug, false);                                              // Turn off humidifier
 
   } else if (humidity < desiredHumidity - HUMIDITY_HYSTERESIS) {                      // Humidity too low
     Serial.printf("Humidity too low in %s mode! Turning on humidifier...\n", mode);   //
-    setPlugState(humidifierPlugAlias, true);                                          // Turn on humidifier
+    setPlugState(humidifierPlug, true);                                               // Turn on humidifier
 
   } else {                                                                            // Humidity within range
-    setPlugState(humidifierPlugAlias, false);                                         // Turn off humidifier to save energy
+    setPlugState(humidifierPlug, false);                                              // Turn off humidifier to save energy
   }
 }
 
@@ -314,7 +315,7 @@ void showStart() {
   int16_t y = (SCREEN_HEIGHT - text_h) / 2;
 
   display.setCursor(x, y);
-  display.print(text);
+  display.print(STARTUP_TEXT);
   display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
   display.clearDisplay();
