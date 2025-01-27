@@ -95,7 +95,7 @@ void initSmartPlugs() {
   display.print("KASA devices found: ");
   display.println(found);
   display.display();
-  delay(500);
+  delay(WAIT_TIME);
 
   // Loop through found devices and match aliases
   for (int i = 0; i < found; i++) {
@@ -110,12 +110,12 @@ void initSmartPlugs() {
     display.setCursor(0, 16);
     display.print("Alias: ");
     display.println(plug->alias);
-    display.print("IP   : ");
+    display.print("IP: ");
     display.println(plug->ip_address);
-    display.print("State   : ");
+    display.print("State: ");
     display.println(plug->state);
     display.display();
-    delay(1000);
+    delay(found != 0 ? SCREEN_STARTUP_DISPLAY_TIME / found : SCREEN_STARTUP_DISPLAY_TIME); // Even out time for all devices. Make sure we arent dividing by 0. It shoudnt be since we check for NULL
 
     // Match plugs by their aliases
     if (strcmp(plug->alias, intakePlugAlias) == 0) {
@@ -139,16 +139,16 @@ void initSmartPlugs() {
     display.setCursor(0, 0);
     display.print("ERROR: Intake plug not found");
     display.display();
-    delay(1000);
+    delay(WAIT_TIME);
   }
   if (exhaustPlug == NULL) {
-    Serial.println("Error: Exhaust plug not found!");
+    Serial.println("ERROR: Exhaust plug not found!");
 
     display.clearDisplay();
     display.setCursor(0, 0);
     display.print("ERROR: Exhaust plug not found");
     display.display();
-    delay(1000);
+    delay(WAIT_TIME);
   }
   if (humidifierPlug == NULL) {
     Serial.println("Error: Humidifier plug not found!");
@@ -157,25 +157,19 @@ void initSmartPlugs() {
     display.setCursor(0, 0);
     display.print("ERROR: Humidifier plug not found");
     display.display();
-    delay(1000);
+    delay(WAIT_TIME);
   }
 }
 
 // Function to turn a plug on or off
 void setPlugState(KASASmartPlug* plug, bool state) {
-  // Setting variable for printing. otherwise dont need this
-  //KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
-
   if (plug == NULL) {
-    //Serial.printf("Error: Could not find plug with alias '%s'\n", plugAlias);
     return;
   }
 
   if (state) {
-    //Serial.printf("Turning ON plug: %s\n", plugAlias);
     plug->SetRelayState(1); // Turn on
   } else {
-    //Serial.printf("Turning OFF plug: %s\n", plugAlias);
     plug->SetRelayState(0); // Turn off
   }
 }
@@ -194,7 +188,7 @@ void handleTemperature(float temperatureF, float desiredTemp, const char* mode) 
 
   } else {                                                                                           // Temperature within range
     setPlugState(exhaustPlug, false);                                                                // Turn off exhaust fan to save energy
-    setPlugState(intakePlug, false);                                                                 // Turn off intake fan to save energy
+    setPlugState(intakePlug, false);                                                                 // Turn off intake fan to save energy //TODO: This is probably not needed and redundant
   }
 }
 
@@ -209,7 +203,7 @@ void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
     setPlugState(humidifierPlug, true);                                               // Turn on humidifier
 
   } else {                                                                            // Humidity within range
-    setPlugState(humidifierPlug, false);                                              // Turn off humidifier to save energy
+    setPlugState(humidifierPlug, false);                                              // Turn off humidifier to save energy //TODO: This is probably not needed and redundant
   }
 }
 
@@ -255,7 +249,7 @@ void connectToWiFi() {
 
       return;
     }
-    delay(1000);
+    delay(WAIT_TIME);
     Serial.print(".");
 
     // Connecting loading bar
