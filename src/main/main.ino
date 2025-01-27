@@ -82,6 +82,17 @@ float celsiusToFahrenheit(float celsius) {
   return fahrenheit;
 }
 
+
+// -------------------------------------
+// Switch Functions
+// -------------------------------------
+// Function to read and update the state of the FLOWER variable based on the rocker switch
+void updateFlowerState() {
+  int rockerState = digitalRead(ROCKER_SWITCH_PIN);
+  FLOWER = (rockerState == LOW); // Assuming LOW means ON
+}
+
+
 // -------------------------------------
 // KASA TP-Link Smart Plug Functions
 // -------------------------------------
@@ -418,6 +429,7 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
 // ============================================================================
 void setup() {
   pinMode(CO2_PIN, INPUT);                        // Set co2 pin mode
+  pinMode(ROCKER_SWITCH_PIN, INPUT_PULLUP);       // Initialize digital input for the rocker switch
   dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22); // Initialize DHT sensor
   Serial.begin(BAUD_RATE);                        // Initialize Serial for debugging
   initOLED();                                     // Initialize OLED
@@ -464,6 +476,9 @@ void loop() {
   static unsigned long lastBitmapCheck = 0;
   static unsigned long lastPlugCheck = 0;
   unsigned long currentTime = millis();
+
+  // Check position of flower switch
+  updateFlowerState();
 
   // Update OLED display
   if (currentTime - lastUpdateTime >= SCREEN_UPDATE_TIME) {

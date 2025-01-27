@@ -20,8 +20,9 @@ constexpr uint16_t SERVER_PORT = 80;                     // Port for the web ser
 constexpr char     SERVER_PATH[] = "/";                  // Path for serving the data
 
 // PINS CONFIGURATION
-constexpr uint8_t CO2_PIN = 35;                          // Analog pin for CO2 sensor
-constexpr uint8_t DHT_PIN = 27;                          // GPIO pin for DHT sensor
+constexpr uint8_t CO2_PIN           = 35;                // Analog pin for CO2 sensor
+constexpr uint8_t DHT_PIN           = 27;                // GPIO pin for DHT sensor
+constexpr uint8_t ROCKER_SWITCH_PIN = 25;                // GPIO pin for flower rocker switch
 
 // SCREEN CONFIGURATION
 constexpr int     SCREEN_WIDTH                = 128;     // OLED display width, in pixels
@@ -42,9 +43,8 @@ constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
 const char      *intakePlugAlias        = "tent1_intake";     // Kasa plug alias (Intake)
 const char      *exhaustPlugAlias       = "tent1_exhaust";    // Kasa plug aliases (Exhaust)
 const char      *humidifierPlugAlias    = "tent1_humidifier"; // Kasa plug aliases (Humidifier)
-//const char      *lightPlugAlias         = "tent1_light";      // Kasa plug aliases (Lights)
 constexpr int   SMARTPLUG_UPDATE_TIME   = 30000;              // Update smart plugs time (ms)
-bool            FLOWER                  = false;              // Set to true to set flower mode //TODO: Link this to a physical switch
+bool            FLOWER                  = false;              // Flower default value (this changes based on rocker switch)
 constexpr float DESIRED_TEMP_VEG        = 75.0;               // Desired temperature in F (veg)
 constexpr float DESIRED_HUMIDITY_VEG    = 60.0;               // Desired humidity in percentage (veg)
 constexpr float DESIRED_CO2_VEG         = 800.0;              // Desired CO2 level (ppm) (veg)
