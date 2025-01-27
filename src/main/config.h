@@ -32,10 +32,8 @@ constexpr int     SCREEN_UPDATE_TIME          = 1000;    // Time to wait before 
 constexpr int     SCREEN_STARTUP_DISPLAY_TIME = 3000;    // Startup screen delay time (ms)
 bool              SHOW_STARTUP                = true;    // Set to true to show the startup sequence
 bool              SHOW_BITMAP                 = true;    // Set to true to show the bitmap
-bool              SHOW_CUSTOM_TEXT            = true;    // Set to true to show custom text
 bool              SHOW_IP_INFO                = true;    // Set to true to show IP information
 constexpr char    STARTUP_TEXT[]              = ":)";    // Startup custom text
-constexpr char    CUSTOM_TEXT[]               = "";      // OLED custom text "_____________________"
 bool              INTERRUPT_WITH_BITMAP       = true;    // Periodically show bitmap
 constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
 

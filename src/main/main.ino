@@ -365,12 +365,6 @@ void showIPInfo() {
     display.setCursor(0, 36);
     display.print("IP:   ");
     display.println(WiFi.localIP().toString().c_str());
-
-    // Custom Text
-    if (SHOW_CUSTOM_TEXT || strlen(CUSTOM_TEXT) == 0) {
-      display.setCursor(0, 56);
-      display.print(CUSTOM_TEXT);
-    }
     display.display();
   }
 }
@@ -388,35 +382,30 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
   // Temperature
   display.setCursor(0, 16);
   display.print("Temp: ");
-  display.print(temperature);
-  display.print(" ");  // print space
-  display.write(0xF8); // Print the degrees symbol
-  display.println("C");
-
-  // Temperature
-  display.setCursor(0, 26);
-  display.print("Temp: ");
   display.print(temperatureF);
   display.print(" ");  // print space
   display.write(0xF8); // Print the degrees symbol
   display.println("F");
 
   // Humidity
-  display.setCursor(0, 36);
+  display.setCursor(0, 26);
   display.print("RH:   ");
   display.print(humidity);
   display.println(" %");
 
   // CO2
-  display.setCursor(0, 46);
+  display.setCursor(0, 36);
   display.print("CO2:  ");
   display.print(co2);
   display.println(" ppm");
 
-  // Custom Text
-  if (SHOW_CUSTOM_TEXT || strlen(CUSTOM_TEXT) == 0) {
-    display.setCursor(0, 56);
-    display.print(CUSTOM_TEXT);
+  // Flower Mode
+  display.setCursor(0, 56);
+  display.print("Flower: ");
+  if (FLOWER) {
+    display.println("ON");
+  } else {
+    display.println("OFF");
   }
 
   // Update Display
