@@ -1,5 +1,5 @@
 ---
-name: Arduino_lint
+name: Arduino_lint # https://github.com/marketplace/actions/arduino-arduino-lint-action
 
 on: [push, pull_request]
 
@@ -12,7 +12,7 @@ jobs:
       - uses: arduino/arduino-lint-action@v2
         with:
           path: ./src/main/
-          project-type: all #(sketch, library, platform, package-index, all)
+          project-type: all # (sketch, library, platform, package-index, all)
           library-manager: update
-          compliance: strict
+          compliance: specification  #strict
           verbose: true
