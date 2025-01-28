@@ -19,4 +19,5 @@ jobs:
           submodules: recursive
 
       - name: Shellcheck Shell Files
-        run: shellcheck --color=always --exclude=1072,1073,1009,2148,2142 --severity=error --check-sourced ./grafana/run.sh ./grafana/setup.sh
+        run: shellcheck --color=always --severity=error --check-sourced ./grafana/run.sh ./grafana/setup.sh
+        # run: shellcheck --color=always --exclude=1072,1073,1009,2148,2142 --severity=error --check-sourced ./grafana/run.sh ./grafana/setup.sh
