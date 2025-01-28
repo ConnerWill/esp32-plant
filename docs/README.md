@@ -4,7 +4,7 @@
 
 ![ESP32 Plant Monitoring Project Image](/static/img/project.png)
 
-[![Arduino_lint](https://github.com/ConnerWill/esp32-plant/actions/workflows/arduino_lint.yml/badge.svg)](https://github.com/ConnerWill/esp32-plant/actions/workflows/arduino_lint.yml)
+[![Arduino Lint](https://github.com/ConnerWill/esp32-plant/actions/workflows/arduino_lint.yml/badge.svg)](https://github.com/ConnerWill/esp32-plant/actions/workflows/arduino_lint.yml)
 [![Python Black](https://github.com/ConnerWill/esp32-plant/actions/workflows/python_black.yml/badge.svg)](https://github.com/ConnerWill/esp32-plant/actions/workflows/python_black.yml)
 [![ShellCheck](https://github.com/ConnerWill/esp32-plant/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/ConnerWill/esp32-plant/actions/workflows/shellcheck.yml)
 
