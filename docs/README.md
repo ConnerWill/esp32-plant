@@ -1,8 +1,12 @@
 # ESP32 Plant Monitoring System
 
+<div align="center">
+
 ![ESP32 Plant Monitoring Project Image](/static/img/project.png)
 
 [![Arduino_lint](https://github.com/ConnerWill/esp32-plant/actions/workflows/arduino_lint.yml/badge.svg)](https://github.com/ConnerWill/esp32-plant/actions/workflows/arduino_lint.yml)
+
+</div>
 
 ---
 
