@@ -14,5 +14,5 @@ jobs:
           path: ./src/main/
           project-type: all # (sketch, library, platform, package-index, all)
           library-manager: update
-          compliance: specification  #strict
+          compliance: strict # specification
           verbose: true
