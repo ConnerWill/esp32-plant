@@ -1,4 +1,4 @@
-name: Python Black Formatting Check
+name: Python Black
 
 on:
   push:
@@ -30,4 +30,3 @@ jobs:
       # Run Black
       - name: Run Black
         run: black --check ./grafana/sensor_data_collector/fetch_data.py
-
