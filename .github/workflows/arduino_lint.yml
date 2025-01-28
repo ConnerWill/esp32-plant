@@ -4,7 +4,7 @@ name: Arduino_lint
 on: [push, pull_request]
 
 jobs:
-  lint:
+  Arduino_Lint:
     runs-on: ubuntu-latest
 
     steps:
