@@ -24,8 +24,6 @@
     - [Uploading](#uploading)
   - [Images](#images)
   - [3D Print](#3d-print)
-    - [DHT22 Case](#dht22-case)
-    - [MQ-135 Case](#mq-135-case)
   - [TODO](#todo)
   - [Links](#links)
 <!--toc:end-->
@@ -157,40 +155,32 @@ The housing to hold the ESP32 can be 3D printed.
 
 The 3D model files are located under the [3D-models](/3D-models) directory.
 
-### DHT22 Case
-
-![DHT22 3D Printed Case](/static/img/DHT22-3D-model.jpg)
-
-[Over-engineered DHT22 / AM2302 Board Case](https://www.thingiverse.com/thing:4521313)
-: (Credit [SciMonster](https://www.thingiverse.com/SciMonster))
-
-### MQ-135 Case
-
-![MQ-135 3D Printed Case](/static/img/MQ-135-3D-model.jpg)
-
-[MQ-2 Sensor Case](https://www.thingiverse.com/thing:2893581)
-: (Credit [RJGII](https://www.thingiverse.com/RJGII))
+| Name             | Image                  | Link                                      | Author     |
+|------------------|------------------------|-------------------------------------------|------------|
+| ESP32-Plant Case | ![ESP32-Plant Case Image](/static/img/ESP32-Housing.jpg) | [ESP32-Plant Case Case](/3D-models/ESP32-housing/)                     | [ConnerWill](https://github.com/ConnerWill) |
+| DHT22 Case       | ![DHT22 Case Image](/static/img/DHT22-3D-model.jpg)       | [Over-engineered DHT22 / AM2302 Board Case](https://www.thingiverse.com/thing:4521313) | [SciMonster](https://www.thingiverse.com/SciMonster) |
+| MQ-135 Case      | ![MQ-135 Case Image](/static/img/MQ-135-3D-model.jpg)      | [MQ-2 Sensor Case](https://www.thingiverse.com/thing:2893581)                          | [RJGII](https://www.thingiverse.com/RJGII)      |
 
 ---
 
 ## TODO
 
-* Add wiring/setup instructions
-* Add 3D models
-* Replace images
-* Improve code
-* Add plotting
+- Add wiring/setup instructions
+- Add 3D models
+- Replace images
+- Improve code
+- Add plotting
 
 ---
 
 ## Links
 
-* https://microcontrollerslab.com/esp32-dht11-dht22-web-server
-* https://blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt
-* https://maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32
-* https://www.thingiverse.com/thing:4521313
-* https://www.thingiverse.com/thing:2893581
-* https://javl.github.io/image2cpp
-* https://github.com/ConnerWill/KasaSmartPlug
+- [microcontrollerslab.com/esp32-dht11-dht22-web-server](https://microcontrollerslab.com/esp32-dht11-dht22-web-server)
+- [blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt](https://blog.asksensors.com/air-quality-sensor-mq135-cloud-mqtt)
+- [maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32](https://maker.pro/everything-esp/projects/how-to-control-a-relay-module-with-esp32)
+- [thingiverse.com/thing:4521313](https://www.thingiverse.com/thing:4521313)
+- [thingiverse.com/thing:2893581](https://www.thingiverse.com/thing:2893581)
+- [javl.github.io/image2cpp](https://javl.github.io/image2cpp)
+- [github.com/ConnerWill/KasaSmartPlug](https://github.com/ConnerWill/KasaSmartPlug)
 
 ---
