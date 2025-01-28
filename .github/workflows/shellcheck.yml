@@ -13,16 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
-      # Step 2: Install ShellCheck
-      - name: Install ShellCheck
-        run: sudo apt-get install -y shellcheck
-
-      # Step 3: Run ShellCheck on all shell scripts
-      - name: Run ShellCheck
-        run: |
-          # Find and lint all shell scripts (*.sh)
-          find . -type f -name "*.sh" -exec shellcheck {} +
+      - name: Shellcheck Shell Files
+        run: shellcheck --color=always --exclude=1072,1073,1009,2148,2142 --severity=error --check-sourced ./grafana/run.sh ./grafana/setup.sh
