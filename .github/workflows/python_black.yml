@@ -1,0 +1,33 @@
+name: Python Black Formatting Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      # Install dependencies
+      - name: Install Black
+        run: pip install black
+
+      # Run Black
+      - name: Run Black
+        run: black --check ./grafana/sensor_data_collector/fetch_data.py
+
