@@ -148,7 +148,7 @@ I installed the ESP32 boards and selected ESP32dev board.
 
 |                                      |                                      |
 |--------------------------------------|--------------------------------------|
-| ![ESP32 Plant Monitoring Project Image](/static/img/project.png) | ![ESP32 Plant Monitoring Project Image](/static/img/project.png) |
+| ![ESP32 Plant Monitoring Project Image 1](/static/img/esp32-plant-image1.jpg) | ![ESP32 Plant Monitoring Project Image 2](/static/img/esp32-plant-image2.jpg) |
 | ![ESP32 Plant Monitoring Project Image](/static/img/project.png) | ![ESP32 Plant Monitoring Project Image](/static/img/project.png) |
 
 ---
