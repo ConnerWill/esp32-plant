@@ -9,6 +9,8 @@
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
 #include <ArduinoJson.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -27,6 +29,9 @@ KASAUtil kasaUtil;                                                // Kasa utilit
 KASASmartPlug *intakePlug = NULL;                                 // Smart plug pointers (Intake)
 KASASmartPlug *exhaustPlug = NULL;                                // Smart plug pointers (Exhaust)
 KASASmartPlug *humidifierPlug = NULL;                             // Smart plug pointers (Humidifier)
+WiFiClientSecure client;                                          // Secure WiFi client
+HTTPClient http;                                                  // HTTP client
+uint8_t bitmap_data[1024];                                        // Buffer for the image data
 // ============================================================================
 
 // ============================================================================
@@ -332,10 +337,38 @@ void showStart() {
   display.clearDisplay();
 }
 
+// Function to fetchBitmap from server
+bool fetchBitmap() {
+  client.setInsecure();  // Disables SSL certificate verification (Not secure for production)
+  http.begin(client, image_url);
+  int httpCode = http.GET();
+  if (httpCode == HTTP_CODE_OK) {
+    WiFiClient* stream = http.getStreamPtr();
+    int index = 0;
+    while (http.connected() && stream->available() && index < sizeof(bitmap_online_data)) {
+      bitmap_online_data[index++] = stream->read();
+    }
+
+    http.end();
+    Serial.println("Image downloaded successfully!");
+    return true;
+  } else {
+    Serial.printf("Failed to fetch image. HTTP Code: %d\n", httpCode);
+    return false;
+  }
+}
+
+
+
 // Function to show bitmap image
 void showBitmap() {
   display.clearDisplay();
-  display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
+  if (fetchBitmap()) {
+    display.drawBitmap(0, 0, bitmap_online_data, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
+
+  } else {
+    display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
+  }
   display.display();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
 

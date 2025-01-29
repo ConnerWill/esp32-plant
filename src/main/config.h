@@ -32,6 +32,7 @@ constexpr int     SCREEN_UPDATE_TIME          = 1000;    // Time to wait before 
 constexpr int     SCREEN_STARTUP_DISPLAY_TIME = 3000;    // Startup screen delay time (ms)
 bool              SHOW_STARTUP                = true;    // Set to true to show the startup sequence
 bool              SHOW_BITMAP                 = true;    // Set to true to show the bitmap
+constexpr char    BITMAP_URL[]                = "https://connerwill.com/static/bitmaps/esp32-bitmap-128x64.bmp"; // URL to online bitmap image
 bool              SHOW_IP_INFO                = true;    // Set to true to show IP information
 constexpr char    STARTUP_TEXT[]              = ":)";    // Startup custom text
 bool              INTERRUPT_WITH_BITMAP       = true;    // Periodically show bitmap
