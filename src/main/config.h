@@ -10,7 +10,7 @@
 // ============================================================================
 // WIFI CONFIGURATION
 constexpr char WIFI_SSID[]         = "";                 // Wi-Fi SSID
-constexpr char WIFI_PASSWORD[]     = "!";                 // Wi-Fi password
+constexpr char WIFI_PASSWORD[]     = "";                 // Wi-Fi password
 constexpr char WIFI_HOSTNAME[]     = "esp32-plant";      // Hostname
 constexpr int  WIFI_TIMEOUT_TIME   = 30000;              // Timeout if unable to connect to WiFi (ms)
 constexpr int  WIFI_CHECK_INTERVAL = 5000;               // Check WiFi time (ms)
@@ -22,7 +22,7 @@ constexpr char     SERVER_PATH[] = "/";                  // Path for serving the
 // PINS CONFIGURATION
 constexpr uint8_t CO2_PIN           = 35;                // Analog pin for CO2 sensor
 constexpr uint8_t DHT_PIN           = 27;                // GPIO pin for DHT sensor
-constexpr uint8_t ROCKER_SWITCH_PIN = 25;                // GPIO pin for flower rocker switch
+constexpr uint8_t ROCKER_SWITCH_PIN = 19;                // GPIO pin for flower rocker switch
 
 // SCREEN CONFIGURATION
 constexpr int     SCREEN_WIDTH                = 128;     // OLED display width, in pixels
@@ -43,8 +43,8 @@ const char      *exhaustPlugAlias       = "tent1_exhaust";    // Kasa plug alias
 const char      *humidifierPlugAlias    = "tent1_humidifier"; // Kasa plug aliases (Humidifier)
 constexpr int   SMARTPLUG_UPDATE_TIME   = 30000;              // Update smart plugs time (ms)
 bool            FLOWER                  = false;              // Flower default value (this changes based on rocker switch)
-constexpr float DESIRED_TEMP_VEG        = 75.0;               // Desired temperature in F (veg)
-constexpr float DESIRED_HUMIDITY_VEG    = 60.0;               // Desired humidity in percentage (veg)
+constexpr float DESIRED_TEMP_VEG        = 80.0;               // Desired temperature in F (veg)
+constexpr float DESIRED_HUMIDITY_VEG    = 50.0;               // Desired humidity in percentage (veg)
 constexpr float DESIRED_CO2_VEG         = 800.0;              // Desired CO2 level (ppm) (veg)
 constexpr float DESIRED_TEMP_FLOWER     = 70.0;               // Desired temperature in F (flower)
 constexpr float DESIRED_HUMIDITY_FLOWER = 45.0;               // Desired humidity in percentage (flower)
