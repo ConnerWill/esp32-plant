@@ -79,7 +79,7 @@ Once you have all the required parts in hand, you can start wiring
 
 ### Circuit Schematic
 
-![ESP32 Plant Wiring](/static/img/esp32-wiring.jpeg)
+[![ESP32 Plant Wiring](/static/img/esp32-wiring.jpeg)](https://wokwi.com/projects/421434545777653761)
 
 ![ESP32 Plant Monitoring Circuit Schematic Image](/static/img/circuit-schematic.png)
 
