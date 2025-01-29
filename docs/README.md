@@ -61,11 +61,12 @@ Here is a list of parts used in this project
 | MQ-135          | $3      | 1     | CO2 Sensor                        | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
 | OLED Display    | $3      | 1     | 0.96" OLED Display 128x64 SSD1306 | [Amazon](https://www.amazon.com/Hosyond-Display-Self-Luminous-Compatible-Raspberry/dp/B09C5K91H7) |                                                    |
 | Kasa Smart Plug | $7.50   | 2     | TP-Link Kasa Smart Plug HS103     | [Amazon](https://www.amazon.com/dp/B07RCNB2L3) | Intake and exhaust fans smart plugs                |
+| Rocker Switch   | $0.60   | 1     | Rocker Switch On/Off 2 Pin        | [Amazon](https://www.amazon.com/dp/B0CVTRKJTV) |                                                    |
 | 1K Ω Resistor   | $0.25   | 1     | 1K Ohm Resistor                   | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
 | 10K Ω Resistor  | $0.25   | 0/1   | 10K Ohm Resistor                  | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR67DJHM) | Most DHT22 sensor modules have a built-in resistor |
 | Wire/Breadboard | $1      | 0/1   | Jumper wire or breadboard         | [Amazon](https://www.amazon.com/DEYUE-breadboard-Set-Prototype-Board/dp/B07LFD4LT6) | Optional depending on setup                        |
 | Breakout Board  | $4      | 0/1   | ESP32 Breakout Board GPIO         | [Amazon](https://www.amazon.com/dp/B0BNQ8V65G) | Optional depending on setup                        |
-| **TOTAL**           | ~$34.25 |       |                                   |        |                                                    |
+| **TOTAL**           | ~$34.85 |       |                                   |        |                                                    |
 
 > [!TIP]
 > *Lower prices can be found if you shop around*
@@ -78,16 +79,19 @@ Once you have all the required parts in hand, you can start wiring
 
 ### Circuit Schematic
 
+![ESP32 Plant Wiring](/static/img/esp32-wiring.jpeg)
+
 ![ESP32 Plant Monitoring Circuit Schematic Image](/static/img/circuit-schematic.png)
 
 ![ESP32 OLED Circuit Schematic Image](/static/img/esp32-oled-schematic.jpg)
 
-| ESP32 Pin | Destination | Type    | Power Requirements (Volts) | ESP32 VCC Pin | ESP32 GND Pin |
-|-----------|-------------|---------|----------------------------|---------------|---------------|
-| 27        | DHT22       | Digital | 3.3 - 5                    | 3.3V          | GND           |
-| 35        | CO2 Sensor  | Analog  | 5                          | 5V            | GND           |
-| 21        | OLED SCL    | SCL     | 3.3                        | 3.3V          | GND           |
-| 22        | OLED SDA    | SDA     | 3.3                        | 3.3V          | GND           |
+| ESP32 Pin | Destination   | Type    | Power Requirements (Volts) | ESP32 VCC Pin | ESP32 GND Pin |
+|-----------|---------------|---------|----------------------------|---------------|---------------|
+| 27        | DHT22         | Digital | 3.3 - 5                    | 3.3V          | GND           |
+| 35        | CO2 Sensor    | Analog  | 5                          | 5V            | GND           |
+| 21        | OLED SCL      | SCL     | 3.3                        | 3.3V          | GND           |
+| 22        | OLED SDA      | SDA     | 3.3                        | 3.3V          | GND           |
+| 19        | Rocker Switch | GPIO    |                            |               | GND           |
 
 > [!NOTE]
 > *Feel free to change the pins used on the ESP32, just note, if you change the pins, you will need to update the values in the code.*
