@@ -82,6 +82,17 @@ float celsiusToFahrenheit(float celsius) {
   return fahrenheit;
 }
 
+
+// -------------------------------------
+// Switch Functions
+// -------------------------------------
+// Function to read and update the state of the FLOWER variable based on the rocker switch
+void updateFlowerState() {
+  int rockerState = digitalRead(ROCKER_SWITCH_PIN);
+  FLOWER = (rockerState == LOW); // Assuming LOW means ON
+}
+
+
 // -------------------------------------
 // KASA TP-Link Smart Plug Functions
 // -------------------------------------
@@ -354,12 +365,6 @@ void showIPInfo() {
     display.setCursor(0, 36);
     display.print("IP:   ");
     display.println(WiFi.localIP().toString().c_str());
-
-    // Custom Text
-    if (SHOW_CUSTOM_TEXT || strlen(CUSTOM_TEXT) == 0) {
-      display.setCursor(0, 56);
-      display.print(CUSTOM_TEXT);
-    }
     display.display();
   }
 }
@@ -377,35 +382,30 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
   // Temperature
   display.setCursor(0, 16);
   display.print("Temp: ");
-  display.print(temperature);
-  display.print(" ");  // print space
-  display.write(0xF8); // Print the degrees symbol
-  display.println("C");
-
-  // Temperature
-  display.setCursor(0, 26);
-  display.print("Temp: ");
   display.print(temperatureF);
   display.print(" ");  // print space
   display.write(0xF8); // Print the degrees symbol
   display.println("F");
 
   // Humidity
-  display.setCursor(0, 36);
+  display.setCursor(0, 26);
   display.print("RH:   ");
   display.print(humidity);
   display.println(" %");
 
   // CO2
-  display.setCursor(0, 46);
+  display.setCursor(0, 36);
   display.print("CO2:  ");
   display.print(co2);
   display.println(" ppm");
 
-  // Custom Text
-  if (SHOW_CUSTOM_TEXT || strlen(CUSTOM_TEXT) == 0) {
-    display.setCursor(0, 56);
-    display.print(CUSTOM_TEXT);
+  // Flower Mode
+  display.setCursor(0, 56);
+  display.print("Flower: ");
+  if (FLOWER) {
+    display.println("ON");
+  } else {
+    display.println("OFF");
   }
 
   // Update Display
@@ -418,6 +418,7 @@ void updateOLED(float co2, float temperature, float temperatureF, float humidity
 // ============================================================================
 void setup() {
   pinMode(CO2_PIN, INPUT);                        // Set co2 pin mode
+  pinMode(ROCKER_SWITCH_PIN, INPUT_PULLUP);       // Initialize digital input for the rocker switch
   dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22); // Initialize DHT sensor
   Serial.begin(BAUD_RATE);                        // Initialize Serial for debugging
   initOLED();                                     // Initialize OLED
@@ -464,6 +465,9 @@ void loop() {
   static unsigned long lastBitmapCheck = 0;
   static unsigned long lastPlugCheck = 0;
   unsigned long currentTime = millis();
+
+  // Check position of flower switch
+  updateFlowerState();
 
   // Update OLED display
   if (currentTime - lastUpdateTime >= SCREEN_UPDATE_TIME) {
