@@ -340,7 +340,7 @@ void showStart() {
 // Function to fetchBitmap from server
 bool fetchBitmap() {
   client.setInsecure();  // Disables SSL certificate verification (Not secure for production)
-  http.begin(client, image_url);
+  http.begin(client, BITMAP_URL);
   int httpCode = http.GET();
   if (httpCode == HTTP_CODE_OK) {
     WiFiClient* stream = http.getStreamPtr();
@@ -365,7 +365,6 @@ void showBitmap() {
   display.clearDisplay();
   if (fetchBitmap()) {
     display.drawBitmap(0, 0, bitmap_online_data, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
-
   } else {
     display.drawBitmap(0, 0, bitmap_image, SCREEN_WIDTH, SCREEN_HEIGHT, SSD1306_WHITE);
   }
