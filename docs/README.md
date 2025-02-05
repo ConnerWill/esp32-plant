@@ -180,10 +180,10 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 
 ## TODO
 
-- [] Improve wiring/setup instructions
-- [] Finish 3D models
-- [] Add finished product images
-- [] Improve code
+- [ ] Improve wiring/setup instructions
+- [ ] Finish 3D models
+- [ ] Add finished product images
+- [ ] Improve code
 
 ---
 
