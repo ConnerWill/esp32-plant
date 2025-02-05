@@ -98,6 +98,12 @@ void updateFlowerState() {
 // -------------------------------------
 // Function to initialize smart plugs
 void initSmartPlugs() {
+  // Check if we are connected to WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("Not connected to WiFi. Skipping smart plug setup");
+      return;
+  }
+
   int found = kasaUtil.ScanDevices();
   Serial.printf("Found %d Kasa devices\n", found);
 
@@ -176,6 +182,12 @@ void initSmartPlugs() {
 void setPlugState(KASASmartPlug* plug, bool state) {
   // Setting variable for printing. otherwise dont need this
   //KASASmartPlug *plugAlias = kasaUtil.GetSmartPlug(plug->alias);
+
+  // Check if we are connected to WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("Not connected to WiFi. Cannot set plug state");
+      return;
+  }
 
   if (plug == NULL) {
     //Serial.printf("Error: Could not find plug with alias '%s'\n", plugAlias);
