@@ -9,11 +9,17 @@ from influxdb import InfluxDBClient
 logging.basicConfig(level=logging.INFO)
 
 # Get environment variables with default values if they do not exist
-ESP32_IP:      str = str(os.getenv("ESP32_IP", "http://192.168.0.30"))  # Default to a placeholder IP
-INFLUXDB_HOST: str = str(os.getenv("INFLUXDB_HOST", "influxdb"))        # Default to the container name
-INFLUXDB_PORT: int = int(os.getenv("INFLUXDB_PORT", 8086))              # Default to 8086
-INFLUXDB_DB:   str = str(os.getenv("INFLUXDB_DB", "esp32_data"))        # Default database name
-POLL_INTERVAL: int = int(os.getenv("POLL_INTERVAL", 2))                 # Default polling interval to 2 seconds
+ESP32_IP: str = str(
+    os.getenv("ESP32_IP", "http://192.168.0.30")
+)  # Default to a placeholder IP
+INFLUXDB_HOST: str = str(
+    os.getenv("INFLUXDB_HOST", "influxdb")
+)  # Default to the container name
+INFLUXDB_PORT: int = int(os.getenv("INFLUXDB_PORT", 8086))  # Default to 8086
+INFLUXDB_DB: str = str(os.getenv("INFLUXDB_DB", "esp32_data"))  # Default database name
+POLL_INTERVAL: int = int(
+    os.getenv("POLL_INTERVAL", 2)
+)  # Default polling interval to 2 seconds
 
 # InfluxDB client setup
 client = InfluxDBClient(host=INFLUXDB_HOST, port=INFLUXDB_PORT)
