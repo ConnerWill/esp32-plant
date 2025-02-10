@@ -60,6 +60,7 @@ Here is a list of parts used in this project
 | DHT22            | $3      | 1     | Temp/Humidity Sensor                  | [Amazon](https://www.amazon.com/dp/B0CPHQC9SF) |                                                    |
 | MQ-135           | $3      | 1     | CO2 Sensor                            | [Amazon](https://www.amazon.com/Ximimark-Quality-Hazardous-Detection-Arduino/dp/B07L73VTTY) |                                                    |
 | OLED Display     | $3      | 1     | 0.96" OLED Display 128x64 SSD1306     | [Amazon](https://www.amazon.com/Hosyond-Display-Self-Luminous-Compatible-Raspberry/dp/B09C5K91H7) |                                                    |
+| RTC Module       | $3      | 1     | DS3231 RTC Module AT24C32             | [Amazon](https://www.amazon.com/dp/B09KPC8JZQ) |                                                    |
 | Kasa Smart Plug  | $7.50   | 2     | TP-Link Kasa Smart Plug HS103         | [Amazon](https://www.amazon.com/dp/B07RCNB2L3) | Intake and exhaust fans smart plugs                |
 | Rocker Switch    | $0.60   | 2     | Rocker Switch On/Off 2 Pin            | [Amazon](https://www.amazon.com/dp/B0CVTRKJTV) |                                                    |
 | 1K Ω Resistor    | $0.25   | 1     | 1K Ohm Resistor                       | [Amazon](https://www.amazon.com/California-JOS-Carbon-Resistor-Tolerance/dp/B0BR66ZN6B) | MQ-135 analog pin                                  |
@@ -94,6 +95,8 @@ Once you have all the required parts in hand, you can start wiring
 | 35        | CO2 Sensor    | Analog  | 5                          | 5V            | GND           |
 | 21        | OLED SCL      | SCL     | 3.3                        | 3.3V          | GND           |
 | 22        | OLED SDA      | SDA     | 3.3                        | 3.3V          | GND           |
+| 21        | RTC SCL       | SCL     | 3.3                        | 3.3V          | GND           |
+| 22        | RTC SDA       | SDA     | 3.3                        | 3.3V          | GND           |
 | 19        | Rocker Switch | GPIO    |                            |               | GND           |
 
 > [!NOTE]
