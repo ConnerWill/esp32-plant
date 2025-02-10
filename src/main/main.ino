@@ -285,9 +285,13 @@ void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
   }
 }
 
-// Function to set light state
-void controlLights(int hour, int minute) {
+// Function to control the lights based on the RTC time and flower state
+void controlLights() {
+  DateTime now = getCurrentTime();
+  int hour = now.hour();
+
   bool lightsOn = false;
+
   if (FLOWER) {
     // Flower mode
     lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_ON || hour < LIGHTS_OFF_HOUR_FLOWER_ON);
@@ -539,6 +543,7 @@ void loop() {
   static unsigned long lastWiFiCheck = 0;
   static unsigned long lastBitmapCheck = 0;
   static unsigned long lastPlugCheck = 0;
+  unsigned long lastNTPUpdate = 0;
   unsigned long currentTime = millis();
 
   // Check position of flower switch
@@ -601,6 +606,14 @@ void loop() {
     handleTemperature(temperatureF, desiredTemp, mode);
     handleHumidity(humidity, desiredHumidity, mode);
   }
+
+  // Periodically sync with NTP
+  if (WiFi.status() == WL_CONNECTED && millis() - lastNTPUpdate > (NTP_UPDATE_INTERVAL * 1000)) {
+    syncRTCWithNTP();
+  }
+
+  DateTime now = getCurrentTime();
+  controlLights();
 
   // Periodically show bitmap
   if (INTERRUPT_WITH_BITMAP) {
