@@ -5,28 +5,38 @@
 // ============================================================================
 // DEPENDENCIES -----------------------------------------------------------
 // ============================================================================
-#include "WiFi.h"
-#include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
-#include <ArduinoJson.h>
-#include <Wire.h>
+#include "ESPAsyncWebServer.h"
+#include "<RTClib.h>"
+#include "WiFi.h"
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <ArduinoJson.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
+#include <Wire.h>
+// -------------------------------------
+// Local Dependencies
+// -------------------------------------
 #include "KasaSmartPlug.h"     // KASA TP-link smart plug library: https://github.com/ConnerWill/KasaSmartPlug
-#include "config.h"            // Include config header file
 #include "bitmap.h"            // Include bitmap header file
+#include "config.h"            // Include config header file
 // ============================================================================
 
 // ============================================================================
 // GLOBAL INSTANCES -----------------------------------------------------------
 // ============================================================================
-DHTesp dht;                                                       // DHT
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1); // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-AsyncWebServer server(SERVER_PORT);                               // Define server on port
-KASAUtil kasaUtil;                                                // Kasa utility object
-KASASmartPlug *intakePlug = NULL;                                 // Smart plug pointers (Intake)
-KASASmartPlug *exhaustPlug = NULL;                                // Smart plug pointers (Exhaust)
-KASASmartPlug *humidifierPlug = NULL;                             // Smart plug pointers (Humidifier)
+DHTesp dht;                                                                    // DHT
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);              // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+AsyncWebServer server(SERVER_PORT);                                            // Define server on port
+KASAUtil kasaUtil;                                                             // Kasa utility object
+KASASmartPlug *intakePlug = NULL;                                              // Smart plug pointers (Intake)
+KASASmartPlug *exhaustPlug = NULL;                                             // Smart plug pointers (Exhaust)
+KASASmartPlug *humidifierPlug = NULL;                                          // Smart plug pointers (Humidifier)
+KASASmartPlug *lightPlug = NULL;                                               // Smart plug pointers (Light)
+RTC_DS3231 rtc;                                                                // Initialize RTC instance
+WiFiUDP ntpUDP;                                                                // UDP instance for NTP
+NTPClient timeClient(ntpUDP, NTP_SERVER, TIMEZONE_OFFSET, RTC_CHECK_INTERVAL); // 60s update interval
 // ============================================================================
 
 // ============================================================================
@@ -90,6 +100,45 @@ float celsiusToFahrenheit(float celsius) {
 void updateFlowerState() {
   int rockerState = digitalRead(ROCKER_SWITCH_PIN);
   FLOWER = (rockerState == LOW); // Assuming LOW means ON
+}
+
+
+// -------------------------------------
+// Time Functions
+// -------------------------------------
+// Function to initialize RTC module
+void initRTC() {
+  if (!ENABLE_RTC) {
+    Serial.println("RTC disabled in config.");
+    return;
+  }
+
+  Wire.begin();
+
+  if (!rtc.begin()) {
+    Serial.println("RTC not found. Check connections.");
+    return;
+  }
+
+  if (rtc.lostPower()) {
+    Serial.println("RTC lost power, setting default time.");
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));  // Set to compile time
+  }
+
+  Serial.println("RTC initialized successfully.");
+}
+
+// Function to Sync RTC with NTP
+void syncRTCWithNTP() {
+  Serial.println("Syncing RTC with NTP...");
+  timeClient.update();
+  rtc.adjust(DateTime(timeClient.getEpochTime()));
+  lastNTPUpdate = millis();
+}
+
+// Function to get Current Time from RTC
+DateTime getCurrentTime() {
+  return rtc.now();
 }
 
 
@@ -235,6 +284,20 @@ void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
     setPlugState(humidifierPlug, false);                                              // Turn off humidifier to save energy
   }
 }
+
+// Function to set light state
+void controlLights(int hour, int minute) {
+  bool lightsOn = false;
+  if (FLOWER) {
+    // Flower mode
+    lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_ON || hour < LIGHTS_OFF_HOUR_FLOWER_ON);
+  } else {
+    // Vegetative mode
+    lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_OFF && hour < LIGHTS_OFF_HOUR_FLOWER_OFF);
+  }
+  setPlugState(lightsPlug, lightsOn);
+}
+
 
 // -------------------------------------
 // WIFI Functions

@@ -41,6 +41,7 @@ constexpr int     INTERRUPT_BITMAP_TIME       = 300000;  // Check WiFi time (ms)
 const char      *intakePlugAlias        = "tent1_intake";     // Kasa plug alias (Intake)
 const char      *exhaustPlugAlias       = "tent1_exhaust";    // Kasa plug aliases (Exhaust)
 const char      *humidifierPlugAlias    = "tent1_humidifier"; // Kasa plug aliases (Humidifier)
+const char      *lightPlugAlias         = "tent1_light";      // Kasa plug aliases (Lights)
 constexpr int   SMARTPLUG_UPDATE_TIME   = 30000;              // Update smart plugs time (ms)
 bool            FLOWER                  = false;              // Flower default value (this changes based on rocker switch)
 constexpr float DESIRED_TEMP_VEG        = 80.0;               // Desired temperature in F (veg)
@@ -52,6 +53,19 @@ constexpr float DESIRED_CO2_FLOWER      = 1000.0;             // Desired CO2 lev
 constexpr float TEMP_HYSTERESIS         = 1.0;                // Temperature hysteresis to prevent rapid switching
 constexpr float HUMIDITY_HYSTERESIS     = 5.0;                // Humidity hysteresis to prevent rapid switching
 constexpr float CO2_HYSTERESIS          = 100.0;              // CO2 hysteresis to prevent rapid switching
+
+// TIME / LIGHT CONFIGURATION
+constexpr int    TIMEZONE_OFFSET            = -6 * 3600;      // Adjust for your timezone (CST example)
+constexpr int    NTP_UPDATE_INTERVAL        = 86400;          // Sync every 24 hours (seconds)
+constexpr int    RTC_CHECK_INTERVAL         = 60000;          // Check RTC time (ms)
+constexpr char   NTP_SERVER[]               = "pool.ntp.org"; // NTP server address
+bool             ENABLE_NTP_SYNC            = true;           // Enable or disable NTP synchronization
+bool             ENABLE_RTC                 = true;           // Enable RTC synchronization
+constexpr int    RTC_I2C_ADDRESS            = 0x68;           // RTC module I2C address (DS3231 default)
+constexpr int    LIGHTS_ON_HOUR_FLOWER_ON   = 18;             // Lights on hour when flower mode is active (6:00 PM)
+constexpr int    LIGHTS_OFF_HOUR_FLOWER_ON  = 6;              // Lights off hour when flower mode is active (6:00 AM)
+constexpr int    LIGHTS_ON_HOUR_FLOWER_OFF  = 6;              // Lights on hour when flower mode is inactive (6:00 AM)
+constexpr int    LIGHTS_OFF_HOUR_FLOWER_OFF = 22;             // Lights off hour when flower mode is inactive (10:00 PM)
 
 // SERIAL CONFIGURATION
 constexpr int BAUD_RATE = 115200;                        // Baud rate
