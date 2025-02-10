@@ -130,10 +130,12 @@ void initRTC() {
 
 // Function to Sync RTC with NTP
 void syncRTCWithNTP() {
-  Serial.println("Syncing RTC with NTP...");
-  timeClient.update();
-  rtc.adjust(DateTime(timeClient.getEpochTime()));
-  lastNTPUpdate = millis();
+  if (ENABLE_NTP_SYNC) {
+    Serial.println("Syncing RTC with NTP...");
+    timeClient.update();
+    rtc.adjust(DateTime(timeClient.getEpochTime()));
+    lastNTPUpdate = millis();
+  }
 }
 
 // Function to get Current Time from RTC
@@ -193,6 +195,9 @@ void initSmartPlugs() {
     } else if (strcmp(plug->alias, humidifierPlugAlias) == 0) {
       humidifierPlug = plug;
       Serial.println("Humidifier plug initialized.");
+    } else if (strcmp(plug->alias, lightPlugAlias) == 0) {
+      lightPlug = plug;
+      Serial.println("Humidifier plug initialized.");
     }
   }
 
@@ -200,7 +205,6 @@ void initSmartPlugs() {
   //TODO: Could clean this up
   if (intakePlug == NULL) {
     Serial.println("Error: Intake plug not found!");
-
     display.clearDisplay();
     display.setCursor(0, 0);
     display.print("ERROR: Intake plug not found");
@@ -209,7 +213,6 @@ void initSmartPlugs() {
   }
   if (exhaustPlug == NULL) {
     Serial.println("Error: Exhaust plug not found!");
-
     display.clearDisplay();
     display.setCursor(0, 0);
     display.print("ERROR: Exhaust plug not found");
@@ -218,10 +221,17 @@ void initSmartPlugs() {
   }
   if (humidifierPlug == NULL) {
     Serial.println("Error: Humidifier plug not found!");
-
     display.clearDisplay();
     display.setCursor(0, 0);
     display.print("ERROR: Humidifier plug not found");
+    display.display();
+    delay(1000);
+  }
+  if (lightPlug == NULL) {
+    Serial.println("Error: Light plug not found!");
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("ERROR: Light plug not found");
     display.display();
     delay(1000);
   }
@@ -293,12 +303,14 @@ void controlLights() {
 
   if (FLOWER) {
     // Flower mode
+    Serial.println("Lights: Flower: ON");
     lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_ON || hour < LIGHTS_OFF_HOUR_FLOWER_ON);
   } else {
     // Vegetative mode
+    Serial.println("Lights: Flower: OFF");
     lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_OFF && hour < LIGHTS_OFF_HOUR_FLOWER_OFF);
   }
-  setPlugState(lightsPlug, lightsOn);
+  setPlugState(lightPlug, lightsOn);
 
   // TODO: Remove debug info
   // Debug information
@@ -623,8 +635,6 @@ void loop() {
   // Update light smart plugs
   if (currentTime - lastLightCheck >= UPDATE_LIGHTS_TIME) {
     lastLightCheck = currentTime;
-    // TODO: Not sure if this is needed here
-    DateTime now = getCurrentTime();
     controlLights();
   }
 
