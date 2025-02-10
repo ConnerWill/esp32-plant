@@ -293,13 +293,20 @@ void controlLights() {
 
   if (FLOWER) {
     // Flower mode
-    Serial.printf("Humidity too low in %s mode! Turning on humidifier...\n", mode);   //
     lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_ON || hour < LIGHTS_OFF_HOUR_FLOWER_ON);
   } else {
     // Vegetative mode
     lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_OFF && hour < LIGHTS_OFF_HOUR_FLOWER_OFF);
   }
   setPlugState(lightsPlug, lightsOn);
+
+  // TODO: Remove debug info
+  // Debug information
+  if (lightsOn) {
+    Serial.println("Lights are ON.");
+  } else {
+    Serial.println("Lights are OFF.");
+  }
 }
 
 
