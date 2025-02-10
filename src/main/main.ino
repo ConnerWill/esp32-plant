@@ -289,11 +289,11 @@ void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
 void controlLights() {
   DateTime now = getCurrentTime();
   int hour = now.hour();
-
   bool lightsOn = false;
 
   if (FLOWER) {
     // Flower mode
+    Serial.printf("Humidity too low in %s mode! Turning on humidifier...\n", mode);   //
     lightsOn = (hour >= LIGHTS_ON_HOUR_FLOWER_ON || hour < LIGHTS_OFF_HOUR_FLOWER_ON);
   } else {
     // Vegetative mode
@@ -543,6 +543,7 @@ void loop() {
   static unsigned long lastWiFiCheck = 0;
   static unsigned long lastBitmapCheck = 0;
   static unsigned long lastPlugCheck = 0;
+  static unsigned long lastLightCheck = 0;
   unsigned long lastNTPUpdate = 0;
   unsigned long currentTime = millis();
 
@@ -607,13 +608,18 @@ void loop() {
     handleHumidity(humidity, desiredHumidity, mode);
   }
 
-  // Periodically sync with NTP
-  if (WiFi.status() == WL_CONNECTED && millis() - lastNTPUpdate > (NTP_UPDATE_INTERVAL * 1000)) {
+  // Periodically sync with NTP if connected to WiFi
+  if (WiFi.status() == WL_CONNECTED && currentTime - lastNTPUpdate >= NTP_UPDATE_INTERVAL) {
     syncRTCWithNTP();
   }
 
-  DateTime now = getCurrentTime();
-  controlLights();
+  // Update light smart plugs
+  if (currentTime - lastLightCheck >= UPDATE_LIGHTS_TIME) {
+    lastLightCheck = currentTime;
+    // TODO: Not sure if this is needed here
+    DateTime now = getCurrentTime();
+    controlLights();
+  }
 
   // Periodically show bitmap
   if (INTERRUPT_WITH_BITMAP) {

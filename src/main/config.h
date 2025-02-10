@@ -55,12 +55,13 @@ constexpr float HUMIDITY_HYSTERESIS     = 5.0;                // Humidity hyster
 constexpr float CO2_HYSTERESIS          = 100.0;              // CO2 hysteresis to prevent rapid switching
 
 // TIME / LIGHT CONFIGURATION
-constexpr int    TIMEZONE_OFFSET            = -6 * 3600;      // Adjust for your timezone (CST example)
-constexpr int    NTP_UPDATE_INTERVAL        = 86400;          // Sync every 24 hours (seconds)
-constexpr int    RTC_CHECK_INTERVAL         = 60000;          // Check RTC time (ms)
-constexpr char   NTP_SERVER[]               = "pool.ntp.org"; // NTP server address
 bool             ENABLE_NTP_SYNC            = true;           // Enable or disable NTP synchronization
 bool             ENABLE_RTC                 = true;           // Enable RTC synchronization
+constexpr int    TIMEZONE_OFFSET            = -6 * 3600;      // Adjust for your timezone (CST example)
+constexpr int    NTP_UPDATE_INTERVAL        = 86400000;       // Sync every 24 hours (ms)
+constexpr int    RTC_CHECK_INTERVAL         = 60000;          // Check RTC time (ms)
+constexpr int    UPDATE_LIGHTS_TIME         = 5000;           // Update lights time (ms)
+constexpr char   NTP_SERVER[]               = "pool.ntp.org"; // NTP server address
 constexpr int    RTC_I2C_ADDRESS            = 0x68;           // RTC module I2C address (DS3231 default)
 constexpr int    LIGHTS_ON_HOUR_FLOWER_ON   = 18;             // Lights on hour when flower mode is active (6:00 PM)
 constexpr int    LIGHTS_OFF_HOUR_FLOWER_ON  = 6;              // Lights off hour when flower mode is active (6:00 AM)
