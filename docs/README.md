@@ -196,5 +196,6 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 - [thingiverse.com/thing:2893581](https://www.thingiverse.com/thing:2893581)
 - [javl.github.io/image2cpp](https://javl.github.io/image2cpp)
 - [github.com/ConnerWill/KasaSmartPlug](https://github.com/ConnerWill/KasaSmartPlug)
+- [randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver](https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver)
 
 ---
