@@ -26,17 +26,17 @@
 // ============================================================================
 // GLOBAL INSTANCES -----------------------------------------------------------
 // ============================================================================
-DHTesp dht;                                                                    // DHT
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);              // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-AsyncWebServer server(SERVER_PORT);                                            // Define server on port
-KASAUtil kasaUtil;                                                             // Kasa utility object
-KASASmartPlug *intakePlug = NULL;                                              // Smart plug pointers (Intake)
-KASASmartPlug *exhaustPlug = NULL;                                             // Smart plug pointers (Exhaust)
-KASASmartPlug *humidifierPlug = NULL;                                          // Smart plug pointers (Humidifier)
-KASASmartPlug *lightPlug = NULL;                                               // Smart plug pointers (Light)
-RTC_DS3231 rtc;                                                                // Initialize RTC instance
-WiFiUDP ntpUDP;                                                                // UDP instance for NTP
-NTPClient timeClient(ntpUDP, NTP_SERVER, TIMEZONE_OFFSET, RTC_CHECK_INTERVAL); // 60s update interval
+DHTesp dht;                                                                     // DHT
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);               // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+AsyncWebServer server(SERVER_PORT);                                             // Define server on port
+KASAUtil kasaUtil;                                                              // Kasa utility object
+KASASmartPlug *intakePlug = NULL;                                               // Smart plug pointers (Intake)
+KASASmartPlug *exhaustPlug = NULL;                                              // Smart plug pointers (Exhaust)
+KASASmartPlug *humidifierPlug = NULL;                                           // Smart plug pointers (Humidifier)
+KASASmartPlug *lightPlug = NULL;                                                // Smart plug pointers (Light)
+RTC_DS3231 rtc;                                                                 // Initialize RTC instance
+WiFiUDP ntpUDP;                                                                 // UDP instance for NTP
+NTPClient timeClient(ntpUDP, NTP_SERVER, TIMEZONE_OFFSET, NTP_UPDATE_INTERVAL); // update interval
 // ============================================================================
 
 // ============================================================================
