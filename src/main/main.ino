@@ -412,7 +412,7 @@ void showBitmap() {
 // Function to display IP Info
 void showIPInfo() {
   // Print IP info
-  Serial.printf("SSID    : %s\n", WIFI_SSID);
+  Serial.printf("SSID    : %s\n", ssid);
   Serial.printf("HOSTNAME: %s\n", WiFi.getHostname());
   Serial.printf("IP      : %s\n", WiFi.localIP().toString().c_str());
 
@@ -420,7 +420,7 @@ void showIPInfo() {
     display.clearDisplay();
     display.setCursor(0, 16);
     display.print("SSID: ");
-    display.println(WIFI_SSID);
+    display.println(ssid);
     display.setCursor(0, 26);
     display.print("Host: ");
     display.println(WiFi.getHostname());
