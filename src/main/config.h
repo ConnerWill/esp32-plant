@@ -8,14 +8,13 @@
 // ============================================================================
 // CONFIGURATION --------------------------------------------------------------
 // ============================================================================
-// WIFI CONFIGURATION
-constexpr char WIFI_HOSTNAME[]     = "esp32-plant";      // Hostname //TODO: This line may not be needed
-constexpr int  WIFI_TIMEOUT_TIME   = 30000;              // Timeout if unable to connect to WiFi (ms)
-constexpr int  WIFI_CHECK_INTERVAL = 5000;               // Check WiFi time (ms)
-
 // SERVER CONFIGURATION
 constexpr uint16_t SERVER_PORT = 80;                     // Port for the web server
 constexpr char     SERVER_PATH[] = "/";                  // Path for serving the data
+
+// WIFI CONFIGURATION
+constexpr int  WIFI_TIMEOUT_TIME   = 30000;              // Timeout if unable to connect to WiFi (ms)
+constexpr int  WIFI_CHECK_INTERVAL = 5000;               // Check WiFi time (ms)
 
 // WIFI MANAGER CONFIGURATION
 // Search for parameter in HTTP POST request
