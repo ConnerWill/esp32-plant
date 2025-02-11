@@ -489,9 +489,9 @@ void setup() {
   initLittleFS();                                 // Initialize LittleFS
 
   // Load values saved in LittleFS
-  ssid    = readFile(LittleFS, ssidPath);
-  pass    = readFile(LittleFS, passPath);
-  ip      = readFile(LittleFS, hostnamePath);
+  ssid     = readFile(LittleFS, ssidPath);
+  pass     = readFile(LittleFS, passPath);
+  hostname = readFile(LittleFS, hostnamePath);
   Serial.printf("LittleFS SSID:     %s \n", ssid);
   Serial.printf("LittleFS Password: %s \n", pass);
   Serial.printf("LittleFS Hostname: %s \n", hostname);
