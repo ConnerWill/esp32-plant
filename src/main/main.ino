@@ -223,16 +223,17 @@ void handleTemperature(float temperatureF, float desiredTemp, const char* mode) 
 
 // Function to control humidifier based on humidity
 void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
-  if (humidity > desiredHumidity + HUMIDITY_HYSTERESIS) {                             // Humidity too high
-    Serial.printf("Humidity too high in %s mode! Turning off humidifier...\n", mode); //
-    setPlugState(humidifierPlug, false);                                              // Turn off humidifier
+  if (humidity > desiredHumidity + HUMIDITY_HYSTERESIS) {                                                       // Humidity too high
+    Serial.printf("Humidity too high in %s mode! Turning off humidifier... Turning on exhaust fan...\n", mode); //
+    setPlugState(humidifierPlug, false);                                                                        // Turn off humidifier
+    setPlugState(exhaustPlug, true);                                                                            // Turn on exhaust fan
 
-  } else if (humidity < desiredHumidity - HUMIDITY_HYSTERESIS) {                      // Humidity too low
-    Serial.printf("Humidity too low in %s mode! Turning on humidifier...\n", mode);   //
-    setPlugState(humidifierPlug, true);                                               // Turn on humidifier
+  } else if (humidity < desiredHumidity - HUMIDITY_HYSTERESIS) {                                                // Humidity too low
+    Serial.printf("Humidity too low in %s mode! Turning on humidifier...\n", mode);                             //
+    setPlugState(humidifierPlug, true);                                                                         // Turn on humidifier
 
-  } else {                                                                            // Humidity within range
-    setPlugState(humidifierPlug, false);                                              // Turn off humidifier to save energy
+  } else {                                                                                                      // Humidity within range
+    setPlugState(humidifierPlug, false);                                                                        // Turn off humidifier to save energy
   }
 }
 
