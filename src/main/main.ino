@@ -543,9 +543,12 @@ void setup() {
     display.setCursor(0, 0);
     display.print("Connect to ESP32 AP");
     display.setCursor(0, 16);
+    display.print("AP IP: ");
+    display.println(IP);
+    display.setCursor(0, 26);
     display.print("AP SSID: ");
     display.println(AP_SSID;
-    display.setCursor(0, 26);
+    display.setCursor(0, 36);
     display.print("AP Password:   ");
     display.println(AP_PASSWORD);
     display.display();
