@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ESP WiFi Manager</title>
+  <title>ESP32-Plant WiFi Manager</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="data:,">
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
   <div class="topnav">
-    <h1>ESP32 WiFi Manager</h1>
+    <h1>ESP32-Plant WiFi Manager</h1>
   </div>
   <div class="content">
     <div class="card-grid">
@@ -16,9 +16,9 @@
         <form action="/" method="POST">
           <p>
             <label for="ssid">SSID</label>
-            <input type="text" id ="ssid" name="ssid"><br>
+            <input type="text" id ="ssid" name="ssid" value="SSID"><br>
             <label for="pass">Password</label>
-            <input type="text" id ="pass" name="pass"><br>
+            <input type="text" id ="pass" name="pass" value="PASSWORD"><br>
             <label for="hostname">Hostname</label>
             <input type="text" id ="hostname" name="hostname" value="esp32-plant"><br>
             <input type ="submit" value ="Submit">
