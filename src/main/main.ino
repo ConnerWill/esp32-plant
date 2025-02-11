@@ -32,8 +32,7 @@ KASASmartPlug *humidifierPlug = NULL;                             // Smart plug 
 //Variables to save values from HTML form
 String ssid;
 String pass;
-String ip;
-String gateway;
+String hostname;
 // ============================================================================
 
 // ============================================================================
@@ -247,61 +246,57 @@ void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
 // -------------------------------------
 // WIFI Functions
 // -------------------------------------
-// Function to connect to Wi-Fi
-void connectToWiFi() {
-  Serial.println(F("Setting up Wi-Fi..."));
-
-  WiFi.mode(WIFI_STA); // Station mode only
-
-  if (!WiFi.setHostname(WIFI_HOSTNAME)) {
-    Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", WIFI_HOSTNAME);
+// Initialize WiFi
+bool initWiFi() {
+  if(ssid=="" || ip==""){
+    Serial.println("Undefined SSID or IP address.");
+    return false;
   }
+
+  WiFi.mode(WIFI_STA);
+
+  if (!WiFi.setHostname(hostname)) {
+    Serial.printf("Error: Failed to set Wi-Fi hostname: %s\n", hostname);
+  }
+  // Connect to WiFi
+  WiFi.begin(ssid.c_str(), pass.c_str());
+  Serial.println("Connecting to WiFi...");
 
   display.clearDisplay();
   display.setCursor(0, 0);
   display.println("Connecting to WiFi");
   display.setCursor(0, 16);
-  display.println(WIFI_SSID);
+  display.println(ssid.c_str());
   display.display();
   delay(100);
 
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.printf("Connecting to WiFi: %s\n", WIFI_SSID);
+  unsigned long currentMillis = millis();
+  previousMillis = currentMillis;
 
-  // Record the start time of the connection attempt
-  unsigned long startAttemptTime = millis();
-  while (WiFi.status() != WL_CONNECTED) {
-    if (millis() - startAttemptTime >= WIFI_TIMEOUT_TIME) { // Timeout after X seconds
-      Serial.printf("Failed to connect to WiFi: %s\n", WIFI_SSID);
-
-      // TODO: Values are not updating when wifi is disconnected
+  while(WiFi.status() != WL_CONNECTED) {
+    currentMillis = millis();
+    if (currentMillis - previousMillis >= WIFI_TIMEOUT_TIME) {
+      Serial.println("Failed to connect.");
       display.clearDisplay();
       display.setCursor(0, 0);
       display.println("Failed to connect to WiFi!");
       display.setCursor(0, 16);
-      display.println(WIFI_SSID);
+      display.println(ssid.c_str());
       display.display();
       delay(SCREEN_STARTUP_DISPLAY_TIME);
       display.clearDisplay();
-
-      return;
+      return false;
     }
     delay(1000);
     Serial.print(".");
-
-    // Connecting loading bar
     display.print("_");
     display.display();
   }
-
-  Serial.println(F("Wi-Fi Connected"));
-
-  // Display IP info
+  Serial.println(WiFi.localIP());
   showIPInfo();
   delay(SCREEN_STARTUP_DISPLAY_TIME);
+  return true;
 }
-
-
 
 // -------------------------------------
 // LittleFS Functions
@@ -490,39 +485,116 @@ void setup() {
   Serial.begin(BAUD_RATE);                        // Initialize Serial for debugging
   initOLED();                                     // Initialize OLED
   initLittleFS();                                 // Initialize LittleFS
-  connectToWiFi();                                // Connect to Wi-Fi
-  initSmartPlugs();                               // Initialize Smart Plugs
 
+  // Load values saved in LittleFS
+  ssid    = readFile(LittleFS, ssidPath);
+  pass    = readFile(LittleFS, passPath);
+  ip      = readFile(LittleFS, hostnamePath);
+  Serial.printf("LittleFS SSID:     %s \n", ssid);
+  Serial.printf("LittleFS Password: %s \n", pass);
+  Serial.printf("LittleFS Hostname: %s \n", hostname);
 
+  //TODO: Move these
 
-  // Define the root endpoint
-  server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
-    // Get sensor values
-    float co2 = readCO2();
-    float temperature = readTemperature();
-    float temperatureF = celsiusToFahrenheit(temperature);
-    float humidity = readHumidity();
+  // If wifi is connected, start serving json values
+  if(initWiFi()) {
+    // Define the root endpoint
+    server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {
+      // Get sensor values
+      float co2          = readCO2();
+      float temperature  = readTemperature();
+      float temperatureF = celsiusToFahrenheit(temperature);
+      float humidity     = readHumidity();
 
-    // Create a JSON document
-    JsonDocument jsonDoc;
+      // Create a JSON document
+      JsonDocument jsonDoc;
 
-    // Add values to the JSON document
-    jsonDoc["co2"]          = co2;
-    jsonDoc["temperature"]  = temperature;
-    jsonDoc["temperatureF"] = temperatureF;
-    jsonDoc["humidity"]     = humidity;
+      // Add values to the JSON document
+      jsonDoc["co2"]          = co2;
+      jsonDoc["temperature"]  = temperature;
+      jsonDoc["temperatureF"] = temperatureF;
+      jsonDoc["humidity"]     = humidity;
 
-    // Serialize JSON to string
-    String jsonString;
-    serializeJson(jsonDoc, jsonString);
+      // Serialize JSON to string
+      String jsonString;
+      serializeJson(jsonDoc, jsonString);
 
-    // Send the JSON response
-    request->send(200, "application/json", jsonString);
+      // Send the JSON response
+      request->send(200, "application/json", jsonString);
 
-  });
-  // Start the server
-  server.begin();
-  Serial.println(F("Server started"));
+    });
+    // Start the server
+    server.begin();
+    Serial.println(F("Server started"));
+
+  // If wifi cannot connect, start Access Point
+  else {
+    // Connect to Wi-Fi network with SSID and password
+    Serial.println("Setting AP (Access Point)");
+    // NULL sets an open Access Point
+    WiFi.softAP(AP_SSID, AP_PASSWORD);
+
+    IPAddress IP = WiFi.softAPIP();
+    Serial.printf("AP IP address: %s\n", IP);
+    Serial.printf("AP SSID:       %s\n", AP_SSID);
+    Serial.printf("AP Password:   %s\n", AP_PASSWORD);
+
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.print("Connect to ESP32 AP");
+    display.setCursor(0, 16);
+    display.print("AP SSID: ");
+    display.println(AP_SSID;
+    display.setCursor(0, 26);
+    display.print("AP Password:   ");
+    display.println(AP_PASSWORD);
+    display.display();
+
+    // Web Server Root URL
+    server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest *request){
+      request->send(LittleFS, "/wifimanager.html", "text/html");
+    });
+
+    server.serveStatic(SERVER_PATH, LittleFS, SERVER_PATH);
+    server.on(SERVER_PATH, HTTP_POST, [](AsyncWebServerRequest *request) {
+      int params = request->params();
+      for(int i=0;i<params;i++){
+        const AsyncWebParameter* p = request->getParam(i);
+        if(p->isPost()){
+          // HTTP POST ssid value
+          if (p->name() == PARAM_INPUT_1) {
+            ssid = p->value().c_str();
+            Serial.print("SSID set to: ");
+            Serial.println(ssid);
+            // Write file to save value
+            writeFile(LittleFS, ssidPath, ssid.c_str());
+          }
+          // HTTP POST pass value
+          if (p->name() == PARAM_INPUT_2) {
+            pass = p->value().c_str();
+            Serial.print("Password set to: ");
+            Serial.println(pass);
+            // Write file to save value
+            writeFile(LittleFS, passPath, pass.c_str());
+          }
+          // HTTP POST hostname value
+          if (p->name() == PARAM_INPUT_3) {
+            hostname = p->value().c_str();
+            Serial.print("Hostname set to: ");
+            Serial.println(hostname);
+            // Write file to save value
+            writeFile(LittleFS, hostnamePath, hostname.c_str());
+          }
+        }
+      }
+      request->send(200, "text/plain", "Done. ESP will restart, connect back to your main network");
+      delay(3000);
+      ESP.restart();
+    });
+    server.begin();
+  }
+
+  initSmartPlugs(); // Initialize Smart Plugs
 }
 // ============================================================================
 
@@ -570,7 +642,7 @@ void loop() {
 
       if (WiFi.status() != WL_CONNECTED) {
         Serial.println(F("Reconnection failed. Retrying full connection..."));
-        connectToWiFi(); // Fallback to full connection
+        initWiFi(); // Fallback to full connection
       } else {
         Serial.println(F("Reconnected to Wi-Fi."));
       }
