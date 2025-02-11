@@ -8,6 +8,8 @@
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
 #include "DHTesp.h"
+#include <AsyncTCP.h>
+#include "LittleFS.h"
 #include <ArduinoJson.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -27,6 +29,11 @@ KASAUtil kasaUtil;                                                // Kasa utilit
 KASASmartPlug *intakePlug = NULL;                                 // Smart plug pointers (Intake)
 KASASmartPlug *exhaustPlug = NULL;                                // Smart plug pointers (Exhaust)
 KASASmartPlug *humidifierPlug = NULL;                             // Smart plug pointers (Humidifier)
+//Variables to save values from HTML form
+String ssid;
+String pass;
+String ip;
+String gateway;
 // ============================================================================
 
 // ============================================================================
@@ -294,6 +301,53 @@ void connectToWiFi() {
   delay(SCREEN_STARTUP_DISPLAY_TIME);
 }
 
+
+
+// -------------------------------------
+// LittleFS Functions
+// -------------------------------------
+// Function to initialize LittleFS
+void initLittleFS() {
+  if (!LittleFS.begin(true)) {
+    Serial.println("An error has occurred while mounting LittleFS");
+  }
+  Serial.println("LittleFS mounted successfully");
+}
+
+// Function to read File from LittleFS
+String readFile(fs::FS &fs, const char * path){
+  Serial.printf("Reading file: %s\r\n", path);
+
+  File file = fs.open(path);
+  if(!file || file.isDirectory()){
+    Serial.println("- failed to open file for reading");
+    return String();
+  }
+
+  String fileContent;
+  while(file.available()){
+    fileContent = file.readStringUntil('\n');
+    break;
+  }
+  return fileContent;
+}
+
+// Function to write file to LittleFS
+void writeFile(fs::FS &fs, const char * path, const char * message){
+  Serial.printf("Writing file: %s\r\n", path);
+
+  File file = fs.open(path, FILE_WRITE);
+  if(!file){
+    Serial.println("- failed to open file for writing");
+    return;
+  }
+  if(file.print(message)){
+    Serial.println("- file written");
+  } else {
+    Serial.println("- write failed");
+  }
+}
+
 // -------------------------------------
 // OLED Functions
 // -------------------------------------
@@ -435,8 +489,11 @@ void setup() {
   dht.setup(DHT_PIN, DHTesp::DHT_MODEL_t::DHT22); // Initialize DHT sensor
   Serial.begin(BAUD_RATE);                        // Initialize Serial for debugging
   initOLED();                                     // Initialize OLED
+  initLittleFS();                                 // Initialize LittleFS
   connectToWiFi();                                // Connect to Wi-Fi
   initSmartPlugs();                               // Initialize Smart Plugs
+
+
 
   // Define the root endpoint
   server.on(SERVER_PATH, HTTP_GET, [](AsyncWebServerRequest* request) {

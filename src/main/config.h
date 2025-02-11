@@ -19,6 +19,18 @@ constexpr int  WIFI_CHECK_INTERVAL = 5000;               // Check WiFi time (ms)
 constexpr uint16_t SERVER_PORT = 80;                     // Port for the web server
 constexpr char     SERVER_PATH[] = "/";                  // Path for serving the data
 
+// WIFI MANAGER CONFIGURATION
+// Search for parameter in HTTP POST request
+const char* PARAM_INPUT_1 = "ssid";
+const char* PARAM_INPUT_2 = "pass";
+const char* PARAM_INPUT_3 = "ip";
+const char* PARAM_INPUT_4 = "gateway";
+// File paths to save input values permanently
+const char* ssidPath    = "/ssid.txt";
+const char* passPath    = "/pass.txt";
+const char* ipPath      = "/ip.txt";
+const char* gatewayPath = "/gateway.txt";
+
 // PINS CONFIGURATION
 constexpr uint8_t CO2_PIN           = 35;                // Analog pin for CO2 sensor
 constexpr uint8_t DHT_PIN           = 27;                // GPIO pin for DHT sensor
