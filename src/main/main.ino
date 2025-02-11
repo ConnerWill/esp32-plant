@@ -248,8 +248,8 @@ void handleHumidity(float humidity, float desiredHumidity, const char* mode) {
 // -------------------------------------
 // Initialize WiFi
 bool initWiFi() {
-  if(ssid=="" || ip==""){
-    Serial.println("Undefined SSID or IP address.");
+  if(ssid=="" || hostname==""){
+    Serial.println("Undefined SSID or Hostname");
     return false;
   }
 
@@ -547,7 +547,7 @@ void setup() {
     display.println(IP);
     display.setCursor(0, 26);
     display.print("AP SSID: ");
-    display.println(AP_SSID;
+    display.println(AP_SSID);
     display.setCursor(0, 36);
     display.print("AP Password:   ");
     display.println(AP_PASSWORD);
