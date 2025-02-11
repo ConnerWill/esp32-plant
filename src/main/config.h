@@ -26,7 +26,7 @@ const char PARAM_INPUT_3[] = "hostname";
 constexpr char ssidPath[]     = "/ssid.txt";
 constexpr char passPath[]     = "/pass.txt";
 constexpr char hostnamePath[] = "/hostname.txt";
-constexpr char AP_SSID[]      = "ESP32PLANT";
+constexpr char AP_SSID[]      = "ESP32PLANT-WIFI-MANAGER";
 constexpr char AP_PASSWORD[]  = "ESP32PLANT";
 
 // PINS CONFIGURATION
