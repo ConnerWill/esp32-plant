@@ -594,7 +594,7 @@ void setup() {
         }
       }
       request->send(200, "text/plain", "Done. ESP will restart, connect back to your main network");
-      delay(3000);
+      delay(2000);
       ESP.restart();
     });
     server.begin();
