@@ -115,16 +115,13 @@ You will need to define values to suite your needs. Variables are defined in [`c
 
 #### WiFI Configuration
 
-Here is a list of WiFi variables that **must** be defined and their descriptions...
+On first boot, the ESP32 will try to connect to WiFi.
 
-`WIFI_SSID`
-: WiFi SSID (network/WiFi name)
+If no setup has been done before, it will launch an access point where
+you can enter the `SSID`, `Password`, and `Hostname` to connect to/with.
 
-`WIFI_PASSWORD`
-: WiFi password
-
-`WIFI_HOSTNAME`
-: Hostname of ESP32 to set
+After you enter the needed WiFi information, it will reboot and then
+try to connect to the WiFi.
 
 #### Other Configuration
 
@@ -184,6 +181,7 @@ The 3D model files are located under the [3D-models](/3D-models) directory.
 - [ ] Finish 3D models
 - [ ] Add finished product images
 - [ ] Improve code
+- [ ] Add a configuration page to set the desired temps instead of hardcoding
 
 ---
 
