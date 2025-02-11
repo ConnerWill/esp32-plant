@@ -270,6 +270,7 @@ bool initWiFi() {
   display.display();
   delay(100);
 
+  unsigned long previousMillis = 0;
   unsigned long currentMillis = millis();
   previousMillis = currentMillis;
 
